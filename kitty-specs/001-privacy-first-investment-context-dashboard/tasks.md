@@ -299,12 +299,12 @@
 **Estimated prompt size**: ~360 lines
 
 ### Included Subtasks
-- [ ] T052 Implement CI workflows for lint/schema/unit/regression checks on PR and main branch.
-- [ ] T053 Implement scheduled workflows for public market/climate/rules dataset refresh with checksum and changelog outputs.
-- [ ] T054 Implement preview build and Pages deployment workflow.
-- [ ] T055 Implement scenario batch-run/report artifact workflow with retention policy and naming rules.
-- [ ] T056 [P] Implement workflow failure surfacing, issue annotations, and release packaging automation.
-- [ ] T057 Add security/privacy checks for artifact redaction and forbidden private-data paths.
+- [x] T052 Implement CI workflows for lint/schema/unit/regression checks on PR and main branch.
+- [x] T053 Implement scheduled workflows for public market/climate/rules dataset refresh with checksum and changelog outputs.
+- [x] T054 Implement preview build and Pages deployment workflow.
+- [x] T055 Implement scenario batch-run/report artifact workflow with retention policy and naming rules.
+- [x] T056 [P] Implement workflow failure surfacing, issue annotations, and release packaging automation.
+- [x] T057 Add security/privacy checks for artifact redaction and forbidden private-data paths.
 
 ### Implementation Notes
 - Keep automation inputs public or synthetic; never default to household private data.

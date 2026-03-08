@@ -1,7 +1,7 @@
 ---
 work_package_id: WP10
 title: GitHub Actions, Public Data Refresh, And Release Hardening
-lane: planned
+lane: completed
 dependencies: [WP01, WP02, WP08]
 subtasks:
 - T052
@@ -11,8 +11,8 @@ subtasks:
 - T056
 - T057
 phase: Phase 5 - Automation
-assignee: ''
-agent: ''
+assignee: GitHub Copilot
+agent: GPT-5.3-Codex
 shell_pid: ''
 review_status: ''
 reviewed_by: ''
@@ -22,6 +22,11 @@ history:
   agent: system
   shell_pid: ''
   action: Prompt generated via /spec-kitty.tasks
+- timestamp: '2026-03-08T23:31:01Z'
+  lane: completed
+  agent: GPT-5.3-Codex
+  shell_pid: ''
+  action: Implemented CI hardening, data refresh, preview/pages deploy, batch scenario artifacts, release packaging, and privacy guard workflows/scripts.
 requirement_refs:
 - FR-030
 - FR-008
@@ -104,3 +109,4 @@ requirement_refs:
 
 ## Activity Log
 - 2026-03-08T20:59:34Z - system - lane=planned - Prompt created.
+- 2026-03-08T23:31:01Z - GPT-5.3-Codex - lane=completed - Added path-filtered CI with lint/schema/unit/integration/regression/build and failure annotations; scheduled data refresh workflow + checksum/changelog outputs; preview and main pages deploy workflow; batch scenario workflow with retention policy and privacy guard; release packaging workflow with summary and tag release publishing; privacy artifact guard script and workflow; automation scripts for data refresh, batch scenarios, and release package generation.

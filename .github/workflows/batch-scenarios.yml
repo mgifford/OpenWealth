@@ -1,0 +1,56 @@
+name: Batch Scenarios
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "35 4 * * 2"
+
+permissions:
+  contents: read
+
+jobs:
+  batch-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build baseline
+        run: npm run build
+
+      - name: Run batch scenarios
+        run: npm run batch:scenarios
+
+      - name: Privacy guard
+        run: node scripts/privacy/artifact-guard.js dist/batch
+
+      - name: Upload batch artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: batch-scenarios-${{ github.run_number }}
+          path: dist/batch
+          retention-days: 14
+
+      - name: Batch summary
+        if: success()
+        run: |
+          {
+            echo "## Batch Scenarios";
+            echo "- output: dist/batch";
+            echo "- retention-days: 14";
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Failure annotation
+        if: failure()
+        run: |
+          echo "::error title=Batch scenarios failed::Scenario batch execution or artifact upload failed."

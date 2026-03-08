@@ -1,0 +1,101 @@
+name: Pages Preview And Deploy
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "index.html"
+      - "scripts/build.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/pages-deploy.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "src/**"
+      - "index.html"
+      - "scripts/build.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/pages-deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  preview-build:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build preview
+        run: npm run build
+
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-preview-${{ github.event.pull_request.number }}
+          path: dist
+          retention-days: 7
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Deploy summary
+        if: success()
+        run: |
+          {
+            echo "## Pages Deploy";
+            echo "- url: ${{ steps.deployment.outputs.page_url }}";
+          } >> "$GITHUB_STEP_SUMMARY"

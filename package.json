@@ -7,6 +7,10 @@
   "scripts": {
     "dev": "node scripts/dev-server.mjs",
     "build": "node scripts/build.mjs",
+    "data:refresh": "node scripts/data-refresh/refresh-public-data.mjs",
+    "batch:scenarios": "node scripts/batch/run-scenarios.mjs",
+    "release:package": "node scripts/release/package-release.mjs",
+    "privacy:guard": "node scripts/privacy/artifact-guard.js dist",
     "lint": "node scripts/lint.mjs",
     "test": "npm run test:unit",
     "test:schema": "node --test tests/schema/**/*.test.mjs",

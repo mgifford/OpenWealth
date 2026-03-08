@@ -1,7 +1,7 @@
 ---
 work_package_id: WP06
 title: Onboarding, Household Capture, And Scenario UX
-lane: planned
+lane: completed
 dependencies: [WP03, WP04]
 subtasks:
 - T029
@@ -11,8 +11,8 @@ subtasks:
 - T033
 - T034
 phase: Phase 3 - User Experience
-assignee: ''
-agent: ''
+assignee: GitHub Copilot
+agent: GPT-5.3-Codex
 shell_pid: ''
 review_status: ''
 reviewed_by: ''
@@ -22,6 +22,11 @@ history:
   agent: system
   shell_pid: ''
   action: Prompt generated via /spec-kitty.tasks
+- timestamp: '2026-03-08T22:24:27Z'
+  lane: completed
+  agent: GPT-5.3-Codex
+  shell_pid: ''
+  action: Implemented onboarding, account editing, scenario authoring, comparison views, state panels, assumptions panel, and UI integration tests.
 requirement_refs:
 - FR-001
 - FR-002
@@ -105,3 +110,4 @@ requirement_refs:
 
 ## Activity Log
 - 2026-03-08T20:59:34Z - system - lane=planned - Prompt created.
+- 2026-03-08T22:24:27Z - GPT-5.3-Codex - lane=completed - Added onboarding wizard draft/finalization flow, account form validation and editor, scenario authoring model, scenario comparison view builders, assumptions + empty/error/loading/stale state panels, and integration tests for journey and error paths.

@@ -176,12 +176,12 @@
 **Estimated prompt size**: ~420 lines
 
 ### Included Subtasks
-- [ ] T029 Implement onboarding wizard for household/person/income/account basics.
-- [ ] T030 Implement account editing flows with required field validation and confidence markers.
-- [ ] T031 Implement scenario authoring UI for retirement/benefit/withdrawal variants.
-- [ ] T032 Implement side-by-side scenario comparison views with key outcome deltas.
-- [ ] T033 [P] Implement empty/error/loading states and assumptions visibility panels.
-- [ ] T034 Add UI integration tests for main user journeys and failure handling.
+- [x] T029 Implement onboarding wizard for household/person/income/account basics.
+- [x] T030 Implement account editing flows with required field validation and confidence markers.
+- [x] T031 Implement scenario authoring UI for retirement/benefit/withdrawal variants.
+- [x] T032 Implement side-by-side scenario comparison views with key outcome deltas.
+- [x] T033 [P] Implement empty/error/loading states and assumptions visibility panels.
+- [x] T034 Add UI integration tests for main user journeys and failure handling.
 
 ### Implementation Notes
 - Keep UX concise and transparent; no hidden assumptions.

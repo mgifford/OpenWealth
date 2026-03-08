@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "household_id": "hh_sus_empty",
+  "name": "No Accounts Household",
+  "province_or_territory": "BC",
+  "people": [
+    {
+      "person_id": "p_sus_002",
+      "display_name": "Jamie Gap",
+      "birth_year": 1990,
+      "retirement_target_age": 65
+    }
+  ],
+  "accounts": [],
+  "goals": [],
+  "assumptions": {
+    "inflation_rate": 0.02,
+    "expected_return": 0.05,
+    "tax_year": 2026,
+    "cpp_start_age_options": [65, 70],
+    "oas_start_age_options": [65, 70]
+  },
+  "updated_at": "2026-03-08T22:30:00Z"
+}

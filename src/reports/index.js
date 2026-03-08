@@ -1,3 +1,11 @@
+import { buildSustainabilitySection } from "./sections/sustainability.js";
+
 export function reportModuleStatus() {
-  return "pending";
+  return "ready";
+}
+
+export function buildReportSections(engineResult) {
+  return {
+    sustainability: buildSustainabilitySection(engineResult.sustainability ?? {})
+  };
 }

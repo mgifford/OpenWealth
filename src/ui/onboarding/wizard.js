@@ -1,3 +1,5 @@
+import { createDefaultSustainabilityPreferences } from "../sustainability/preferences/index.js";
+
 function createId(prefix) {
   return `${prefix}_${Math.random().toString(36).slice(2, 10)}`;
 }
@@ -97,6 +99,7 @@ export function finalizeOnboardingDraft(draft, options = {}) {
       cpp_start_age_options: [65, 70],
       oas_start_age_options: [65, 70]
     },
+    sustainability_preferences: createDefaultSustainabilityPreferences(),
     updated_at: clock().toISOString()
   };
 }

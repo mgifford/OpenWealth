@@ -207,12 +207,12 @@
 **Estimated prompt size**: ~390 lines
 
 ### Included Subtasks
-- [ ] T035 Implement sustainability preference model and UI controls.
-- [ ] T036 Implement component metric calculators (fossil, carbon, renewable/transition, social/community, controversial sectors).
-- [ ] T037 Implement climate overlay scenarios (rapid transition, delayed transition, worsened physical risk).
-- [ ] T038 Implement metric provenance and confidence/availability labeling.
-- [ ] T039 [P] Implement alternatives panel that shows values-aligned options without recommendation certainty.
-- [ ] T040 Add sustainability/climate fixture tests and edge-case validations.
+- [x] T035 Implement sustainability preference model and UI controls.
+- [x] T036 Implement component metric calculators (fossil, carbon, renewable/transition, social/community, controversial sectors).
+- [x] T037 Implement climate overlay scenarios (rapid transition, delayed transition, worsened physical risk).
+- [x] T038 Implement metric provenance and confidence/availability labeling.
+- [x] T039 [P] Implement alternatives panel that shows values-aligned options without recommendation certainty.
+- [x] T040 Add sustainability/climate fixture tests and edge-case validations.
 
 ### Implementation Notes
 - Never produce a single opaque score; preserve component metric traceability.

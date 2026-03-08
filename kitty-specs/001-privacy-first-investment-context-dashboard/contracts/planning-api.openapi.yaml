@@ -1,0 +1,225 @@
+openapi: 3.1.0
+info:
+  title: Planning Engine Local API
+  version: 0.1.0
+  description: >-
+    Local application service contracts for deterministic planning, import preview,
+    scenario simulation, and report bundle generation.
+servers:
+  - url: http://localhost:4173/api
+paths:
+  /household/validate:
+    post:
+      summary: Validate canonical household payload
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Household'
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                  errors:
+                    type: array
+                    items:
+                      type: string
+  /import/preview:
+    post:
+      summary: Parse, validate, and preview merge diff for YAML/JSON/CSV import
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Preview result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  proposed_changes:
+                    type: array
+                    items:
+                      type: object
+                  validation_errors:
+                    type: array
+                    items:
+                      type: string
+                  unmatched_fields:
+                    type: array
+                    items:
+                      type: string
+  /import/apply:
+    post:
+      summary: Apply approved import changes and create snapshot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [preview_id, approved_changes]
+              properties:
+                preview_id:
+                  type: string
+                approved_changes:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Apply result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  snapshot_id:
+                    type: string
+                  updated:
+                    type: integer
+  /scenario/run:
+    post:
+      summary: Run deterministic scenario simulation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [household_id, scenario_id]
+              properties:
+                household_id:
+                  type: string
+                scenario_id:
+                  type: string
+      responses:
+        '200':
+          description: Scenario results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScenarioResult'
+  /report/generate:
+    post:
+      summary: Generate downloadable report bundle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [household_id, scenario_ids]
+              properties:
+                household_id:
+                  type: string
+                scenario_ids:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Bundle metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bundle_name:
+                    type: string
+                  files:
+                    type: array
+                    items:
+                      type: string
+components:
+  schemas:
+    Household:
+      type: object
+      required:
+        - schema_version
+        - household_id
+        - name
+        - province_or_territory
+      properties:
+        schema_version:
+          type: string
+        household_id:
+          type: string
+        name:
+          type: string
+        province_or_territory:
+          type: string
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+    Account:
+      type: object
+      required:
+        - account_id
+        - account_type
+        - current_balance
+      properties:
+        account_id:
+          type: string
+        account_type:
+          type: string
+          enum:
+            - tfsa
+            - rrsp
+            - fhsa
+            - resp
+            - non_registered
+            - chequing_savings
+            - dc_pension
+            - db_pension_placeholder
+            - mortgage
+            - other_debt
+        current_balance:
+          type: number
+        currency:
+          type: string
+          default: CAD
+    ScenarioResult:
+      type: object
+      required:
+        - scenario_id
+        - net_worth_projection
+        - assumptions
+        - warnings
+      properties:
+        scenario_id:
+          type: string
+        net_worth_projection:
+          type: array
+          items:
+            type: object
+            properties:
+              year:
+                type: integer
+              value:
+                type: number
+        assumptions:
+          type: array
+          items:
+            type: string
+        warnings:
+          type: array
+          items:
+            type: string

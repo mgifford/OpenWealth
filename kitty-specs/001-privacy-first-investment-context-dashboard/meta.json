@@ -1,0 +1,11 @@
+{
+  "feature_number": "001",
+  "slug": "001-privacy-first-investment-context-dashboard",
+  "feature_slug": "001-privacy-first-investment-context-dashboard",
+  "friendly_name": "Privacy-First Investment Context Dashboard",
+  "mission": "software-dev",
+  "target_branch": "main",
+  "created_at": "2026-03-08T20:43:52.801727+00:00",
+  "source_description": "Open-source, privacy-friendly wealth tracking for people in their 40s-50s with public-market context, clear non-advisory positioning, and AI prompt generation.",
+  "vcs": "git"
+}

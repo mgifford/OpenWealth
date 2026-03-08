@@ -12,3 +12,4 @@ export {
 	buildAlternativesPanel,
 	renderAlternativesPanel
 } from "./sustainability/index.js";
+export { buildReportBundle, createBundleDownloadPayload } from "./export/index.js";

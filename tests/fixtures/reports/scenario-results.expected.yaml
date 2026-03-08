@@ -1,0 +1,454 @@
+schema_version: 1.0.0
+scenario:
+  retirement_age: 65
+  withdrawal_strategy: tfsa_first
+  cpp_start_age: 65
+  oas_start_age: 65
+  annual_spending: 62000
+  projection_years: 35
+  scenario_id: scenario_report_001
+  name: Report Baseline
+results:
+  projection:
+    summary:
+      strategy: tfsa_first
+      finalNetWorth: 3926438.2539158943
+      totalUnfunded: 0
+    assumptions: &a1
+      inflationRate: 0.02
+      expectedReturn: 0.05
+      retirementAge: 65
+      cppStartAge: 65
+      oasStartAge: 65
+      strategy: tfsa_first
+    warnings: &a2
+      - Informational model only; not financial advice.
+      - Deterministic engine output depends on provided assumptions.
+    annualProjection:
+      - year: 2026
+        age: 38
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 508200
+      - year: 2027
+        age: 39
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 558810
+      - year: 2028
+        age: 40
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 611950.5
+      - year: 2029
+        age: 41
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 667748.025
+      - year: 2030
+        age: 42
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 726335.4262499999
+      - year: 2031
+        age: 43
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 787852.1975624999
+      - year: 2032
+        age: 44
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 852444.807440625
+      - year: 2033
+        age: 45
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 920267.0478126563
+      - year: 2034
+        age: 46
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 991480.400203289
+      - year: 2035
+        age: 47
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 1066254.4202134535
+      - year: 2036
+        age: 48
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 1144767.1412241263
+      - year: 2037
+        age: 49
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 1227205.4982853325
+      - year: 2038
+        age: 50
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 1313765.7731995992
+      - year: 2039
+        age: 51
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 1404654.061859579
+      - year: 2040
+        age: 52
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 1500086.764952558
+      - year: 2041
+        age: 53
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 1600291.103200186
+      - year: 2042
+        age: 54
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 1705505.6583601953
+      - year: 2043
+        age: 55
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 1815980.9412782048
+      - year: 2044
+        age: 56
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 1931979.9883421152
+      - year: 2045
+        age: 57
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 2053778.9877592209
+      - year: 2046
+        age: 58
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 2181667.937147182
+      - year: 2047
+        age: 59
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 2315951.3340045414
+      - year: 2048
+        age: 60
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 2456948.9007047685
+      - year: 2049
+        age: 61
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 2604996.345740007
+      - year: 2050
+        age: 62
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 2760446.163027007
+      - year: 2051
+        age: 63
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 2923668.4711783575
+      - year: 2052
+        age: 64
+        spendingNeed: 0
+        benefitsIncome: 0
+        withdrawalsPlanned: 0
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 3095051.8947372753
+      - year: 2053
+        age: 65
+        spendingNeed: 105826.96155174857
+        benefitsIncome: 24500
+        withdrawalsPlanned: 81326.96155174857
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 3189611.179844803
+      - year: 2054
+        age: 66
+        spendingNeed: 107943.50078278354
+        benefitsIncome: 24500
+        withdrawalsPlanned: 83443.50078278354
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 3286676.0630151206
+      - year: 2055
+        age: 67
+        spendingNeed: 110102.37079843921
+        benefitsIncome: 24500
+        withdrawalsPlanned: 85602.37079843921
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 3386327.3768275157
+      - year: 2056
+        age: 68
+        spendingNeed: 112304.418214408
+        benefitsIncome: 24500
+        withdrawalsPlanned: 87804.418214408
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 3488649.106543763
+      - year: 2057
+        age: 69
+        spendingNeed: 114550.50657869616
+        benefitsIncome: 24500
+        withdrawalsPlanned: 90050.50657869616
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 3593728.5299633197
+      - year: 2058
+        age: 70
+        spendingNeed: 116841.51671027008
+        benefitsIncome: 24500
+        withdrawalsPlanned: 92341.51671027008
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 3701656.3639157023
+      - year: 2059
+        age: 71
+        spendingNeed: 119178.34704447548
+        benefitsIncome: 24500
+        withdrawalsPlanned: 94678.34704447548
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 3812526.917714788
+      - year: 2060
+        age: 72
+        spendingNeed: 121561.913985365
+        benefitsIncome: 24500
+        withdrawalsPlanned: 97061.913985365
+        taxFromWithdrawals: 0
+        unfundedAmount: 0
+        netWorth: 3926438.2539158943
+  sensitivity:
+    - id: low_return
+      assumptions:
+        inflationRate: 0.02
+        expectedReturn: 0.04
+        retirementAge: 65
+        cppStartAge: 65
+        oasStartAge: 65
+        strategy: tfsa_first
+      finalNetWorth: 2804744.650153758
+      totalUnfunded: 0
+    - id: base_case
+      assumptions:
+        inflationRate: 0.02
+        expectedReturn: 0.05
+        retirementAge: 65
+        cppStartAge: 65
+        oasStartAge: 65
+        strategy: tfsa_first
+      finalNetWorth: 3926438.2539158943
+      totalUnfunded: 0
+    - id: high_return
+      assumptions:
+        inflationRate: 0.02
+        expectedReturn: 0.060000000000000005
+        retirementAge: 65
+        cppStartAge: 65
+        oasStartAge: 65
+        strategy: tfsa_first
+      finalNetWorth: 5443545.880099634
+      totalUnfunded: 0
+    - id: high_inflation
+      assumptions:
+        inflationRate: 0.03
+        expectedReturn: 0.05
+        retirementAge: 65
+        cppStartAge: 65
+        oasStartAge: 65
+        strategy: tfsa_first
+      finalNetWorth: 3535772.167597799
+      totalUnfunded: 0
+  simulation:
+    seed: 42
+    runs: 8
+    returnBound: 0.01
+    warnings:
+      - Bounded simulation is illustrative only and not a prediction.
+      - Pseudo-random sampling is deterministic when seed is fixed.
+    outputs:
+      - run: 1
+        expectedReturn: 0.04504690349567682
+        finalNetWorth: 3328468.5563857127
+        totalUnfunded: 0
+      - run: 2
+        expectedReturn: 0.04176250090822578
+        finalNetWorth: 2978609.7915747534
+        totalUnfunded: 0
+      - run: 3
+        expectedReturn: 0.05154562396463007
+        finalNetWorth: 4132113.347444581
+        totalUnfunded: 0
+      - run: 4
+        expectedReturn: 0.04445108531974256
+        finalNetWorth: 3262389.5541231884
+        totalUnfunded: 0
+      - run: 5
+        expectedReturn: 0.04751320394221693
+        finalNetWorth: 3615028.210666414
+        totalUnfunded: 0
+      - run: 6
+        expectedReturn: 0.040513278096914296
+        finalNetWorth: 2854421.961740829
+        totalUnfunded: 0
+      - run: 7
+        expectedReturn: 0.048945625717751684
+        finalNetWorth: 3791541.1661446355
+        totalUnfunded: 0
+      - run: 8
+        expectedReturn: 0.04236920007504523
+        finalNetWorth: 3040641.7385682347
+        totalUnfunded: 0
+  sustainability:
+    preferences: null
+    metrics:
+      - metric_key: fossil_exposure
+        availability_state: modeled
+        modeled_value: 15.74
+        unit: "% portfolio"
+        source_reference: Modeled from account-type exposure assumptions (OpenWealth
+          baseline 2026)
+        confidence: medium
+      - metric_key: carbon_intensity
+        availability_state: modeled
+        modeled_value: 120.1
+        unit: tCO2e / $M revenue
+        source_reference: Modeled from account-type exposure assumptions (OpenWealth
+          baseline 2026)
+        confidence: medium
+      - metric_key: renewable_transition_exposure
+        availability_state: modeled
+        modeled_value: 17.72
+        unit: "% portfolio"
+        source_reference: Modeled from account-type exposure assumptions (OpenWealth
+          baseline 2026)
+        confidence: medium
+      - metric_key: social_community_exposure
+        availability_state: modeled
+        modeled_value: 8.59
+        unit: "% portfolio"
+        source_reference: Modeled from account-type exposure assumptions (OpenWealth
+          baseline 2026)
+        confidence: medium
+      - metric_key: controversial_sector_exposure
+        availability_state: modeled
+        modeled_value: 5.87
+        unit: "% portfolio"
+        source_reference: Modeled from account-type exposure assumptions (OpenWealth
+          baseline 2026)
+        confidence: medium
+    has_opaque_score: false
+    climate_overlays:
+      - overlay_key: rapid_transition
+        label: Rapid transition
+        projected_return_delta: -0.007
+        adjusted_final_net_worth: 3070594.51
+        risk_note: Near-term repricing risk for carbon-intensive holdings
+        availability_state: modeled
+        confidence: medium
+        source_reference: OpenWealth climate overlay assumptions (scenario-based, non-predictive)
+      - overlay_key: delayed_transition
+        label: Delayed transition
+        projected_return_delta: -0.003
+        adjusted_final_net_worth: 3534510.8
+        risk_note: Longer period of policy uncertainty and staggered repricing
+        availability_state: modeled
+        confidence: medium
+        source_reference: OpenWealth climate overlay assumptions (scenario-based, non-predictive)
+      - overlay_key: worsened_physical_risk
+        label: Worsened physical risk
+        projected_return_delta: -0.01
+        adjusted_final_net_worth: 2762043.94
+        risk_note: Higher expected loss rates from physical climate events
+        availability_state: modeled
+        confidence: medium
+        source_reference: OpenWealth climate overlay assumptions (scenario-based, non-predictive)
+  assumptions: *a1
+  warnings: *a2

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OpenWealth Report - Engine Fixture Household</title>
+  </head>
+  <body>
+    <header>
+      <h1>OpenWealth Report - Engine Fixture Household</h1>
+      <p>Scenario: Report Baseline | Generated: 2026-03-08T23:00:00Z</p>
+    </header>
+
+    <section>
+      <h2>Disclaimer</h2>
+      <p>OpenWealth outputs are informational planning projections only and are not financial advice.</p>
+    </section>
+
+    <section>
+      <h2>Profile</h2>
+      <p>Engine Fixture Household (ON) - 1 person(s)</p>
+    </section>
+
+    <section>
+      <h2>Accounts</h2>
+      <p>Total balance: 460000</p>
+    </section>
+
+    <section>
+      <h2>Scenario Summary</h2>
+      <p>Final net worth: 3926438.2539158943</p>
+      <p>Total unfunded: 0</p>
+    </section>
+
+    <section>
+      <h2>Assumptions</h2>
+      <pre>{
+  "inflationRate": 0.02,
+  "expectedReturn": 0.05,
+  "retirementAge": 65,
+  "cppStartAge": 65,
+  "oasStartAge": 65,
+  "strategy": "tfsa_first"
+}</pre>
+    </section>
+
+    <section>
+      <h2>Caveats</h2>
+      <pre>[
+  "Informational model only; not financial advice.",
+  "Deterministic engine output depends on provided assumptions."
+]</pre>
+    </section>
+
+    <section>
+      <h2>Sustainability and climate context</h2>
+      <pre>{
+  "section_id": "sustainability",
+  "title": "Sustainability and climate context",
+  "disclaimer": "Descriptive planning context only. Not an investment recommendation.",
+  "metrics": [
+    {
+      "metric_key": "fossil_exposure",
+      "availability": "Modeled",
+      "value": 15.74,
+      "unit": "% portfolio",
+      "confidence": "medium",
+      "source_reference": "Modeled from account-type exposure assumptions (OpenWealth baseline 2026)"
+    },
+    {
+      "metric_key": "carbon_intensity",
+      "availability": "Modeled",
+      "value": 120.1,
+      "unit": "tCO2e / $M revenue",
+      "confidence": "medium",
+      "source_reference": "Modeled from account-type exposure assumptions (OpenWealth baseline 2026)"
+    },
+    {
+      "metric_key": "renewable_transition_exposure",
+      "availability": "Modeled",
+      "value": 17.72,
+      "unit": "% portfolio",
+      "confidence": "medium",
+      "source_reference": "Modeled from account-type exposure assumptions (OpenWealth baseline 2026)"
+    },
+    {
+      "metric_key": "social_community_exposure",
+      "availability": "Modeled",
+      "value": 8.59,
+      "unit": "% portfolio",
+      "confidence": "medium",
+      "source_reference": "Modeled from account-type exposure assumptions (OpenWealth baseline 2026)"
+    },
+    {
+      "metric_key": "controversial_sector_exposure",
+      "availability": "Modeled",
+      "value": 5.87,
+      "unit": "% portfolio",
+      "confidence": "medium",
+      "source_reference": "Modeled from account-type exposure assumptions (OpenWealth baseline 2026)"
+    }
+  ],
+  "overlays": [
+    {
+      "overlay_key": "rapid_transition",
+      "label": "Rapid transition",
+      "projected_return_delta": -0.007,
+      "adjusted_final_net_worth": 3070594.51,
+      "risk_note": "Near-term repricing risk for carbon-intensive holdings",
+      "availability_state": "modeled",
+      "confidence": "medium",
+      "source_reference": "OpenWealth climate overlay assumptions (scenario-based, non-predictive)"
+    },
+    {
+      "overlay_key": "delayed_transition",
+      "label": "Delayed transition",
+      "projected_return_delta": -0.003,
+      "adjusted_final_net_worth": 3534510.8,
+      "risk_note": "Longer period of policy uncertainty and staggered repricing",
+      "availability_state": "modeled",
+      "confidence": "medium",
+      "source_reference": "OpenWealth climate overlay assumptions (scenario-based, non-predictive)"
+    },
+    {
+      "overlay_key": "worsened_physical_risk",
+      "label": "Worsened physical risk",
+      "projected_return_delta": -0.01,
+      "adjusted_final_net_worth": 2762043.94,
+      "risk_note": "Higher expected loss rates from physical climate events",
+      "availability_state": "modeled",
+      "confidence": "medium",
+      "source_reference": "OpenWealth climate overlay assumptions (scenario-based, non-predictive)"
+    }
+  ]
+}</pre>
+    </section>
+
+    <section>
+      <h2>Recommended next questions</h2>
+      <pre>[
+  "Should retirement age assumptions be stress-tested by +/- 2 years?",
+  "Are CPP and OAS start ages aligned with liquidity preferences?",
+  "Do account contribution assumptions reflect expected cashflow?",
+  "Which warnings should be resolved before relying on this scenario?"
+]</pre>
+    </section>
+
+    <section>
+      <h2>Change log</h2>
+      <pre>[
+  {
+    "timestamp": "2026-03-08T23:00:00Z",
+    "action": "report_generated",
+    "detail": "Generated portable HTML + YAML bundle"
+  }
+]</pre>
+    </section>
+
+    <script type="application/json" id="openwealth-report-metadata">{"generated_at":"2026-03-08T23:00:00Z","schema_version":"1.0.0","household_id":"hh_engine_001","scenario_name":"Report Baseline","disclaimer":"OpenWealth outputs are informational planning projections only and are not financial advice."}</script>
+  </body>
+</html>

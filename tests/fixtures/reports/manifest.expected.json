@@ -1,0 +1,34 @@
+{
+  "manifest_version": "1.0.0",
+  "generated_at": "2026-03-08T23:00:00Z",
+  "bundle_name": "openwealth-privacy-first-investment-context-dashboard-20260308-v1",
+  "schema_version": "1.0.0",
+  "household_id": "hh_engine_001",
+  "scenario_name": "Report Baseline",
+  "warnings_summary": [
+    "Informational model only; not financial advice.",
+    "Deterministic engine output depends on provided assumptions."
+  ],
+  "artifacts": [
+    {
+      "name": "report.html",
+      "sha256": "4753029db2bd00712c76e385ea7c013037cf6421e97f850d77b5d07607a21bd8",
+      "size_bytes": 5202
+    },
+    {
+      "name": "household.yaml",
+      "sha256": "db5002f366a3b39481781bdc99aaacf7ce815493c11b4812a4a18e1977b66d32",
+      "size_bytes": 1228
+    },
+    {
+      "name": "scenario-results.yaml",
+      "sha256": "b9f896ff0fa158379fd51ab4766dae4ed21b2e6a037e21726adb5f86dafca759",
+      "size_bytes": 13218
+    },
+    {
+      "name": "assumptions.yaml",
+      "sha256": "5ad7366d793de0b28f0da6b133feb9968f352e0cdb571d9d02cee41d89e9434c",
+      "size_bytes": 286
+    }
+  ]
+}

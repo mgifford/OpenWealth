@@ -3,3 +3,10 @@ export function appName() {
 }
 
 export { buildReportSections } from "./reports/index.js";
+export {
+  assembleReport,
+  exportYamlArtifacts,
+  buildManifest,
+  packageReportBundle,
+  serializeBundle
+} from "./reports/index.js";

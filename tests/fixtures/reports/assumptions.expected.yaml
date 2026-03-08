@@ -1,0 +1,11 @@
+schema_version: 1.0.0
+assumptions:
+  inflationRate: 0.02
+  expectedReturn: 0.05
+  retirementAge: 65
+  cppStartAge: 65
+  oasStartAge: 65
+  strategy: tfsa_first
+warnings:
+  - Informational model only; not financial advice.
+  - Deterministic engine output depends on provided assumptions.

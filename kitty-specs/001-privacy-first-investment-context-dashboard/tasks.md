@@ -238,12 +238,12 @@
 **Estimated prompt size**: ~400 lines
 
 ### Included Subtasks
-- [ ] T041 Implement report assembler for household summary, accounts, scenarios, assumptions, caveats, sustainability/climate.
-- [ ] T042 Implement YAML artifact writers (`household.yaml`, `scenario-results.yaml`, `assumptions.yaml`).
-- [ ] T043 Implement manifest generator with versions, timestamps, hashes, warnings summary.
-- [ ] T044 Implement downloadable bundle packaging and offline-friendly assets.
-- [ ] T045 [P] Implement report metadata embedding and non-advisory disclaimers in all relevant sections.
-- [ ] T046 Add report generation tests and golden-output fixtures.
+- [x] T041 Implement report assembler for household summary, accounts, scenarios, assumptions, caveats, sustainability/climate.
+- [x] T042 Implement YAML artifact writers (`household.yaml`, `scenario-results.yaml`, `assumptions.yaml`).
+- [x] T043 Implement manifest generator with versions, timestamps, hashes, warnings summary.
+- [x] T044 Implement downloadable bundle packaging and offline-friendly assets.
+- [x] T045 [P] Implement report metadata embedding and non-advisory disclaimers in all relevant sections.
+- [x] T046 Add report generation tests and golden-output fixtures.
 
 ### Implementation Notes
 - Bundle naming should be deterministic and timestamped.

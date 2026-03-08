@@ -1,0 +1,17 @@
+{
+  "contract_name": "llm_scenario_draft",
+  "version": "1.0.0",
+  "required_fields": [
+    "schema_version",
+    "scenario_draft",
+    "missing_inputs",
+    "assumptions",
+    "confidence_notes",
+    "disclaimer"
+  ],
+  "prohibited_authority": [
+    "tax_rule_authority",
+    "benefit_rule_authority",
+    "prescriptive_advice"
+  ]
+}

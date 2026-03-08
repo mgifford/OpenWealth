@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openwealth.dev/schemas/llm-explanation-summary.schema.json",
+  "title": "LlmExplanationSummary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "summary",
+    "assumptions",
+    "missing_inputs",
+    "confidence_notes",
+    "disclaimer"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^1\\.[0-9]+\\.[0-9]+$" },
+    "summary": { "type": "string", "minLength": 1 },
+    "assumptions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "missing_inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "reason"],
+        "properties": {
+          "field": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 },
+          "prompt": { "type": "string" },
+          "severity": { "type": "string", "enum": ["low", "medium", "high"] }
+        }
+      }
+    },
+    "confidence_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["topic", "confidence", "note"],
+        "properties": {
+          "topic": { "type": "string", "minLength": 1 },
+          "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+          "note": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "disclaimer": { "type": "string", "minLength": 1 }
+  }
+}

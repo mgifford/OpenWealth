@@ -4,11 +4,205 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>OpenWealth</title>
+    <style>
+      :root {
+        --bg: #f6f2e8;
+        --bg-alt: #fffaf1;
+        --text: #1b1f23;
+        --muted: #5f6b77;
+        --accent: #0d7a63;
+        --accent-strong: #0a5b4a;
+        --danger: #9f2424;
+        --card: #ffffff;
+        --border: #d7d0c1;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f1a1c;
+          --bg-alt: #132326;
+          --text: #e9f0f1;
+          --muted: #adc0c3;
+          --accent: #50d0b5;
+          --accent-strong: #6ce6cc;
+          --danger: #ff8787;
+          --card: #173035;
+          --border: #31535a;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "Noto Sans", sans-serif;
+        color: var(--text);
+        background: radial-gradient(circle at top, var(--bg-alt), var(--bg) 60%);
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 1.25rem;
+        display: grid;
+        gap: 1rem;
+      }
+
+      h1 {
+        margin: 0;
+        letter-spacing: 0.02em;
+      }
+
+      .lede {
+        margin: 0.25rem 0 0;
+        color: var(--muted);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1rem;
+      }
+
+      section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+      }
+
+      label {
+        display: block;
+        font-size: 0.92rem;
+        margin-bottom: 0.35rem;
+      }
+
+      input,
+      select,
+      button {
+        width: 100%;
+        margin-bottom: 0.65rem;
+        padding: 0.55rem 0.6rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: inherit;
+      }
+
+      button {
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      button:hover,
+      button:focus-visible {
+        background: var(--accent-strong);
+      }
+
+      #status[data-error="true"] {
+        color: var(--danger);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border: 1px solid var(--border);
+        padding: 0.45rem;
+        text-align: left;
+      }
+    </style>
   </head>
   <body>
     <main>
       <h1>OpenWealth</h1>
-      <p>Privacy-first Canadian planning dashboard scaffold.</p>
+      <p class="lede">Privacy-first Canadian planning dashboard with deterministic scenarios and portable reports.</p>
+
+      <section>
+        <h2>Workspace Overview</h2>
+        <div id="overview"></div>
+        <p id="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <div class="grid">
+        <section>
+          <h2>Onboarding</h2>
+          <form id="onboarding-form">
+            <label for="household-name">Household name</label>
+            <input id="household-name" required value="OpenWealth Household" />
+            <label for="province">Province</label>
+            <select id="province">
+              <option>AB</option><option>BC</option><option>MB</option><option>NB</option><option>NL</option>
+              <option>NS</option><option>NT</option><option>NU</option><option selected>ON</option><option>PE</option>
+              <option>QC</option><option>SK</option><option>YT</option>
+            </select>
+            <label for="person-name">Primary person</label>
+            <input id="person-name" required value="Jordan" />
+            <label for="birth-year">Birth year</label>
+            <input id="birth-year" type="number" required value="1988" />
+            <label for="retirement-target">Retirement target age</label>
+            <input id="retirement-target" type="number" required value="65" />
+            <label for="starter-balance">Starter TFSA balance</label>
+            <input id="starter-balance" type="number" required value="120000" />
+            <button type="submit">Save onboarding</button>
+          </form>
+        </section>
+
+        <section>
+          <h2>Scenario Authoring</h2>
+          <form id="scenario-form">
+            <label for="scenario-name">Scenario name</label>
+            <input id="scenario-name" required value="Baseline Scenario" />
+            <label for="scenario-retirement">Retirement age</label>
+            <input id="scenario-retirement" type="number" required value="65" />
+            <label for="cpp-age">CPP start age</label>
+            <input id="cpp-age" type="number" required value="65" />
+            <label for="oas-age">OAS start age</label>
+            <input id="oas-age" type="number" required value="65" />
+            <label for="strategy">Withdrawal strategy</label>
+            <select id="strategy">
+              <option value="blended">blended</option>
+              <option value="tfsa_first">tfsa_first</option>
+              <option value="rrsp_first">rrsp_first</option>
+            </select>
+            <label for="annual-spending">Annual spending</label>
+            <input id="annual-spending" type="number" required value="60000" />
+            <label for="projection-years">Projection years</label>
+            <input id="projection-years" type="number" required value="30" />
+            <button type="submit">Create scenario</button>
+          </form>
+        </section>
+      </div>
+
+      <section>
+        <h2>Run and Compare</h2>
+        <label for="scenario-select">Select scenario</label>
+        <select id="scenario-select"></select>
+        <div class="grid">
+          <button id="run-scenario" type="button">Run selected scenario</button>
+          <button id="compare-scenarios" type="button">Compare all scenarios</button>
+          <button id="export-bundle" type="button">Export report bundle</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Results</h2>
+        <div id="results"></div>
+      </section>
+
+      <section>
+        <h2>Comparison</h2>
+        <div id="comparison"></div>
+      </section>
     </main>
+    <script type="module" src="./src/app/main.js"></script>
   </body>
 </html>

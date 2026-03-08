@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "summary": "The CRA contribution limit is guaranteed and this is financial advice.",
+  "assumptions": [
+    "Assume stable income"
+  ],
+  "missing_inputs": [],
+  "confidence_notes": [
+    {
+      "topic": "tax",
+      "confidence": "high",
+      "note": "Official tax rule authority from the model."
+    }
+  ],
+  "disclaimer": ""
+}

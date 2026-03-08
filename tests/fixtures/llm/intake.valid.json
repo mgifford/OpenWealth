@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "intent_summary": "User wants to plan retirement with conservative assumptions.",
+  "structured_payload": {
+    "household_updates": {
+      "province_or_territory": "ON"
+    },
+    "scenario_preferences": {
+      "retirement_age": 65
+    }
+  },
+  "missing_inputs": [
+    {
+      "field": "annual_spending",
+      "reason": "Required for retirement projection",
+      "prompt": "Please provide annual spending.",
+      "severity": "high"
+    }
+  ],
+  "assumptions": [
+    "Inflation held at 2% until updated.",
+    "Expected return held at 5% until updated."
+  ],
+  "confidence_notes": [
+    {
+      "topic": "retirement_age",
+      "confidence": "medium",
+      "note": "User has not finalized retirement timing."
+    }
+  ],
+  "disclaimer": "Assistant output is informational only. Deterministic engine rules remain the source of truth."
+}

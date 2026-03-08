@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "scenario_draft": {
+    "name": "Draft Scenario",
+    "retirement_age": 65,
+    "cpp_start_age": 65,
+    "oas_start_age": 65,
+    "withdrawal_strategy": "blended",
+    "annual_spending": 60000
+  },
+  "missing_inputs": [
+    {
+      "field": "projection_years",
+      "reason": "Needed for full report horizon"
+    }
+  ],
+  "assumptions": [
+    "Deterministic engine values remain unchanged"
+  ],
+  "confidence_notes": [
+    {
+      "topic": "withdrawal_strategy",
+      "confidence": "low",
+      "note": "User did not indicate strategy preference."
+    }
+  ],
+  "disclaimer": "Assistant output is informational only. Deterministic engine rules remain the source of truth."
+}

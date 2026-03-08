@@ -6,7 +6,11 @@ export default [
       sourceType: "module",
       globals: {
         console: "readonly",
-        process: "readonly"
+        process: "readonly",
+        document: "readonly",
+        window: "readonly",
+        Blob: "readonly",
+        URL: "readonly"
       }
     },
     rules: {

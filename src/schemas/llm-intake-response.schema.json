@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openwealth.dev/schemas/llm-intake-response.schema.json",
+  "title": "LlmIntakeResponse",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "intent_summary",
+    "structured_payload",
+    "missing_inputs",
+    "assumptions",
+    "confidence_notes",
+    "disclaimer"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^1\\.[0-9]+\\.[0-9]+$" },
+    "intent_summary": { "type": "string", "minLength": 1 },
+    "structured_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "household_updates": { "type": "object" },
+        "scenario_preferences": { "type": "object" }
+      }
+    },
+    "missing_inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "reason"],
+        "properties": {
+          "field": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 },
+          "prompt": { "type": "string" },
+          "severity": { "type": "string", "enum": ["low", "medium", "high"] }
+        }
+      }
+    },
+    "assumptions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "confidence_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["topic", "confidence", "note"],
+        "properties": {
+          "topic": { "type": "string", "minLength": 1 },
+          "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+          "note": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "disclaimer": { "type": "string", "minLength": 1 }
+  }
+}

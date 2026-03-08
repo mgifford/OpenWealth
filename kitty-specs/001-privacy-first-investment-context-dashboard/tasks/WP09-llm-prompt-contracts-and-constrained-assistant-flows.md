@@ -1,7 +1,7 @@
 ---
 work_package_id: WP09
 title: LLM Prompt Contracts And Constrained Assistant Flows
-lane: planned
+lane: completed
 dependencies: [WP03, WP06]
 subtasks:
 - T047
@@ -10,8 +10,8 @@ subtasks:
 - T050
 - T051
 phase: Phase 5 - Assistant Layer
-assignee: ''
-agent: ''
+assignee: GitHub Copilot
+agent: GPT-5.3-Codex
 shell_pid: ''
 review_status: ''
 reviewed_by: ''
@@ -21,6 +21,11 @@ history:
   agent: system
   shell_pid: ''
   action: Prompt generated via /spec-kitty.tasks
+- timestamp: '2026-03-08T23:16:40Z'
+  lane: completed
+  agent: GPT-5.3-Codex
+  shell_pid: ''
+  action: Implemented LLM contracts/schemas, authority guardrails, missing-data and confidence extraction, prompt package generator, and unit/schema tests.
 requirement_refs:
 - FR-007
 - FR-029
@@ -94,3 +99,4 @@ requirement_refs:
 
 ## Activity Log
 - 2026-03-08T20:59:34Z - system - lane=planned - Prompt created.
+- 2026-03-08T23:16:40Z - GPT-5.3-Codex - lane=completed - Added contract JSON descriptors and LLM schemas (intake/scenario/explanation), guardrail and policy filters for prohibited authority claims with mandatory disclaimers, normalized missing-data and confidence extraction, deterministic prompt package generator UX helper, schema coverage tests, and LLM unit tests for validation and policy enforcement.

@@ -13,3 +13,4 @@ export {
 	renderAlternativesPanel
 } from "./sustainability/index.js";
 export { buildReportBundle, createBundleDownloadPayload } from "./export/index.js";
+export { createPromptPackage } from "./prompt-generator/index.js";

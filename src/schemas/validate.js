@@ -16,6 +16,9 @@ const SCHEMA_FILES = {
   provenance: "provenance.schema.json",
   snapshot: "snapshot.schema.json",
   reportManifest: "report-manifest.schema.json",
+  llmIntakeResponse: "llm-intake-response.schema.json",
+  llmScenarioDraft: "llm-scenario-draft.schema.json",
+  llmExplanationSummary: "llm-explanation-summary.schema.json",
   scenarioOverride: "scenario-override.schema.json",
   household: "household.schema.json"
 };

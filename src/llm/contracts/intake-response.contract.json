@@ -1,0 +1,18 @@
+{
+  "contract_name": "llm_intake_response",
+  "version": "1.0.0",
+  "required_fields": [
+    "schema_version",
+    "intent_summary",
+    "structured_payload",
+    "missing_inputs",
+    "assumptions",
+    "confidence_notes",
+    "disclaimer"
+  ],
+  "prohibited_authority": [
+    "tax_rule_authority",
+    "benefit_rule_authority",
+    "guaranteed_returns"
+  ]
+}

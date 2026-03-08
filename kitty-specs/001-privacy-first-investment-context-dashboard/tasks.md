@@ -269,11 +269,11 @@
 **Estimated prompt size**: ~330 lines
 
 ### Included Subtasks
-- [ ] T047 Define structured prompt/response contracts for intake, scenario generation, and narrative summary.
-- [ ] T048 Implement guardrails that block LLM-authored tax/benefit rule authority.
-- [ ] T049 Implement missing-data and confidence-note extraction pipeline.
-- [ ] T050 [P] Implement LLM prompt generator UX tied to current scenario outputs.
-- [ ] T051 Add contract tests validating required output fields and prohibited claims.
+- [x] T047 Define structured prompt/response contracts for intake, scenario generation, and narrative summary.
+- [x] T048 Implement guardrails that block LLM-authored tax/benefit rule authority.
+- [x] T049 Implement missing-data and confidence-note extraction pipeline.
+- [x] T050 [P] Implement LLM prompt generator UX tied to current scenario outputs.
+- [x] T051 Add contract tests validating required output fields and prohibited claims.
 
 ### Implementation Notes
 - Treat LLM as assistant layer only; no direct mutation of canonical rules tables.

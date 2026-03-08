@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openwealth.dev/schemas/household.schema.json",
+  "title": "Household",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "household_id",
+    "name",
+    "province_or_territory",
+    "people",
+    "accounts",
+    "goals",
+    "assumptions",
+    "updated_at"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^1\\.[0-9]+\\.[0-9]+$" },
+    "model_version": { "type": "string" },
+    "household_id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "province_or_territory": {
+      "type": "string",
+      "enum": ["AB", "BC", "MB", "NB", "NL", "NS", "NT", "NU", "ON", "PE", "QC", "SK", "YT"]
+    },
+    "household_composition": { "type": "string" },
+    "people": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "https://openwealth.dev/schemas/person.schema.json" }
+    },
+    "accounts": {
+      "type": "array",
+      "items": { "$ref": "https://openwealth.dev/schemas/account.schema.json" }
+    },
+    "liabilities": {
+      "type": "array",
+      "items": { "$ref": "https://openwealth.dev/schemas/liability.schema.json" }
+    },
+    "income_sources": {
+      "type": "array",
+      "items": { "$ref": "https://openwealth.dev/schemas/income.schema.json" }
+    },
+    "goals": {
+      "type": "array",
+      "items": { "$ref": "https://openwealth.dev/schemas/goal.schema.json" }
+    },
+    "assumptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inflation_rate",
+        "expected_return",
+        "tax_year",
+        "cpp_start_age_options",
+        "oas_start_age_options"
+      ],
+      "properties": {
+        "inflation_rate": { "type": "number", "minimum": 0, "maximum": 0.25 },
+        "expected_return": { "type": "number", "minimum": -0.5, "maximum": 0.5 },
+        "tax_year": { "type": "integer", "minimum": 2000, "maximum": 2200 },
+        "cpp_start_age_options": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "integer", "minimum": 60, "maximum": 70 },
+          "uniqueItems": true
+        },
+        "oas_start_age_options": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "integer", "minimum": 65, "maximum": 75 },
+          "uniqueItems": true
+        },
+        "market_regime": { "type": "string" },
+        "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+        "source_refs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "sustainability_preferences": {
+      "$ref": "https://openwealth.dev/schemas/sustainability.schema.json"
+    },
+    "notes": { "type": "string" },
+    "updated_at": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T" }
+  }
+}

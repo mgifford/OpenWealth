@@ -1,0 +1,7 @@
+{
+  "metric_key": "carbon_intensity",
+  "availability_state": "measured",
+  "measured_value": 42.1,
+  "unit": "tCO2e/$M",
+  "source_reference": "public-dataset-2026"
+}

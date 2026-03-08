@@ -43,6 +43,24 @@ OpenWealth is built around these principles:
 ## Repository Layout
 
 ```text
+src/
+  ui/
+  components/
+  engine/
+  schemas/
+  imports/
+  reports/
+  llm/
+
+tests/
+  unit/
+  schema/
+  regression/
+  fixtures/
+
+data/public/
+examples/
+
 kitty-specs/
   001-privacy-first-investment-context-dashboard/
     spec.md
@@ -52,6 +70,18 @@ kitty-specs/
     tasks.md
     tasks/
 ```
+
+  ## Development Commands
+
+  ```bash
+  npm install
+  npm run dev
+  npm run lint
+  npm run test:schema
+  npm run test:unit
+  npm run test:regression
+  npm run build
+  ```
 
 ## Next Steps
 

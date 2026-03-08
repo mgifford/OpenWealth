@@ -1,0 +1,5 @@
+{
+  "metric_key": "carbon_intensity",
+  "availability_state": "measured",
+  "unit": "tCO2e/$M"
+}

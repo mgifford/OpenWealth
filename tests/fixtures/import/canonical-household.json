@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "household_id": "hh_import_001",
+  "name": "Import Household",
+  "province_or_territory": "ON",
+  "people": [
+    { "person_id": "p_001", "display_name": "Taylor", "birth_year": 1980 }
+  ],
+  "accounts": [
+    {
+      "account_id": "acc_tfsa",
+      "account_type": "tfsa",
+      "ownership": "individual",
+      "currency": "CAD",
+      "current_balance": 10000,
+      "institution": "Maple Bank",
+      "last_updated": "2026-03-08"
+    },
+    {
+      "account_id": "acc_rrsp",
+      "account_type": "rrsp",
+      "ownership": "individual",
+      "currency": "CAD",
+      "current_balance": 25000,
+      "institution": "Maple Bank",
+      "last_updated": "2026-03-08"
+    }
+  ],
+  "goals": [],
+  "assumptions": {
+    "inflation_rate": 0.02,
+    "expected_return": 0.05,
+    "tax_year": 2026,
+    "cpp_start_age_options": [65],
+    "oas_start_age_options": [65]
+  },
+  "updated_at": "2026-03-08T00:00:00Z"
+}

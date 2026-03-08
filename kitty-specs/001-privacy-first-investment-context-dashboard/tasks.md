@@ -20,11 +20,11 @@
 **Estimated prompt size**: ~320 lines
 
 ### Included Subtasks
-- [ ] T001 Create source/test/data directory skeleton aligned to plan structure.
-- [ ] T002 Add package scripts for lint, schema-test, unit-test, regression-test, and build.
-- [ ] T003 [P] Configure formatter/linter with deterministic style rules and no hidden transpilation assumptions.
-- [ ] T004 [P] Add baseline CI workflow for install, lint, schema validation, and unit smoke.
-- [ ] T005 Document local-first/privacy-first development constraints in contributor docs.
+- [x] T001 Create source/test/data directory skeleton aligned to plan structure.
+- [x] T002 Add package scripts for lint, schema-test, unit-test, regression-test, and build.
+- [x] T003 [P] Configure formatter/linter with deterministic style rules and no hidden transpilation assumptions.
+- [x] T004 [P] Add baseline CI workflow for install, lint, schema validation, and unit smoke.
+- [x] T005 Document local-first/privacy-first development constraints in contributor docs.
 
 ### Implementation Notes
 - Keep dependencies minimal and inspectable.
@@ -51,12 +51,12 @@
 **Estimated prompt size**: ~380 lines
 
 ### Included Subtasks
-- [ ] T006 Define household/person/income/goal schemas with required-vs-optional fields and versioning.
-- [ ] T007 Define account/liability schemas for Canadian account set and debt types.
-- [ ] T008 Define scenario-override schema with patch semantics and guardrails.
-- [ ] T009 Define sustainability/climate metric schemas including availability states.
-- [ ] T010 Define provenance, snapshot, and report-manifest schemas.
-- [ ] T011 [P] Implement schema validation module and fixture-based schema tests.
+- [x] T006 Define household/person/income/goal schemas with required-vs-optional fields and versioning.
+- [x] T007 Define account/liability schemas for Canadian account set and debt types.
+- [x] T008 Define scenario-override schema with patch semantics and guardrails.
+- [x] T009 Define sustainability/climate metric schemas including availability states.
+- [x] T010 Define provenance, snapshot, and report-manifest schemas.
+- [x] T011 [P] Implement schema validation module and fixture-based schema tests.
 
 ### Implementation Notes
 - Keep schema modules decoupled from engine implementation.
@@ -83,12 +83,12 @@
 **Estimated prompt size**: ~460 lines
 
 ### Included Subtasks
-- [ ] T012 Implement account contribution/withdrawal rule modules (TFSA, RRSP, FHSA, RESP, non-registered).
-- [ ] T013 Implement CPP/OAS timing scenario logic with explicit assumptions output.
-- [ ] T014 Implement retirement cashflow projection pipeline with inflation and return assumptions.
-- [ ] T015 Implement withdrawal strategy variants (TFSA-first, RRSP-first, blended).
-- [ ] T016 Implement sensitivity matrix and bounded scenario-distribution simulation mode.
-- [ ] T017 Add deterministic regression tests for core engine pathways.
+- [x] T012 Implement account contribution/withdrawal rule modules (TFSA, RRSP, FHSA, RESP, non-registered).
+- [x] T013 Implement CPP/OAS timing scenario logic with explicit assumptions output.
+- [x] T014 Implement retirement cashflow projection pipeline with inflation and return assumptions.
+- [x] T015 Implement withdrawal strategy variants (TFSA-first, RRSP-first, blended).
+- [x] T016 Implement sensitivity matrix and bounded scenario-distribution simulation mode.
+- [x] T017 Add deterministic regression tests for core engine pathways.
 
 ### Implementation Notes
 - Avoid hidden randomness in deterministic path.
@@ -115,11 +115,11 @@
 **Estimated prompt size**: ~340 lines
 
 ### Included Subtasks
-- [ ] T018 Implement storage adapters (`localStorage` settings + IndexedDB canonical/snapshot stores).
-- [ ] T019 Implement state repository for household/scenario/draft lifecycle management.
-- [ ] T020 Implement snapshot creation/retrieval/rollback primitives.
-- [ ] T021 [P] Implement migration/version-upgrade handlers for persisted schemas.
-- [ ] T022 Add persistence integration tests for refresh/reload/rollback behavior.
+- [x] T018 Implement storage adapters (`localStorage` settings + IndexedDB canonical/snapshot stores).
+- [x] T019 Implement state repository for household/scenario/draft lifecycle management.
+- [x] T020 Implement snapshot creation/retrieval/rollback primitives.
+- [x] T021 [P] Implement migration/version-upgrade handlers for persisted schemas.
+- [x] T022 Add persistence integration tests for refresh/reload/rollback behavior.
 
 ### Implementation Notes
 - Keep storage layer abstract to allow optional power-user Git sync later.
@@ -145,12 +145,12 @@
 **Estimated prompt size**: ~470 lines
 
 ### Included Subtasks
-- [ ] T023 Implement YAML/JSON/CSV parsers and normalization pipeline.
-- [ ] T024 Implement record matching and duplicate detection strategy.
-- [ ] T025 Implement structured diff generator (human-readable + machine-readable forms).
-- [ ] T026 Implement approval gate and merge applicator with non-destructive semantics.
-- [ ] T027 Implement field-level provenance recording and snapshot-before-apply enforcement.
-- [ ] T028 Add parser/merge regression tests covering conflicting and malformed imports.
+- [x] T023 Implement YAML/JSON/CSV parsers and normalization pipeline.
+- [x] T024 Implement record matching and duplicate detection strategy.
+- [x] T025 Implement structured diff generator (human-readable + machine-readable forms).
+- [x] T026 Implement approval gate and merge applicator with non-destructive semantics.
+- [x] T027 Implement field-level provenance recording and snapshot-before-apply enforcement.
+- [x] T028 Add parser/merge regression tests covering conflicting and malformed imports.
 
 ### Implementation Notes
 - Keep a strict import lifecycle: parse -> validate -> normalize -> match -> preview -> approve -> snapshot -> apply.

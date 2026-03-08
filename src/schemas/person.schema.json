@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openwealth.dev/schemas/person.schema.json",
+  "title": "Person",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["person_id", "display_name", "birth_year"],
+  "properties": {
+    "person_id": { "type": "string", "minLength": 1 },
+    "display_name": { "type": "string", "minLength": 1 },
+    "birth_year": { "type": "integer", "minimum": 1900, "maximum": 2100 },
+    "employment_status": {
+      "type": "string",
+      "enum": ["full_time", "part_time", "self_employed", "retired", "unemployed", "other"]
+    },
+    "annual_income": { "type": "number", "minimum": 0 },
+    "retirement_target_age": { "type": "integer", "minimum": 30, "maximum": 75 }
+  }
+}

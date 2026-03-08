@@ -1,7 +1,7 @@
 ---
 work_package_id: WP01
 title: Foundation Scaffold And Quality Gates
-lane: planned
+lane: in_progress
 dependencies: []
 subtasks:
 - T001
@@ -10,8 +10,8 @@ subtasks:
 - T004
 - T005
 phase: Phase 1 - Setup
-assignee: ''
-agent: ''
+assignee: GitHub Copilot
+agent: GPT-5.3-Codex
 shell_pid: ''
 review_status: ''
 reviewed_by: ''
@@ -21,6 +21,11 @@ history:
   agent: system
   shell_pid: ''
   action: Prompt generated via /spec-kitty.tasks
+- timestamp: '2026-03-08T21:38:35Z'
+  lane: in_progress
+  agent: GPT-5.3-Codex
+  shell_pid: ''
+  action: Initiated WP01 scaffold, quality gates, CI baseline, and contributor constraints docs.
 requirement_refs:
 - FR-008
 - FR-009
@@ -97,3 +102,4 @@ requirement_refs:
 
 ## Activity Log
 - 2026-03-08T20:59:34Z - system - lane=planned - Prompt created.
+- 2026-03-08T21:38:35Z - GPT-5.3-Codex - lane=in_progress - Scaffolded src/tests/data/examples layout, scripts/config, CI workflow, and docs; lint/schema/unit/regression/build commands pass locally.

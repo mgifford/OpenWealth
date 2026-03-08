@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openwealth.dev/schemas/climate-metrics.schema.json",
+  "title": "ClimateMetricRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metric_key", "availability_state"],
+  "properties": {
+    "metric_key": {
+      "type": "string",
+      "enum": [
+        "fossil_exposure",
+        "carbon_intensity",
+        "renewable_transition_exposure",
+        "social_community_exposure",
+        "controversial_sector_exposure"
+      ]
+    },
+    "availability_state": { "type": "string", "enum": ["measured", "modeled", "unavailable"] },
+    "measured_value": { "type": "number" },
+    "modeled_value": { "type": "number" },
+    "unit": { "type": "string" },
+    "source_reference": { "type": "string" },
+    "confidence": { "type": "string", "enum": ["low", "medium", "high"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "availability_state": { "const": "measured" } }, "required": ["availability_state"] },
+      "then": { "required": ["measured_value", "unit"] }
+    },
+    {
+      "if": { "properties": { "availability_state": { "const": "modeled" } }, "required": ["availability_state"] },
+      "then": { "required": ["modeled_value", "unit"] }
+    }
+  ]
+}

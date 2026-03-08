@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openwealth.dev/schemas/income.schema.json",
+  "title": "IncomeSource",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["income_id", "source_type", "annual_amount", "taxable"],
+  "properties": {
+    "income_id": { "type": "string", "minLength": 1 },
+    "source_type": {
+      "type": "string",
+      "enum": ["employment", "self_employment", "rental", "dividend", "interest", "pension", "benefit", "other"]
+    },
+    "annual_amount": { "type": "number", "minimum": 0 },
+    "taxable": { "type": "boolean" },
+    "start_date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "end_date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "confidence": { "type": "string", "enum": ["low", "medium", "high"] }
+  }
+}

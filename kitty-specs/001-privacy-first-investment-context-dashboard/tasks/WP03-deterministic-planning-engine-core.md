@@ -1,7 +1,7 @@
 ---
 work_package_id: WP03
 title: Deterministic Planning Engine Core
-lane: planned
+lane: completed
 dependencies: [WP02]
 subtasks:
 - T012
@@ -11,8 +11,8 @@ subtasks:
 - T016
 - T017
 phase: Phase 2 - Core Modeling
-assignee: ''
-agent: ''
+assignee: GitHub Copilot
+agent: GPT-5.3-Codex
 shell_pid: ''
 review_status: ''
 reviewed_by: ''
@@ -22,6 +22,11 @@ history:
   agent: system
   shell_pid: ''
   action: Prompt generated via /spec-kitty.tasks
+- timestamp: '2026-03-08T21:52:02Z'
+  lane: completed
+  agent: GPT-5.3-Codex
+  shell_pid: ''
+  action: Implemented deterministic engine core modules, benefit timing, strategies, sensitivity/simulation, and passing regression coverage.
 requirement_refs:
 - FR-004
 - FR-005
@@ -108,3 +113,4 @@ requirement_refs:
 
 ## Activity Log
 - 2026-03-08T20:59:34Z - system - lane=planned - Prompt created.
+- 2026-03-08T21:52:02Z - GPT-5.3-Codex - lane=completed - Added Canadian account-rule handlers, CPP/OAS timing calculations, annual projection pipeline, TFSA-first/RRSP-first/blended strategy planner, deterministic sensitivity matrix, seeded bounded simulation, and regression fixtures/tests.

@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "household_id": "hh_001",
+  "name": "Sample Household",
+  "province_or_territory": "ON",
+  "people": [
+    {
+      "person_id": "p_001",
+      "display_name": "Alex Example",
+      "birth_year": 1985,
+      "retirement_target_age": 65
+    }
+  ],
+  "accounts": [
+    {
+      "account_id": "a_001",
+      "account_type": "tfsa",
+      "ownership": "individual",
+      "currency": "CAD",
+      "current_balance": 12500,
+      "last_updated": "2026-03-08"
+    }
+  ],
+  "goals": [
+    {
+      "goal_id": "g_001",
+      "goal_type": "retirement_income",
+      "target_amount": 1000000,
+      "target_date": "2048-12-31"
+    }
+  ],
+  "assumptions": {
+    "inflation_rate": 0.02,
+    "expected_return": 0.05,
+    "tax_year": 2026,
+    "cpp_start_age_options": [65, 70],
+    "oas_start_age_options": [65, 70]
+  },
+  "updated_at": "2026-03-08T21:00:00Z"
+}

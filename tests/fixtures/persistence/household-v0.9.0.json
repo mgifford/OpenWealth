@@ -1,0 +1,19 @@
+{
+  "household_id": "hh_migrate_001",
+  "name": "Legacy Household",
+  "province_or_territory": "ON",
+  "people": [
+    {
+      "person_id": "p_migrate_001",
+      "display_name": "Legacy Person",
+      "birth_year": 1988
+    }
+  ],
+  "assumptions": {
+    "inflation_rate": 0.02,
+    "expected_return": 0.04,
+    "tax_year": 2026,
+    "cpp_start_age_options": [65],
+    "oas_start_age_options": [65]
+  }
+}

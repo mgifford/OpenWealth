@@ -1,0 +1,2 @@
+account_id,account_type,ownership,currency,current_balance,institution,last_updated,unexpected_column
+acc_tfsa,tfsa,individual,CAD,13000,Maple Bank,2026-03-11,ignored

@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "household_id": "hh_engine_001",
+  "name": "Engine Fixture Household",
+  "province_or_territory": "ON",
+  "people": [
+    {
+      "person_id": "p_engine_001",
+      "display_name": "Jordan Sample",
+      "birth_year": 1986,
+      "retirement_target_age": 65
+    }
+  ],
+  "accounts": [
+    {
+      "account_id": "acc_tfsa",
+      "account_type": "tfsa",
+      "ownership": "individual",
+      "currency": "CAD",
+      "current_balance": 120000,
+      "annual_contribution": 7000,
+      "last_updated": "2026-03-08"
+    },
+    {
+      "account_id": "acc_rrsp",
+      "account_type": "rrsp",
+      "ownership": "individual",
+      "currency": "CAD",
+      "current_balance": 250000,
+      "annual_contribution": 12000,
+      "last_updated": "2026-03-08"
+    },
+    {
+      "account_id": "acc_nonreg",
+      "account_type": "non_registered",
+      "ownership": "individual",
+      "currency": "CAD",
+      "current_balance": 90000,
+      "annual_contribution": 5000,
+      "last_updated": "2026-03-08"
+    }
+  ],
+  "goals": [
+    {
+      "goal_id": "goal_retire",
+      "goal_type": "retirement_income",
+      "target_amount": 1500000,
+      "target_date": "2052-12-31"
+    }
+  ],
+  "assumptions": {
+    "inflation_rate": 0.02,
+    "expected_return": 0.05,
+    "tax_year": 2026,
+    "cpp_start_age_options": [65, 70],
+    "oas_start_age_options": [65, 70]
+  },
+  "updated_at": "2026-03-08T21:00:00Z"
+}

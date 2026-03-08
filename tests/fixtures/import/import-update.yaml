@@ -1,0 +1,8 @@
+accounts:
+  - account_id: acc_tfsa
+    account_type: tfsa
+    ownership: individual
+    currency: CAD
+    current_balance: 12500
+    institution: Maple Bank
+    last_updated: "2026-03-10"

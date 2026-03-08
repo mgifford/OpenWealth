@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openwealth.dev/schemas/sustainability.schema.json",
+  "title": "SustainabilityPreference",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["exclusions", "priorities", "tradeoff_tolerance"],
+  "properties": {
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "fossil_fuel_producers",
+          "weapons",
+          "tobacco",
+          "controversial_labor",
+          "high_carbon_utilities",
+          "other"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "priorities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fossil_exposure",
+        "carbon_intensity",
+        "renewable_transition",
+        "social_community",
+        "controversial_sector"
+      ],
+      "properties": {
+        "fossil_exposure": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "carbon_intensity": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "renewable_transition": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "social_community": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "controversial_sector": { "type": "integer", "minimum": 0, "maximum": 5 }
+      }
+    },
+    "tradeoff_tolerance": { "type": "string", "enum": ["low", "medium", "high"] },
+    "local_investment_preference": { "type": "boolean" },
+    "indigenous_rights_consideration": { "type": "boolean" }
+  }
+}

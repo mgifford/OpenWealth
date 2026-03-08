@@ -1,0 +1,19 @@
+{
+  "report_id": "rpt_001",
+  "generated_at": "2026-03-08T21:00:00Z",
+  "feature_slug": "001-privacy-first-investment-context-dashboard",
+  "schema_versions": {
+    "household": "1.0.0"
+  },
+  "artifacts": [
+    {
+      "name": "household",
+      "path": "household.yaml",
+      "media_type": "application/yaml"
+    }
+  ],
+  "checksums": {
+    "household.yaml": "aabbccddeeff00112233445566778899"
+  },
+  "warnings": []
+}

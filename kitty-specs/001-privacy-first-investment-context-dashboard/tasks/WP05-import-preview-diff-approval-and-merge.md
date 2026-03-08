@@ -1,7 +1,7 @@
 ---
 work_package_id: WP05
 title: Import Preview, Diff, Approval, And Merge
-lane: planned
+lane: completed
 dependencies: [WP02, WP04]
 subtasks:
 - T023
@@ -11,8 +11,8 @@ subtasks:
 - T027
 - T028
 phase: Phase 3 - Data Ingestion
-assignee: ''
-agent: ''
+assignee: GitHub Copilot
+agent: GPT-5.3-Codex
 shell_pid: ''
 review_status: ''
 reviewed_by: ''
@@ -22,6 +22,11 @@ history:
   agent: system
   shell_pid: ''
   action: Prompt generated via /spec-kitty.tasks
+- timestamp: '2026-03-08T22:10:41Z'
+  lane: completed
+  agent: GPT-5.3-Codex
+  shell_pid: ''
+  action: Implemented parser adapters, normalization, matching, diff generation, approval/merge flow, provenance capture, and import regression tests.
 requirement_refs:
 - FR-023
 - FR-024
@@ -105,3 +110,4 @@ requirement_refs:
 
 ## Activity Log
 - 2026-03-08T20:59:34Z - system - lane=planned - Prompt created.
+- 2026-03-08T22:10:41Z - GPT-5.3-Codex - lane=completed - Added YAML/JSON/CSV parser pipeline, canonical normalization, confidence-scored record matching with manual-review flags for heuristic matches, structured diff generation, approval-gated merge apply with snapshot/provenance enforcement, and regression tests for malformed/conflicting imports.

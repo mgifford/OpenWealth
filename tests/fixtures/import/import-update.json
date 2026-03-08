@@ -1,0 +1,22 @@
+{
+  "accounts": [
+    {
+      "account_id": "acc_tfsa",
+      "account_type": "tfsa",
+      "ownership": "individual",
+      "currency": "CAD",
+      "current_balance": 12000,
+      "institution": "Maple Bank",
+      "last_updated": "2026-03-09"
+    },
+    {
+      "account_id": "acc_new",
+      "account_type": "non_registered",
+      "ownership": "individual",
+      "currency": "CAD",
+      "current_balance": 3000,
+      "institution": "Cedar Investments",
+      "last_updated": "2026-03-09"
+    }
+  ]
+}

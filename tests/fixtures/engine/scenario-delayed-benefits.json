@@ -1,0 +1,8 @@
+{
+  "retirement_age": 65,
+  "withdrawal_strategy": "blended",
+  "cpp_start_age": 70,
+  "oas_start_age": 70,
+  "annual_spending": 62000,
+  "projection_years": 35
+}

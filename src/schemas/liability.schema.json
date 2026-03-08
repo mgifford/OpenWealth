@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openwealth.dev/schemas/liability.schema.json",
+  "title": "Liability",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["liability_id", "kind", "balance", "interest_rate", "payment_amount"],
+  "properties": {
+    "liability_id": { "type": "string", "minLength": 1 },
+    "kind": {
+      "type": "string",
+      "enum": ["mortgage", "line_of_credit", "credit_card", "student_loan", "car_loan", "other"]
+    },
+    "balance": { "type": "number" },
+    "interest_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+    "payment_amount": { "type": "number", "minimum": 0 },
+    "amortization_months": { "type": "integer", "minimum": 1 },
+    "secured_by": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openwealth.dev/schemas/report-manifest.schema.json",
+  "title": "ReportManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_id",
+    "generated_at",
+    "feature_slug",
+    "schema_versions",
+    "artifacts",
+    "checksums",
+    "warnings"
+  ],
+  "properties": {
+    "report_id": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T" },
+    "feature_slug": { "type": "string", "minLength": 1 },
+    "schema_versions": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string" }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "path", "media_type"],
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "media_type": { "type": "string" }
+        }
+      }
+    },
+    "checksums": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "pattern": "^[a-fA-F0-9]{16,}$" }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

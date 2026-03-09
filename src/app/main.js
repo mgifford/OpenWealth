@@ -13,7 +13,9 @@ import {
   applyPersonaToFormValues,
   listRetirementPersonas,
   buildProjectionSeries,
-  renderProjectionChartSvg
+  renderProjectionChartSvg,
+  buildCoupleTimingOutcomes,
+  renderCoupleTimingOutcomes
 } from "../ui/index.js";
 import {
   renderAssumptionsPanel,
@@ -531,6 +533,14 @@ async function onRunScenario() {
     }
 
     lastRun = result;
+    const household = await householdRepository.load();
+    const coupleOutcomes = buildCoupleTimingOutcomes({
+      household,
+      scenario: result.scenario,
+      currentYear: new Date().getUTCFullYear()
+    });
+    const coupleOutcomesHtml = renderCoupleTimingOutcomes(coupleOutcomes);
+
     const sustainabilityDisclosure = renderMetricDisclosure(
       buildMetricDisclosure(result.engineResult.sustainability.metrics)
     );
@@ -545,6 +555,7 @@ async function onRunScenario() {
       <p><strong>${result.scenario.name}</strong></p>
       <p>Final net worth: ${Math.round(result.engineResult.projection.summary.finalNetWorth)}</p>
       <p>Total unfunded: ${Math.round(result.engineResult.projection.summary.totalUnfunded)}</p>
+      ${coupleOutcomesHtml}
       ${renderProjectionChart(result)}
       ${renderAssumptionsPanel(result.assumptionsPanel)}
       <h3>Sustainability disclosure</h3>

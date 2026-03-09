@@ -20,3 +20,4 @@ export {
 	applyPersonaToFormValues
 } from "./personas/index.js";
 export { buildProjectionSeries, renderProjectionChartSvg } from "./charts/projection.js";
+export { buildCoupleTimingOutcomes, renderCoupleTimingOutcomes } from "./results/index.js";

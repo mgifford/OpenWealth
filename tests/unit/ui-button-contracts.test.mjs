@@ -83,6 +83,29 @@ test("ui contract: guided tour persona selector and ARIA tooltips are present", 
   assert.match(indexHtml, /role=["']tooltip["']/);
 });
 
+test("ui contract: save/load profile section appears before the wizard navigation", () => {
+  const saveLoadPos = indexHtml.indexOf('id="profile-save-load-heading"');
+  const wizardHeadingPos = indexHtml.indexOf('id="wizard-heading"');
+  assert.ok(saveLoadPos >= 0, "profile-save-load-heading element must exist");
+  assert.ok(wizardHeadingPos >= 0, "wizard-heading element must exist");
+  assert.ok(
+    saveLoadPos < wizardHeadingPos,
+    "Save / Load Profile section must appear before the wizard navigation section"
+  );
+  assert.match(indexHtml, /id=["']export-household-yaml["']/);
+  assert.match(indexHtml, /id=["']import-household-yaml["']/);
+  assert.match(indexHtml, /id=["']household-yaml-file["']/);
+});
+
+test("ui contract: results wizard step includes save-profile reminder", () => {
+  assert.ok(
+    indexHtml.includes('data-wizard-section="results"'),
+    "results wizard section must exist"
+  );
+  assert.match(indexHtml, /Save your progress/);
+  assert.match(indexHtml, /Save \/ Load Profile/);
+});
+
 test("ui contract: main app wires click handlers for key buttons", () => {
   const expectedWiring = [
     ["theme-toggle", "applyUserThemeToggle"],

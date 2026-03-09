@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   buildProjectionSeries,
   buildStressTestRangeSeries,
+  buildStressTestAssumptionSummary,
   renderProjectionChartSvg,
   renderStressTestRangeChartSvg,
   renderLikelyNetWorthLineChartSvg
@@ -65,6 +66,24 @@ test("stress test chart renderer outputs shaded path and accessible svg", () => 
   assert.match(svg, /stress-chart-title/);
   assert.match(svg, /<path d=/);
   assert.match(svg, /Shaded area/);
+});
+
+test("stress-test assumption summary reports range and source counts", () => {
+  const summary = buildStressTestAssumptionSummary({
+    likely: [100000, 120000],
+    worst: [80000, 90000],
+    best: [120000, 170000],
+    sensitivityRows: [{ id: "low_return" }, { id: "high_return" }],
+    simulationOutputs: [{ finalNetWorth: 95000 }, { finalNetWorth: 165000 }, { finalNetWorth: 172000 }]
+  });
+
+  assert.equal(summary.baselineFinal, 120000);
+  assert.equal(summary.worstFinal, 90000);
+  assert.equal(summary.bestFinal, 170000);
+  assert.equal(summary.sensitivityCount, 2);
+  assert.equal(summary.simulationCount, 3);
+  assert.ok(summary.worstDeltaPercent < 0);
+  assert.ok(summary.bestDeltaPercent > 0);
 });
 
 test("likely-only chart renderer outputs single-line accessible svg", () => {

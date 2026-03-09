@@ -1,0 +1,99 @@
+name: Accessibility Scan
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "src/**"
+      - "index.html"
+      - "inflation-meter.html"
+      - "liquidity-levers.html"
+      - "scripts/build.mjs"
+      - "tests/fixtures/reports/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/accessibility-scan.yml"
+  pull_request:
+    paths:
+      - "src/**"
+      - "index.html"
+      - "inflation-meter.html"
+      - "liquidity-levers.html"
+      - "scripts/build.mjs"
+      - "tests/fixtures/reports/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/accessibility-scan.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  a11y:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        run: npm run build
+
+      - name: Stage report HTML fixture for scanning
+        run: |
+          mkdir -p dist/a11y
+          cp tests/fixtures/reports/report.expected.html dist/a11y/report.html
+
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 --directory dist > /tmp/openwealth-a11y-server.log 2>&1 &
+          echo $! > /tmp/openwealth-a11y-server.pid
+          sleep 2
+
+      - name: Scan app shell (index)
+        run: npx --yes pa11y-ci http://127.0.0.1:4173/index.html
+
+      - name: Scan standalone inflation meter page
+        run: npx --yes pa11y-ci http://127.0.0.1:4173/inflation-meter.html
+
+      - name: Scan standalone liquidity levers page
+        run: npx --yes pa11y-ci http://127.0.0.1:4173/liquidity-levers.html
+
+      - name: Scan generated report HTML fixture
+        run: npx --yes pa11y-ci http://127.0.0.1:4173/a11y/report.html
+
+      - name: Stop static server
+        if: always()
+        run: |
+          if [ -f /tmp/openwealth-a11y-server.pid ]; then
+            kill "$(cat /tmp/openwealth-a11y-server.pid)" || true
+          fi
+
+      - name: Accessibility summary
+        if: success()
+        run: |
+          {
+            echo "## Accessibility Scan";
+            echo "- target: dist/index.html";
+            echo "- target: dist/inflation-meter.html";
+            echo "- target: dist/liquidity-levers.html";
+            echo "- target: dist/a11y/report.html";
+            echo "- engine: pa11y-ci";
+            echo "- result: pass";
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Failure annotation
+        if: failure()
+        run: |
+          echo "::error title=Accessibility scan failed::Pa11y reported at least one accessibility violation."

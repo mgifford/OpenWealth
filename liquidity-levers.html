@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OpenWealth Liquidity Levers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f6f2e8;
+        --text: #1b1f23;
+        --muted: #5f6b77;
+        --card: #ffffff;
+        --border: #d7d0c1;
+        --accent: #0d7a63;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Noto Sans", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 8% 8%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 34%),
+          radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 36%),
+          var(--bg);
+      }
+
+      main {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 1rem;
+        display: grid;
+        gap: 1rem;
+      }
+
+      section {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+        padding: 1rem;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Fraunces", Georgia, serif;
+        margin-top: 0;
+      }
+
+      .hint {
+        color: var(--muted);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.3rem;
+      }
+
+      input,
+      button {
+        width: 100%;
+        margin-bottom: 0.65rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        padding: 0.55rem 0.6rem;
+        background: transparent;
+        color: inherit;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 0.75rem;
+      }
+
+      .actions {
+        display: grid;
+        gap: 0.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+
+      button {
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .swatch {
+        display: inline-block;
+        width: 0.8rem;
+        height: 0.8rem;
+        border-radius: 999px;
+        margin-right: 0.35rem;
+        vertical-align: middle;
+      }
+
+      .swatch.fast {
+        background: #1b9e77;
+      }
+
+      .swatch.slow {
+        background: #7a5195;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1>Liquidity Levers</h1>
+        <p class="hint">Informational scenario tool only. OpenWealth does not provide financial advice.</p>
+        <p>Understand your balance between <span class="swatch fast"></span>fast money and <span class="swatch slow"></span>slow money.</p>
+        <p><a href="./index.html">Back to main planning dashboard</a></p>
+      </section>
+
+      <section>
+        <h2>Inputs</h2>
+        <p class="hint">Use rough values first. The goal is to make access-speed risk visible, not produce fake precision.</p>
+
+        <div class="grid">
+          <div>
+            <label for="liquidity-fast-cash">Fast money: cash/savings</label>
+            <input id="liquidity-fast-cash" type="number" min="0" step="100" value="12000" />
+          </div>
+          <div>
+            <label for="liquidity-fast-taxable">Fast money: taxable investments</label>
+            <input id="liquidity-fast-taxable" type="number" min="0" step="100" value="15000" />
+          </div>
+          <div>
+            <label for="liquidity-slow-rrsp">Slow money: RRSP/FHSA/RESP style</label>
+            <input id="liquidity-slow-rrsp" type="number" min="0" step="100" value="95000" />
+          </div>
+          <div>
+            <label for="liquidity-slow-home-equity">Slow money: home equity value</label>
+            <input id="liquidity-slow-home-equity" type="number" min="0" step="100" value="260000" />
+          </div>
+          <div>
+            <label for="liquidity-mortgage-debt">Mortgage/home-loan debt</label>
+            <input id="liquidity-mortgage-debt" type="number" min="0" step="100" value="280000" />
+          </div>
+          <div>
+            <label for="liquidity-pension-income">Annual pension income rights</label>
+            <input id="liquidity-pension-income" type="number" min="0" step="100" value="0" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="liquidity-balanced-preset" type="button">Use balanced preset</button>
+          <button id="liquidity-house-rich-preset" type="button">Use house-rich preset</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Liquidity Output</h2>
+        <div id="liquidity-levers-container" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <script type="module" src="./src/app/liquidity-levers-page.js"></script>
+  </body>
+</html>

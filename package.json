@@ -7,6 +7,10 @@
   "scripts": {
     "dev": "node scripts/dev-server.mjs",
     "build": "node scripts/build.mjs",
+    "ollama:run": "node scripts/ollama/run-local-prompt.mjs",
+    "llm:log": "node scripts/ollama/log-query.mjs",
+    "copilot:log": "node scripts/ollama/log-query.mjs --provider copilot",
+    "llm:ratio": "node scripts/ollama/usage-ratio.mjs",
     "data:refresh": "node scripts/data-refresh/refresh-public-data.mjs",
     "batch:scenarios": "node scripts/batch/run-scenarios.mjs",
     "release:package": "node scripts/release/package-release.mjs",

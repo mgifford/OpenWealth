@@ -35,3 +35,16 @@ test("inflation panel includes buying-power plain language", () => {
   assert.match(html, /Buying power meter/);
   assert.match(html, /20-year cost-of-living reality/);
 });
+
+test("inflation reality handles zero principal without negative meter output", () => {
+  const check = buildInflationRealityCheck({
+    principal: 0,
+    checkingRate: 0.0001,
+    highYieldRate: 0.045,
+    bondRate: 0.035,
+    inflationRate: 0.04
+  });
+
+  assert.equal(check.buyingPowerPercent, 0);
+  assert.ok(check.nextYearCheckingReal >= 0);
+});

@@ -38,3 +38,36 @@ test("liquidity panel renders donut and balance insight", () => {
   assert.match(html, /Donut chart showing fast versus slow money/);
   assert.match(html, /Balance insight/);
 });
+
+test("liquidity balance handles all-fast households", () => {
+  const balance = buildLiquidityBalance({
+    household: {
+      accounts: [
+        { account_type: "cash", current_balance: 10000 },
+        { account_type: "tfsa", current_balance: 20000 }
+      ]
+    }
+  });
+
+  assert.equal(balance.buckets.fast, 30000);
+  assert.equal(balance.buckets.slow, 0);
+  assert.equal(balance.fastShare, 1);
+  assert.equal(balance.slowShare, 0);
+});
+
+test("liquidity balance handles all-slow households", () => {
+  const balance = buildLiquidityBalance({
+    household: {
+      accounts: [
+        { account_type: "rrsp", current_balance: 90000 },
+        { account_type: "home_equity", current_balance: 300000 }
+      ]
+    }
+  });
+
+  assert.equal(balance.buckets.fast, 0);
+  assert.equal(balance.buckets.slow, 390000);
+  assert.equal(balance.fastShare, 0);
+  assert.equal(balance.slowShare, 1);
+  assert.match(balance.message, /slow money|cash poor/i);
+});

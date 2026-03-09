@@ -15,6 +15,7 @@ import {
   buildProjectionSeries,
   renderProjectionChartSvg,
   buildStressTestRangeSeries,
+  buildStressTestAssumptionSummary,
   renderStressTestRangeChartSvg,
   renderLikelyNetWorthLineChartSvg,
   buildCoupleTimingOutcomes,
@@ -699,6 +700,14 @@ function renderStressTestChart(result, milestones) {
     return `${likelyChart}<p><strong>Simple view:</strong> This is one likely path. Switch to stress range to see best/worst volatility bounds.</p>`;
   }
 
+  const summary = buildStressTestAssumptionSummary({
+    likely: stressSeries.likely,
+    worst: stressSeries.worst,
+    best: stressSeries.best,
+    sensitivityRows: result.engineResult.sensitivity ?? [],
+    simulationOutputs: result.engineResult.simulation?.outputs ?? []
+  });
+
   const chart = renderStressTestRangeChartSvg(stressSeries, {
     title: "Stress test: market volatility range",
     description:
@@ -712,7 +721,19 @@ function renderStressTestChart(result, milestones) {
       ? `Even if the market has a bad year like 2008, this plan still stays on track for your ${goalYear} goal.`
       : `A bad market year can delay your goal. Use the What-If slider to add a small buffer and improve your ${goalYear} outlook.`;
 
-  return `${chart}<p><strong>Stress test takeaway:</strong> ${reassurance}</p>`;
+  const stressAssumptionsHtml = `
+    <details>
+      <summary><strong>Stress-test assumptions</strong></summary>
+      <ul>
+        <li>Likely path final net worth: ${formatCurrency(Math.round(summary.baselineFinal))}.</li>
+        <li>Worst-case path final net worth: ${formatCurrency(Math.round(summary.worstFinal))} (${summary.worstDeltaPercent.toFixed(1)}% vs likely).</li>
+        <li>Best-case path final net worth: ${formatCurrency(Math.round(summary.bestFinal))} (${summary.bestDeltaPercent.toFixed(1)}% vs likely).</li>
+        <li>Range source inputs: ${summary.sensitivityCount} deterministic sensitivity variants and ${summary.simulationCount} bounded simulation runs.</li>
+      </ul>
+    </details>
+  `;
+
+  return `${chart}${stressAssumptionsHtml}<p><strong>Stress test takeaway:</strong> ${reassurance}</p>`;
 }
 
 async function refreshOverview() {

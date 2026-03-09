@@ -121,6 +121,41 @@ export function buildStressTestRangeSeries(input = {}) {
   };
 }
 
+export function buildStressTestAssumptionSummary(input = {}) {
+  const likely = input.likely ?? [];
+  const worst = input.worst ?? [];
+  const best = input.best ?? [];
+  const sensitivityRows = input.sensitivityRows ?? [];
+  const simulationOutputs = input.simulationOutputs ?? [];
+
+  if (!likely.length || !worst.length || !best.length) {
+    return {
+      baselineFinal: 0,
+      worstFinal: 0,
+      bestFinal: 0,
+      worstDeltaPercent: 0,
+      bestDeltaPercent: 0,
+      sensitivityCount: 0,
+      simulationCount: 0
+    };
+  }
+
+  const baselineFinal = Math.max(0, Number(likely.at(-1) ?? 0));
+  const worstFinal = Math.max(0, Number(worst.at(-1) ?? 0));
+  const bestFinal = Math.max(0, Number(best.at(-1) ?? 0));
+  const divisor = Math.max(1, baselineFinal);
+
+  return {
+    baselineFinal,
+    worstFinal,
+    bestFinal,
+    worstDeltaPercent: ((worstFinal - baselineFinal) / divisor) * 100,
+    bestDeltaPercent: ((bestFinal - baselineFinal) / divisor) * 100,
+    sensitivityCount: sensitivityRows.length,
+    simulationCount: simulationOutputs.length
+  };
+}
+
 export function renderProjectionChartSvg(series, options = {}) {
   const width = options.width ?? 860;
   const height = options.height ?? 260;

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OpenWealth Inflation Buying-Power Meter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f6f2e8;
+        --text: #1b1f23;
+        --muted: #5f6b77;
+        --card: #ffffff;
+        --border: #d7d0c1;
+        --accent: #0d7a63;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Noto Sans", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 8% 8%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 34%),
+          radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 36%),
+          var(--bg);
+      }
+
+      main {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 1rem;
+        display: grid;
+        gap: 1rem;
+      }
+
+      section {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+        padding: 1rem;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Fraunces", Georgia, serif;
+        margin-top: 0;
+      }
+
+      p {
+        margin-top: 0.4rem;
+      }
+
+      .hint {
+        color: var(--muted);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.3rem;
+      }
+
+      input,
+      button {
+        width: 100%;
+        margin-bottom: 0.65rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        padding: 0.55rem 0.6rem;
+        background: transparent;
+        color: inherit;
+      }
+
+      .actions {
+        display: grid;
+        gap: 0.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+
+      button {
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1>Inflation Buying-Power Meter</h1>
+        <p class="hint">
+          Informational scenario tool only. OpenWealth does not provide financial advice.
+        </p>
+        <p>
+          This page shows how inflation and account rates can change next year's buying power for cash.
+        </p>
+        <p><a href="./index.html">Back to main planning dashboard</a></p>
+      </section>
+
+      <section>
+        <h2>Inputs</h2>
+        <p class="hint">
+          Conservative defaults are preloaded. Update values using your own assumptions and public data sources.
+        </p>
+
+        <label for="inflation-cash-principal">Cash sitting in checking/savings</label>
+        <input id="inflation-cash-principal" type="number" min="0" step="100" value="50000" />
+
+        <label for="inflation-checking-rate">Checking account rate</label>
+        <input id="inflation-checking-rate" type="range" min="0" max="0.03" step="0.0001" value="0.0001" />
+        <p class="hint">Checking rate: <strong id="inflation-checking-rate-output">0.01%</strong></p>
+
+        <label for="inflation-high-yield-rate">High-yield savings rate</label>
+        <input id="inflation-high-yield-rate" type="range" min="0.01" max="0.08" step="0.0005" value="0.045" />
+        <p class="hint">High-yield rate: <strong id="inflation-high-yield-rate-output">4.50%</strong></p>
+
+        <label for="inflation-bond-rate">Bond yield estimate</label>
+        <input id="inflation-bond-rate" type="range" min="0.01" max="0.08" step="0.0005" value="0.035" />
+        <p class="hint">Bond yield: <strong id="inflation-bond-rate-output">3.50%</strong></p>
+
+        <label for="inflation-rate">Inflation estimate (CPI)</label>
+        <input id="inflation-rate" type="range" min="0.01" max="0.06" step="0.0005" value="0.025" />
+        <p class="hint">Inflation rate: <strong id="inflation-rate-output">2.50%</strong></p>
+
+        <div class="actions">
+          <button id="conservative-preset" type="button">Use conservative preset</button>
+          <button id="current-market-preset" type="button">Use current-market preset</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Buying-Power Output</h2>
+        <div id="inflation-reality-container" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <script type="module" src="./src/app/inflation-meter-page.js"></script>
+  </body>
+</html>

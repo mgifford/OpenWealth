@@ -90,6 +90,9 @@ kitty-specs/
   npm run build
   ```
 
+  Standalone page:
+  - `inflation-meter.html`: focused Inflation Buying-Power Meter view.
+
   ## Automation Commands
 
   ```bash
@@ -97,16 +100,29 @@ kitty-specs/
   npm run batch:scenarios
   npm run release:package
   npm run privacy:guard
+  npm run ollama:run -- --prompt-file path/to/prompt.txt
+  npm run llm:log -- --provider local-ollama --kind planning
+  npm run copilot:log -- --kind implementation --note "manual review/fix"
+  npm run llm:ratio
   ```
+
+  LLM tracking notes:
+  - `npm run ollama:run` now auto-logs each local query to `logs/llm-usage.jsonl`.
+  - Use `npm run copilot:log -- --kind <kind> --note "..."` to count Copilot-side queries.
+  - Use `npm run llm:ratio` for weekly totals and a PR-ready query-mix line.
 
   ## Workflow Matrix
 
   - `ci.yml`: lint + schema + unit + integration + regression + build
+  - `accessibility-scan.yml`: automated pa11y checks for app shell, standalone inflation page, and report HTML fixture
   - `pages-deploy.yml`: PR preview artifact and main branch Pages deployment
   - `data-refresh.yml`: scheduled/dispatch public dataset checksum + changelog artifacts
   - `batch-scenarios.yml`: scheduled/dispatch synthetic batch report artifacts
   - `release.yml`: tag/dispatch release package generation + release attachment
   - `privacy-guard.yml`: denylist/path/content checks over generated artifacts
+
+  Pull request template:
+  - `.github/pull_request_template.md`: includes deterministic guardrails and weekly LLM query-mix reporting (`npm run llm:ratio`).
 
   ## Pre-release Verification
 

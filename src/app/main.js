@@ -153,7 +153,8 @@ function formatRangeOutput(input) {
       "nonreg-balance",
       "annual-income",
       "mortgage-balance",
-      "debt-payment"
+      "debt-payment",
+      "workplace-pension-income"
     ].includes(input.id)
   ) {
     displayValue = formatCurrency(input.value);
@@ -353,6 +354,11 @@ async function onOnboard(event) {
       debt_payment: Number(el("debt-payment").value),
       mortgage_interest_rate: Number(el("mortgage-interest-rate").value)
     });
+    draft = experience.applyOnboardingStep(draft, "benefits", {
+      workplace_pension_income: Number(el("workplace-pension-income").value),
+      preferred_cpp_start_age: Number(el("preferred-cpp-age").value),
+      preferred_oas_start_age: Number(el("preferred-oas-age").value)
+    });
 
     await experience.completeOnboarding(draft);
     await refreshOverview();
@@ -372,6 +378,20 @@ function applyMarketPreset(button) {
   el("scenario-name").value = `${presetName} Scenario`;
   syncAllRangeOutputs();
   setStatus(`${presetName} market preset applied.`);
+}
+
+function applyReturnPreset(button) {
+  const presetReturn = Number(button.dataset.return ?? el("expected-return").value);
+  el("expected-return").value = String(presetReturn);
+  syncAllRangeOutputs();
+  setStatus(`Expected return preset applied: ${formatPercent(presetReturn)}`);
+}
+
+function applyInflationPreset(button) {
+  const presetInflation = Number(button.dataset.inflation ?? el("inflation-rate").value);
+  el("inflation-rate").value = String(presetInflation);
+  syncAllRangeOutputs();
+  setStatus(`Inflation preset applied: ${formatPercent(presetInflation)}`);
 }
 
 async function onCreateScenario(event) {
@@ -639,6 +659,12 @@ async function init() {
   });
   document.querySelectorAll("button.market-preset").forEach((button) => {
     button.addEventListener("click", () => applyMarketPreset(button));
+  });
+  document.querySelectorAll("button.return-preset").forEach((button) => {
+    button.addEventListener("click", () => applyReturnPreset(button));
+  });
+  document.querySelectorAll("button.inflation-preset").forEach((button) => {
+    button.addEventListener("click", () => applyInflationPreset(button));
   });
   syncAllRangeOutputs();
   syncHouseholdModeUi();

@@ -520,6 +520,45 @@
               data-output="mortgage-interest-rate-output"
             />
             <p class="hint">Mortgage interest: <strong id="mortgage-interest-rate-output">4.5%</strong></p>
+
+            <fieldset>
+              <legend>Benefits and pension</legend>
+              <label for="workplace-pension-income">Expected annual workplace pension</label>
+              <input
+                id="workplace-pension-income"
+                type="range"
+                min="0"
+                max="120000"
+                step="500"
+                value="0"
+                data-output="workplace-pension-income-output"
+              />
+              <p class="hint">
+                Workplace pension: <strong id="workplace-pension-income-output">$0</strong>
+              </p>
+              <label for="preferred-cpp-age">Preferred CPP start age</label>
+              <input
+                id="preferred-cpp-age"
+                type="range"
+                min="60"
+                max="70"
+                step="1"
+                value="65"
+                data-output="preferred-cpp-age-output"
+              />
+              <p class="hint">Preferred CPP age: <strong id="preferred-cpp-age-output">65</strong></p>
+              <label for="preferred-oas-age">Preferred OAS start age</label>
+              <input
+                id="preferred-oas-age"
+                type="range"
+                min="65"
+                max="70"
+                step="1"
+                value="65"
+                data-output="preferred-oas-age-output"
+              />
+              <p class="hint">Preferred OAS age: <strong id="preferred-oas-age-output">65</strong></p>
+            </fieldset>
             <button type="submit">Save onboarding</button>
           </form>
         </section>
@@ -631,6 +670,18 @@
               <button class="market-preset" type="button" data-name="Growth" data-return="0.07" data-inflation="0.022">
                 Growth
               </button>
+            </div>
+            <p class="hint">Expected return presets:</p>
+            <div class="grid">
+              <button class="return-preset" type="button" data-return="0.04">4.0%</button>
+              <button class="return-preset" type="button" data-return="0.055">5.5%</button>
+              <button class="return-preset" type="button" data-return="0.07">7.0%</button>
+            </div>
+            <p class="hint">Inflation presets:</p>
+            <div class="grid">
+              <button class="inflation-preset" type="button" data-inflation="0.02">2.0%</button>
+              <button class="inflation-preset" type="button" data-inflation="0.025">2.5%</button>
+              <button class="inflation-preset" type="button" data-inflation="0.03">3.0%</button>
             </div>
             <button type="submit">Create scenario</button>
           </form>

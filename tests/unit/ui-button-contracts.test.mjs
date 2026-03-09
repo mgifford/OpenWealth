@@ -36,6 +36,22 @@ test("ui contract: market preset buttons are visible with expected assumptions",
   assert.match(indexHtml, /data-return=["']0\.07["']/);
 });
 
+test("ui contract: expected return and inflation preset buttons are present", () => {
+  const returnPresetMatches = indexHtml.match(/class=["']return-preset["']/g) ?? [];
+  const inflationPresetMatches = indexHtml.match(/class=["']inflation-preset["']/g) ?? [];
+
+  assert.ok(returnPresetMatches.length >= 3, "expected at least 3 expected-return presets");
+  assert.ok(inflationPresetMatches.length >= 3, "expected at least 3 inflation presets");
+
+  assert.match(indexHtml, /class=["']return-preset["'][^>]*data-return=["']0\.04["']/);
+  assert.match(indexHtml, /class=["']return-preset["'][^>]*data-return=["']0\.055["']/);
+  assert.match(indexHtml, /class=["']return-preset["'][^>]*data-return=["']0\.07["']/);
+
+  assert.match(indexHtml, /class=["']inflation-preset["'][^>]*data-inflation=["']0\.02["']/);
+  assert.match(indexHtml, /class=["']inflation-preset["'][^>]*data-inflation=["']0\.025["']/);
+  assert.match(indexHtml, /class=["']inflation-preset["'][^>]*data-inflation=["']0\.03["']/);
+});
+
 test("ui contract: main app wires click handlers for key buttons", () => {
   const expectedWiring = [
     ["theme-toggle", "applyUserThemeToggle"],
@@ -52,4 +68,9 @@ test("ui contract: main app wires click handlers for key buttons", () => {
   for (const [buttonId, handler] of expectedWiring) {
     assert.match(appMain, new RegExp(`el\\(["']${buttonId}["']\\)\\.addEventListener\\(["']click["'],\\s*${handler}`));
   }
+
+  assert.match(appMain, /button\.return-preset/);
+  assert.match(appMain, /applyReturnPreset/);
+  assert.match(appMain, /button\.inflation-preset/);
+  assert.match(appMain, /applyInflationPreset/);
 });

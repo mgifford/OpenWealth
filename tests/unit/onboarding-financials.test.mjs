@@ -87,3 +87,42 @@ test("onboarding supports couple mode and captures a second person", () => {
   assert.equal(household.people[0].display_name, "Sam");
   assert.equal(household.people[1].display_name, "Riley");
 });
+
+test("onboarding benefits step captures pension and preferred benefit ages", () => {
+  let draft = createOnboardingDraft();
+  draft = applyOnboardingStep(draft, "household", {
+    name: "Benefits Household",
+    province_or_territory: "ON"
+  });
+  draft = applyOnboardingStep(draft, "people", {
+    people: [
+      {
+        display_name: "Jamie",
+        birth_year: 1984,
+        retirement_target_age: 65
+      }
+    ]
+  });
+  draft = applyOnboardingStep(draft, "financials", {
+    current_income: 110000,
+    mortgage_balance: 0,
+    debt_payment: 0,
+    mortgage_interest_rate: 0.04
+  });
+  draft = applyOnboardingStep(draft, "benefits", {
+    workplace_pension_income: 22000,
+    preferred_cpp_start_age: 67,
+    preferred_oas_start_age: 68
+  });
+
+  const household = finalizeOnboardingDraft(draft, {
+    householdId: "hh_benefits_1",
+    clock: () => new Date("2026-03-09T12:10:00Z")
+  });
+
+  const pensionIncome = household.income_sources.find((income) => income.source_type === "pension");
+  assert.ok(pensionIncome);
+  assert.equal(pensionIncome.annual_amount, 22000);
+  assert.deepEqual(household.assumptions.cpp_start_age_options, [67, 70]);
+  assert.deepEqual(household.assumptions.oas_start_age_options, [68, 70]);
+});

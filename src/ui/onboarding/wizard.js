@@ -102,6 +102,35 @@ export function applyOnboardingStep(draft, step, payload) {
     return next;
   }
 
+  if (step === "benefits") {
+    const workplacePensionIncome = Number(payload.workplace_pension_income ?? 0);
+    const preferredCppAge = Number(payload.preferred_cpp_start_age ?? 65);
+    const preferredOasAge = Number(payload.preferred_oas_start_age ?? 65);
+
+    const nonPensionIncomes = next.incomeSources.filter((income) => income.source_type !== "pension");
+    next.incomeSources =
+      workplacePensionIncome > 0
+        ? [
+            ...nonPensionIncomes,
+            {
+              income_id: payload.pension_income_id ?? createId("income_pension"),
+              source_type: "pension",
+              annual_amount: workplacePensionIncome,
+              taxable: true,
+              confidence: payload.pension_confidence ?? "medium"
+            }
+          ]
+        : nonPensionIncomes;
+
+    next.household = {
+      ...next.household,
+      preferred_cpp_start_age: preferredCppAge,
+      preferred_oas_start_age: preferredOasAge
+    };
+
+    return next;
+  }
+
   throw new Error(`Unknown onboarding step: ${step}`);
 }
 
@@ -140,8 +169,8 @@ export function finalizeOnboardingDraft(draft, options = {}) {
       inflation_rate: 0.02,
       expected_return: 0.05,
       tax_year: clock().getUTCFullYear(),
-      cpp_start_age_options: [65, 70],
-      oas_start_age_options: [65, 70]
+      cpp_start_age_options: [draft.household.preferred_cpp_start_age ?? 65, 70],
+      oas_start_age_options: [draft.household.preferred_oas_start_age ?? 65, 70]
     },
     sustainability_preferences: createDefaultSustainabilityPreferences(),
     updated_at: clock().toISOString()

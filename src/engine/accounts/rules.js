@@ -1,11 +1,6 @@
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { ACCOUNT_RULES_CA_2026 } from "../data/account-rules.ca-2026.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const accountRules = JSON.parse(
-  readFileSync(join(__dirname, "../../../data/public/tax/account-rules.ca-2026.json"), "utf8")
-);
+const accountRules = ACCOUNT_RULES_CA_2026;
 
 function clampContribution(accountType, contribution) {
   const cap = accountRules.accounts[accountType]?.annual_contribution_cap;

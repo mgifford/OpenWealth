@@ -36,6 +36,10 @@ const experience = createPlanningExperience({ householdRepository, scenarioRepos
 
 let lastRun = null;
 let activePersona = null;
+const prefersDarkScheme =
+  typeof window !== "undefined" && typeof window.matchMedia === "function"
+    ? window.matchMedia("(prefers-color-scheme: dark)")
+    : null;
 
 function el(id) {
   return document.getElementById(id);
@@ -48,26 +52,44 @@ function setStatus(message, isError = false) {
   node.setAttribute("role", isError ? "alert" : "status");
 }
 
-function applyTheme(theme) {
-  const root = document.documentElement;
-  if (theme === "auto") {
-    delete root.dataset.theme;
-  } else {
-    root.dataset.theme = theme;
-  }
-  settings.set("theme", theme);
-  el("theme-mode").textContent = theme;
-  el("theme-toggle").setAttribute("aria-label", `Color theme mode: ${theme}`);
+function updateThemeControls(theme, source) {
+  const nextAction = theme === "dark" ? "light" : "dark";
+  el("theme-mode").textContent = source === "system" ? `${theme} (system)` : theme;
+  el("theme-toggle").setAttribute("aria-label", `Switch to ${nextAction} mode`);
+  el("theme-toggle").setAttribute("title", `Switch to ${nextAction} mode`);
+  el("theme-toggle").setAttribute("aria-pressed", String(theme === "dark"));
 }
 
-function nextTheme(currentTheme) {
-  if (currentTheme === "auto") {
-    return "light";
+function applyTheme(theme, source = "user") {
+  const root = document.documentElement;
+  root.dataset.theme = theme;
+  updateThemeControls(theme, source);
+}
+
+function resolveInitialTheme() {
+  const savedTheme = settings.get("theme", null);
+  if (savedTheme === "light" || savedTheme === "dark") {
+    return { theme: savedTheme, source: "user" };
   }
-  if (currentTheme === "light") {
-    return "dark";
+
+  const systemTheme = prefersDarkScheme?.matches ? "dark" : "light";
+  return { theme: systemTheme, source: "system" };
+}
+
+function applyUserThemeToggle() {
+  const currentTheme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  const nextTheme = currentTheme === "dark" ? "light" : "dark";
+  settings.set("theme", nextTheme);
+  applyTheme(nextTheme, "user");
+}
+
+function onSystemThemeChange(event) {
+  const savedTheme = settings.get("theme", null);
+  if (savedTheme === "light" || savedTheme === "dark") {
+    return;
   }
-  return "auto";
+
+  applyTheme(event.matches ? "dark" : "light", "system");
 }
 
 function downloadTextFile(payload) {
@@ -408,13 +430,19 @@ async function onPersonaCarousel() {
 }
 
 async function init() {
-  applyTheme(settings.get("theme", "auto"));
+  const initial = resolveInitialTheme();
+  applyTheme(initial.theme, initial.source);
   await refreshOverview();
 
-  el("theme-toggle").addEventListener("click", () => {
-    const current = settings.get("theme", "auto");
-    applyTheme(nextTheme(current));
-  });
+  el("theme-toggle").addEventListener("click", applyUserThemeToggle);
+
+  if (prefersDarkScheme) {
+    if (typeof prefersDarkScheme.addEventListener === "function") {
+      prefersDarkScheme.addEventListener("change", onSystemThemeChange);
+    } else if (typeof prefersDarkScheme.addListener === "function") {
+      prefersDarkScheme.addListener(onSystemThemeChange);
+    }
+  }
 
   el("onboarding-form").addEventListener("submit", onOnboard);
   el("scenario-form").addEventListener("submit", onCreateScenario);

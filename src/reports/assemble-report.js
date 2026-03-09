@@ -1,7 +1,3 @@
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-
 import { buildDisclaimerSection } from "./sections/disclaimer.js";
 import { buildProfileSection } from "./sections/profile.js";
 import { buildAccountsSection } from "./sections/accounts.js";
@@ -11,9 +7,9 @@ import { buildCaveatsSection } from "./sections/caveats.js";
 import { buildSustainabilitySection } from "./sections/sustainability.js";
 import { buildNextQuestionsSection } from "./sections/next-questions.js";
 import { buildChangeLogSection } from "./sections/change-log.js";
+import { REPORT_TEMPLATE } from "./templates/report-template.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const TEMPLATE = readFileSync(join(__dirname, "templates", "report.html"), "utf8");
+const TEMPLATE = REPORT_TEMPLATE;
 
 function replaceTokens(template, replacements) {
   return Object.entries(replacements).reduce(

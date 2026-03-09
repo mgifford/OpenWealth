@@ -1,11 +1,6 @@
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { CPP_OAS_RULES_CA_2026 } from "../data/cpp-oas.ca-2026.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const benefitRules = JSON.parse(
-  readFileSync(join(__dirname, "../../../data/public/benefits/cpp-oas.ca-2026.json"), "utf8")
-);
+const benefitRules = CPP_OAS_RULES_CA_2026;
 
 export function annualOasAtStartAge(startAge) {
   const rules = benefitRules.oas;

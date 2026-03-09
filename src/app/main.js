@@ -126,6 +126,8 @@ function applyPersonaToUi(persona) {
   el("strategy").value = values.strategy;
   el("retirement-goal-range").textContent = values.retirementGoalRange;
   el("life-expectancy-range").textContent = values.lifeExpectancyRange;
+  el("household-mode").value = "single";
+  syncHouseholdModeUi();
   syncAllRangeOutputs();
 }
 
@@ -168,6 +170,14 @@ function syncAllRangeOutputs() {
   document.querySelectorAll("input[type='range'][data-output]").forEach((input) => {
     formatRangeOutput(input);
   });
+}
+
+function syncHouseholdModeUi() {
+  const isCouple = el("household-mode").value === "couple";
+  el("partner-fields").hidden = !isCouple;
+  el("partner-name").required = isCouple;
+  el("partner-birth-year").required = isCouple;
+  el("partner-retirement-target").required = isCouple;
 }
 
 function renderSensitivityChart(sensitivityRows) {
@@ -284,19 +294,33 @@ async function refreshOverview() {
 async function onOnboard(event) {
   event.preventDefault();
   try {
+    const householdMode = el("household-mode").value;
+
     let draft = experience.createOnboardingDraft();
     draft = experience.applyOnboardingStep(draft, "household", {
       name: el("household-name").value,
-      province_or_territory: el("province").value
+      province_or_territory: el("province").value,
+      household_composition: householdMode
     });
+
+    const people = [
+      {
+        display_name: el("person-name").value,
+        birth_year: Number(el("birth-year").value),
+        retirement_target_age: Number(el("retirement-target").value)
+      }
+    ];
+
+    if (householdMode === "couple") {
+      people.push({
+        display_name: el("partner-name").value,
+        birth_year: Number(el("partner-birth-year").value),
+        retirement_target_age: Number(el("partner-retirement-target").value)
+      });
+    }
+
     draft = experience.applyOnboardingStep(draft, "people", {
-      people: [
-        {
-          display_name: el("person-name").value,
-          birth_year: Number(el("birth-year").value),
-          retirement_target_age: Number(el("retirement-target").value)
-        }
-      ]
+      people
     });
     draft = experience.applyOnboardingStep(draft, "accounts", {
       accounts: [
@@ -608,6 +632,7 @@ async function init() {
   el("random-persona").addEventListener("click", onRandomPersona);
   el("apply-persona").addEventListener("click", onApplyPersona);
   el("run-persona-carousel").addEventListener("click", onPersonaCarousel);
+  el("household-mode").addEventListener("change", syncHouseholdModeUi);
 
   document.querySelectorAll("input[type='range'][data-output]").forEach((input) => {
     input.addEventListener("input", () => formatRangeOutput(input));
@@ -616,6 +641,7 @@ async function init() {
     button.addEventListener("click", () => applyMarketPreset(button));
   });
   syncAllRangeOutputs();
+  syncHouseholdModeUi();
 
   onRandomPersona();
   setStatus("Ready.");

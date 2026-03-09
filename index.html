@@ -407,6 +407,11 @@
               <option>NS</option><option>NT</option><option>NU</option><option selected>ON</option><option>PE</option>
               <option>QC</option><option>SK</option><option>YT</option>
             </select>
+            <label for="household-mode">Household mode</label>
+            <select id="household-mode">
+              <option value="single" selected>Single</option>
+              <option value="couple">Couple</option>
+            </select>
             <label for="person-name">Primary person</label>
             <input id="person-name" required value="Jordan" />
             <label for="birth-year">Birth year</label>
@@ -423,6 +428,28 @@
               required
             />
             <p class="hint">Selected retirement target age: <strong id="retirement-target-output">65</strong></p>
+
+            <fieldset id="partner-fields" hidden>
+              <legend>Second person details</legend>
+              <label for="partner-name">Second person name</label>
+              <input id="partner-name" value="Alex" />
+              <label for="partner-birth-year">Second person birth year</label>
+              <input id="partner-birth-year" type="number" value="1990" />
+              <label for="partner-retirement-target">Second person retirement target age</label>
+              <input
+                id="partner-retirement-target"
+                type="range"
+                min="50"
+                max="75"
+                step="1"
+                value="65"
+                data-output="partner-retirement-target-output"
+              />
+              <p class="hint">
+                Second person target age: <strong id="partner-retirement-target-output">65</strong>
+              </p>
+            </fieldset>
+
             <p>Retirement goal range: <strong id="retirement-goal-range">n/a</strong></p>
             <p>Life expectancy range: <strong id="life-expectancy-range">n/a</strong></p>
             <label for="starter-balance">Starter TFSA balance</label>

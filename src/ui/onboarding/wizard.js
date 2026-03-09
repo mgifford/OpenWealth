@@ -12,7 +12,8 @@ export function createOnboardingDraft() {
   return {
     household: {
       name: "",
-      province_or_territory: "ON"
+      province_or_territory: "ON",
+      household_composition: "single"
     },
     people: [],
     starterAccounts: [],
@@ -35,7 +36,8 @@ export function applyOnboardingStep(draft, step, payload) {
     next.household = {
       ...next.household,
       name: payload.name?.trim() ?? next.household.name,
-      province_or_territory: payload.province_or_territory ?? next.household.province_or_territory
+      province_or_territory: payload.province_or_territory ?? next.household.province_or_territory,
+      household_composition: payload.household_composition ?? next.household.household_composition
     };
     return next;
   }
@@ -128,6 +130,7 @@ export function finalizeOnboardingDraft(draft, options = {}) {
     household_id: options.householdId ?? createId("household"),
     name: draft.household.name.trim(),
     province_or_territory: draft.household.province_or_territory,
+    household_composition: draft.household.household_composition,
     people: draft.people,
     accounts: draft.starterAccounts,
     liabilities: draft.liabilities,

@@ -54,3 +54,36 @@ test("onboarding financial step stores income and mortgage liabilities", () => {
   assert.equal(household.liabilities[0].balance, 350000);
   assert.equal(household.liabilities[0].payment_amount, 2100);
 });
+
+test("onboarding supports couple mode and captures a second person", () => {
+  let draft = createOnboardingDraft();
+  draft = applyOnboardingStep(draft, "household", {
+    name: "Couple Household",
+    province_or_territory: "BC",
+    household_composition: "couple"
+  });
+  draft = applyOnboardingStep(draft, "people", {
+    people: [
+      {
+        display_name: "Sam",
+        birth_year: 1985,
+        retirement_target_age: 64
+      },
+      {
+        display_name: "Riley",
+        birth_year: 1987,
+        retirement_target_age: 65
+      }
+    ]
+  });
+
+  const household = finalizeOnboardingDraft(draft, {
+    householdId: "hh_couple_1",
+    clock: () => new Date("2026-03-09T12:05:00Z")
+  });
+
+  assert.equal(household.household_composition, "couple");
+  assert.equal(household.people.length, 2);
+  assert.equal(household.people[0].display_name, "Sam");
+  assert.equal(household.people[1].display_name, "Riley");
+});

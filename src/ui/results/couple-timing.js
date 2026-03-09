@@ -63,10 +63,38 @@ export function renderCoupleTimingOutcomes(outcomes) {
     return "";
   }
 
-  const rows = outcomes.perPerson
+  const years = outcomes.perPerson.map((person) => person.retirementYear);
+  const minYear = Math.min(...years);
+  const maxYear = Math.max(...years);
+  const span = Math.max(1, maxYear - minYear);
+  const width = 640;
+  const leftPad = 48;
+  const rightPad = 24;
+  const y = 50;
+
+  const points = outcomes.perPerson
+    .map((person, index) => {
+      const x = leftPad + ((person.retirementYear - minYear) / span) * (width - leftPad - rightPad);
+      const color = index % 2 === 0 ? "#0d7a63" : "#2f6ccf";
+      return `
+        <circle cx="${x}" cy="${y}" r="7" fill="${color}"></circle>
+        <text x="${x}" y="30" text-anchor="middle" font-size="11">${person.name}</text>
+        <text x="${x}" y="74" text-anchor="middle" font-size="10">${person.retirementYear}</text>
+      `;
+    })
+    .join("");
+
+  const cards = outcomes.perPerson
     .map(
-      (person) =>
-        `<tr><th scope="row">${person.name}</th><td>${person.currentAge}</td><td>${person.targetAge}</td><td>${person.retirementAge}</td><td>${person.retirementYear}</td><td>${person.timingGapYears}</td></tr>`
+      (person) => `
+        <article class="metric-primary">
+          <p class="label">${person.name}</p>
+          <p>Current age: <strong>${person.currentAge}</strong></p>
+          <p>Target age: <strong>${person.targetAge}</strong></p>
+          <p>Scenario retirement age: <strong>${person.retirementAge}</strong></p>
+          <p>Timing gap: <strong>${person.timingGapYears}</strong> year(s)</p>
+        </article>
+      `
     )
     .join("");
 
@@ -77,20 +105,14 @@ export function renderCoupleTimingOutcomes(outcomes) {
       <p>Earliest retirement year: <strong>${outcomes.combined.earliestRetirementYear}</strong></p>
       <p>Latest retirement year: <strong>${outcomes.combined.latestRetirementYear}</strong></p>
       <p>Years until both retired: <strong>${outcomes.combined.yearsUntilBothRetired}</strong></p>
-      <table>
-        <caption>Per-person retirement timing</caption>
-        <thead>
-          <tr>
-            <th scope="col">Person</th>
-            <th scope="col">Current age</th>
-            <th scope="col">Target age</th>
-            <th scope="col">Scenario age</th>
-            <th scope="col">Retirement year</th>
-            <th scope="col">Timing gap (years)</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
+      <figure>
+        <figcaption>Life timeline</figcaption>
+        <svg viewBox="0 0 ${width} 100" role="img" aria-label="Couple retirement life timeline">
+          <line x1="${leftPad}" y1="${y}" x2="${width - rightPad}" y2="${y}" stroke="currentColor" stroke-opacity="0.4"></line>
+          ${points}
+        </svg>
+      </figure>
+      <div class="metric-primary-grid">${cards}</div>
     </section>
   `;
 }

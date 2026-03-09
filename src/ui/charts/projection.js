@@ -29,6 +29,29 @@ function pointsForSeries(values, width, height, padding, maxValue) {
     .join(" ");
 }
 
+function pathForBand(upperValues, lowerValues, width, height, padding, maxValue) {
+  const upperPoints = upperValues.map((value, index) => {
+    const x = scaleX(index, upperValues.length, width, padding);
+    const y = scaleY(value, maxValue, height, padding);
+    return `${x},${y}`;
+  });
+
+  const lowerPoints = lowerValues
+    .map((value, index) => {
+      const x = scaleX(index, lowerValues.length, width, padding);
+      const y = scaleY(value, maxValue, height, padding);
+      return `${x},${y}`;
+    })
+    .reverse();
+
+  const all = [...upperPoints, ...lowerPoints];
+  if (!all.length) {
+    return "";
+  }
+
+  return `M ${all.join(" L ")} Z`;
+}
+
 function renderPointMarkers(values, color, width, height, padding, maxValue) {
   return values
     .map((value, index) => {
@@ -55,6 +78,46 @@ export function buildProjectionSeries(annualProjection = []) {
     benefitsIncome: annualProjection.map((row) => Number(row.benefitsIncome ?? 0)),
     withdrawalsPlanned: annualProjection.map((row) => Number(row.withdrawalsPlanned ?? 0)),
     spendingNeed: annualProjection.map((row) => Number(row.spendingNeed ?? 0))
+  };
+}
+
+export function buildStressTestRangeSeries(input = {}) {
+  const annualProjection = input.annualProjection ?? [];
+  const sensitivityRows = input.sensitivityRows ?? [];
+  const simulationOutputs = input.simulationOutputs ?? [];
+
+  const labels = annualProjection.map((row) => row.year);
+  const likely = annualProjection.map((row) => Number(row.netWorth ?? 0));
+
+  if (!likely.length) {
+    return {
+      labels: [],
+      likely: [],
+      worst: [],
+      best: []
+    };
+  }
+
+  const baselineFinal = Math.max(1, likely.at(-1) ?? 1);
+  const sensitivityFinals = sensitivityRows
+    .map((row) => Number(row.finalNetWorth ?? NaN))
+    .filter((value) => Number.isFinite(value));
+  const simulationFinals = simulationOutputs
+    .map((row) => Number(row.finalNetWorth ?? NaN))
+    .filter((value) => Number.isFinite(value));
+
+  const finals = [baselineFinal, ...sensitivityFinals, ...simulationFinals];
+  const worstFinal = Math.max(0, Math.min(...finals));
+  const bestFinal = Math.max(...finals);
+
+  const worstFactor = clamp(worstFinal / baselineFinal, 0, 1.4);
+  const bestFactor = clamp(bestFinal / baselineFinal, 0.6, 2);
+
+  return {
+    labels,
+    likely,
+    worst: likely.map((value) => Math.max(0, value * worstFactor)),
+    best: likely.map((value) => Math.max(0, value * bestFactor))
   };
 }
 
@@ -131,6 +194,56 @@ export function renderProjectionChartSvg(series, options = {}) {
     ${spendingEnd}
   </svg>
   <p>Green: benefits income, Blue: planned withdrawals, Gold: spending need.</p>
+</figure>
+`.trim();
+}
+
+export function renderStressTestRangeChartSvg(series, options = {}) {
+  const width = options.width ?? 860;
+  const height = options.height ?? 250;
+  const padding = options.padding ?? 28;
+  const title = options.title ?? "Stress test: best, likely, and worst case";
+  const description =
+    options.description ??
+    "Shaded area shows possible net worth outcomes based on low/base/high market return scenarios and bounded simulation.";
+
+  if (!series?.labels?.length) {
+    return "";
+  }
+
+  const maxValue = Math.max(1, ...series.best, ...series.likely, ...series.worst);
+  const clippedMax = clamp(maxValue, 1, Number.MAX_SAFE_INTEGER);
+
+  const likelyPoints = pointsForSeries(series.likely, width, height, padding, clippedMax);
+  const worstPoints = pointsForSeries(series.worst, width, height, padding, clippedMax);
+  const bestPoints = pointsForSeries(series.best, width, height, padding, clippedMax);
+  const bandPath = pathForBand(series.best, series.worst, width, height, padding, clippedMax);
+
+  const likelyEnd = renderEndLabel(
+    series.likely,
+    "#12436d",
+    width,
+    height,
+    padding,
+    clippedMax,
+    `${Math.round(series.likely.at(-1) ?? 0).toLocaleString()}`
+  );
+
+  return `
+<figure>
+  <figcaption>${title}</figcaption>
+  <svg viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="stress-chart-title stress-chart-desc">
+    <title id="stress-chart-title">${title}</title>
+    <desc id="stress-chart-desc">${description}</desc>
+    <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="currentColor" stroke-opacity="0.4" />
+    <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="currentColor" stroke-opacity="0.4" />
+    <path d="${bandPath}" fill="#12436d" fill-opacity="0.16" />
+    <polyline fill="none" stroke="#b33c3c" stroke-width="1.5" stroke-dasharray="4 2" points="${worstPoints}" />
+    <polyline fill="none" stroke="#12436d" stroke-width="2.5" points="${likelyPoints}" />
+    <polyline fill="none" stroke="#2f8f4e" stroke-width="1.5" stroke-dasharray="4 2" points="${bestPoints}" />
+    ${likelyEnd}
+  </svg>
+  <p>Blue line: likely case. Shaded area: possible range. Red edge: worst case. Green edge: best case.</p>
 </figure>
 `.trim();
 }

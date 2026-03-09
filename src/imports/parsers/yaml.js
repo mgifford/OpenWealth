@@ -4,6 +4,12 @@ function parseScalar(text) {
   if (trimmed === "null") {
     return null;
   }
+  if (trimmed === "[]") {
+    return [];
+  }
+  if (trimmed === "{}") {
+    return {};
+  }
   if (trimmed === "true") {
     return true;
   }
@@ -20,65 +26,127 @@ function parseScalar(text) {
   return trimmed;
 }
 
-function parseKeyValue(line) {
-  const separator = line.indexOf(":");
+function stripComments(line) {
+  const hashIndex = line.indexOf(" #");
+  return hashIndex >= 0 ? line.slice(0, hashIndex) : line;
+}
+
+function splitKeyValue(text) {
+  const separator = text.indexOf(":");
   if (separator < 0) {
-    throw new Error(`Invalid YAML line: ${line}`);
+    throw new Error(`Invalid YAML line: ${text}`);
   }
 
-  const key = line.slice(0, separator).trim();
-  const rawValue = line.slice(separator + 1).trim();
   return {
-    key,
-    hasValue: rawValue.length > 0,
-    value: parseScalar(rawValue)
+    key: text.slice(0, separator).trim(),
+    rawValue: text.slice(separator + 1).trim()
   };
 }
 
+function nextMeaningfulLine(lines, startIndex) {
+  for (let index = startIndex; index < lines.length; index += 1) {
+    const trimmed = lines[index].trim();
+    if (trimmed.length === 0 || trimmed.startsWith("#")) {
+      continue;
+    }
+    return { line: lines[index], index };
+  }
+
+  return null;
+}
+
+function popToIndent(stack, indent) {
+  while (stack.length > 1 && indent <= stack[stack.length - 1].indent) {
+    stack.pop();
+  }
+}
+
 export function parseYaml(content) {
-  const lines = content
-    .split(/\r?\n/)
-    .map((line) => line.replace(/\t/g, "  "))
-    .filter((line) => line.trim().length > 0 && !line.trim().startsWith("#"));
-
+  const lines = content.split(/\r?\n/).map((line) => stripComments(line.replace(/\t/g, "  ")));
   const root = {};
-  let activeArray = null;
-  let activeArrayIndent = -1;
+  const stack = [{ type: "object", value: root, indent: -1 }];
 
-  for (const line of lines) {
-    const indent = line.length - line.trimStart().length;
-    const trimmed = line.trim();
+  for (let index = 0; index < lines.length; index += 1) {
+    const rawLine = lines[index];
+    const trimmed = rawLine.trim();
+
+    if (trimmed.length === 0 || trimmed.startsWith("#")) {
+      continue;
+    }
+
+    const indent = rawLine.length - rawLine.trimStart().length;
+    popToIndent(stack, indent);
+    const parent = stack[stack.length - 1];
 
     if (trimmed.startsWith("- ")) {
-      if (!activeArray) {
-        throw new Error(`Unexpected list item in YAML: ${line}`);
+      if (parent.type !== "array") {
+        throw new Error(`Unexpected list item in YAML: ${trimmed}`);
       }
 
       const itemText = trimmed.slice(2).trim();
       if (itemText.length === 0) {
-        activeArray.push({});
+        const obj = {};
+        parent.value.push(obj);
+        stack.push({ type: "object", value: obj, indent });
         continue;
       }
 
-      const parsed = parseKeyValue(itemText);
-      activeArray.push({ [parsed.key]: parsed.hasValue ? parsed.value : {} });
+      if (itemText.includes(":")) {
+        const { key, rawValue } = splitKeyValue(itemText);
+        const obj = {};
+        parent.value.push(obj);
+
+        if (rawValue.length === 0) {
+          obj[key] = {};
+          stack.push({ type: "object", value: obj, indent });
+        } else {
+          obj[key] = parseScalar(rawValue);
+          stack.push({ type: "object", value: obj, indent });
+        }
+        continue;
+      }
+
+      parent.value.push(parseScalar(itemText));
       continue;
     }
 
-    if (activeArray && indent <= activeArrayIndent) {
-      activeArray = null;
-      activeArrayIndent = -1;
+    if (parent.type !== "object") {
+      throw new Error(`Invalid key-value placement in YAML: ${trimmed}`);
     }
 
-    const parsed = parseKeyValue(trimmed);
-    if (!parsed.hasValue) {
-      root[parsed.key] = [];
-      activeArray = root[parsed.key];
-      activeArrayIndent = indent;
-    } else if (activeArray && activeArray.length > 0 && indent > activeArrayIndent) {
-      activeArray[activeArray.length - 1][parsed.key] = parsed.value;
+    const { key, rawValue } = splitKeyValue(trimmed);
+    if (rawValue.length > 0) {
+      parent.value[key] = parseScalar(rawValue);
+      continue;
+    }
+
+    const upcoming = nextMeaningfulLine(lines, index + 1);
+    if (
+      upcoming &&
+      upcoming.line.length - upcoming.line.trimStart().length > indent &&
+      upcoming.line.trim() === "[]"
+    ) {
+      parent.value[key] = [];
+      index = upcoming.index;
+      continue;
+    }
+
+    if (
+      upcoming &&
+      upcoming.line.length - upcoming.line.trimStart().length > indent &&
+      upcoming.line.trim() === "{}"
+    ) {
+      parent.value[key] = {};
+      index = upcoming.index;
+      continue;
+    }
+
+    if (upcoming && upcoming.line.length - upcoming.line.trimStart().length > indent && upcoming.line.trim().startsWith("- ")) {
+      parent.value[key] = [];
+      stack.push({ type: "array", value: parent.value[key], indent });
     } else {
-      root[parsed.key] = parsed.value;
+      parent.value[key] = {};
+      stack.push({ type: "object", value: parent.value[key], indent });
     }
   }
 

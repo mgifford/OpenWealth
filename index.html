@@ -190,6 +190,141 @@
         margin-bottom: 0;
       }
 
+      .quick-intake {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 0.8rem;
+        background: color-mix(in srgb, var(--bg-alt) 80%, var(--card));
+        margin-bottom: 0.9rem;
+      }
+
+      .quick-intake h3 {
+        margin-bottom: 0.35rem;
+      }
+
+      .quick-question {
+        font-weight: 600;
+        margin-bottom: 0.45rem;
+      }
+
+      .safety-bar {
+        width: 100%;
+        height: 0.8rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: color-mix(in srgb, var(--danger) 20%, var(--bg));
+        overflow: hidden;
+      }
+
+      .safety-bar-fill {
+        height: 100%;
+        width: 60%;
+        background: linear-gradient(90deg, #d83a3a 0%, #f5a623 45%, #1d9f6e 100%);
+        transition: width 220ms ease;
+      }
+
+      .mode-note {
+        margin: 0.2rem 0 0.65rem;
+      }
+
+      .metric-primary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.75rem;
+        margin: 0.8rem 0;
+      }
+
+      .metric-primary {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 0.75rem;
+        background: color-mix(in srgb, var(--accent) 10%, var(--card));
+      }
+
+      .metric-primary .label {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .metric-primary .value {
+        margin: 0.25rem 0 0;
+        font-size: 1.6rem;
+        font-weight: 700;
+      }
+
+      .info-trigger {
+        width: auto;
+        margin: 0 0 0 0.35rem;
+        padding: 0.05rem 0.38rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .tooltip {
+        display: inline-block;
+        margin: 0.1rem 0 0.55rem;
+        padding: 0.38rem 0.5rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: color-mix(in srgb, var(--card) 88%, var(--bg));
+        color: var(--text);
+        font-size: 0.84rem;
+        max-width: 42ch;
+      }
+
+      .guided-tour {
+        border: 1px dashed var(--border);
+        border-radius: 10px;
+        padding: 0.65rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .buying-power-meter {
+        width: 100%;
+        height: 0.9rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: color-mix(in srgb, var(--danger) 30%, var(--bg));
+        overflow: hidden;
+      }
+
+      .buying-power-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #cf3d3d 0%, #f1a73f 50%, #148f63 100%);
+        transition: width 240ms ease;
+      }
+
+      .portfolio-balance-panel {
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 0.85rem;
+        align-items: center;
+      }
+
+      .donut-legend p {
+        margin: 0.35rem 0;
+      }
+
+      .swatch {
+        display: inline-block;
+        width: 0.8rem;
+        height: 0.8rem;
+        border-radius: 999px;
+        margin-right: 0.35rem;
+        vertical-align: middle;
+      }
+
+      .swatch.fast {
+        background: #1b9e77;
+      }
+
+      .swatch.slow {
+        background: #7a5195;
+      }
+
       .wizard-step[data-active="true"] {
         background: var(--accent-strong);
       }
@@ -433,6 +568,23 @@
           <h2>Onboarding</h2>
           <form id="onboarding-form" aria-describedby="onboarding-help">
             <p id="onboarding-help">Required fields only for a first deterministic scenario run.</p>
+            <div class="guided-tour">
+              <label for="guided-tour-persona">Guided tour focus</label>
+              <select id="guided-tour-persona">
+                <option value="student">I'm a student</option>
+                <option value="family" selected>I'm starting a family</option>
+                <option value="retirement">I'm thinking about retirement</option>
+              </select>
+              <p id="guided-tour-note" class="hint">Family focus: keeps debt, income, and emergency planning front-and-center.</p>
+            </div>
+            <label for="data-entry-mode">Data entry mode</label>
+            <select id="data-entry-mode">
+              <option value="estimate" selected>Good enough estimates first</option>
+              <option value="exact">Exact values</option>
+            </select>
+            <p id="data-entry-mode-note" class="hint mode-note">
+              Start with rough numbers now. You can refine exact values later.
+            </p>
 
             <div data-wizard-pane="about-you">
             <label for="household-name">Household name</label>
@@ -493,64 +645,106 @@
             <div data-wizard-pane="savings">
             <label for="starter-balance">Starter TFSA balance</label>
             <input id="starter-balance" type="number" required value="120000" />
-            <label for="rrsp-balance">Starter RRSP balance</label>
-            <input
-              id="rrsp-balance"
-              type="range"
-              min="0"
-              max="1500000"
-              step="5000"
-              value="80000"
-              data-output="rrsp-balance-output"
-            />
-            <p class="hint">RRSP balance: <strong id="rrsp-balance-output">$80,000</strong></p>
-            <label for="nonreg-balance">Starter non-registered balance</label>
-            <input
-              id="nonreg-balance"
-              type="range"
-              min="0"
-              max="1500000"
-              step="5000"
-              value="25000"
-              data-output="nonreg-balance-output"
-            />
-            <p class="hint">Non-registered balance: <strong id="nonreg-balance-output">$25,000</strong></p>
-            <label for="mortgage-balance">Mortgage or debt balance</label>
-            <input
-              id="mortgage-balance"
-              type="range"
-              min="0"
-              max="2000000"
-              step="5000"
-              value="350000"
-              data-output="mortgage-balance-output"
-            />
-            <p class="hint">Debt balance: <strong id="mortgage-balance-output">$350,000</strong></p>
-            <label for="debt-payment">Monthly debt payment</label>
-            <input
-              id="debt-payment"
-              type="range"
-              min="0"
-              max="10000"
-              step="50"
-              value="2100"
-              data-output="debt-payment-output"
-            />
-            <p class="hint">Debt payment: <strong id="debt-payment-output">$2,100</strong></p>
-            <label for="mortgage-interest-rate">Mortgage interest rate</label>
-            <input
-              id="mortgage-interest-rate"
-              type="range"
-              min="0.01"
-              max="0.12"
-              step="0.001"
-              value="0.045"
-              data-output="mortgage-interest-rate-output"
-            />
-            <p class="hint">Mortgage interest: <strong id="mortgage-interest-rate-output">4.5%</strong></p>
+            <div data-guided-tags="family,retirement">
+              <label for="rrsp-balance">Starter retirement savings (RRSP)</label>
+              <input
+                id="rrsp-balance"
+                type="range"
+                min="0"
+                max="1500000"
+                step="5000"
+                value="80000"
+                data-output="rrsp-balance-output"
+              />
+              <p class="hint">Retirement savings: <strong id="rrsp-balance-output">$80,000</strong></p>
+            </div>
+            <div data-guided-tags="family,retirement">
+              <label for="nonreg-balance">Starter flexible savings</label>
+              <input
+                id="nonreg-balance"
+                type="range"
+                min="0"
+                max="1500000"
+                step="5000"
+                value="25000"
+                data-output="nonreg-balance-output"
+              />
+              <p class="hint">Flexible savings: <strong id="nonreg-balance-output">$25,000</strong></p>
+            </div>
+            <div data-guided-tags="family">
+              <label for="mortgage-balance">Home loan or debt balance</label>
+              <input
+                id="mortgage-balance"
+                type="range"
+                min="0"
+                max="2000000"
+                step="5000"
+                value="350000"
+                data-output="mortgage-balance-output"
+              />
+              <p class="hint">Debt balance: <strong id="mortgage-balance-output">$350,000</strong></p>
+            </div>
+            <div data-guided-tags="student,family">
+              <label for="debt-payment">Biggest monthly bill or debt payment</label>
+              <input
+                id="debt-payment"
+                type="range"
+                min="0"
+                max="10000"
+                step="50"
+                value="2100"
+                data-output="debt-payment-output"
+              />
+              <p class="hint">Monthly bill: <strong id="debt-payment-output">$2,100</strong></p>
+            </div>
+            <div data-guided-tags="family">
+              <label for="mortgage-interest-rate">Loan interest rate
+                <button class="info-trigger" type="button" aria-describedby="tip-loan-rate" aria-expanded="false">i</button>
+              </label>
+              <span id="tip-loan-rate" role="tooltip" class="tooltip" hidden>
+                Interest rate is the cost of borrowing. It matters less than your monthly surplus for day-to-day planning.
+              </span>
+              <input
+                id="mortgage-interest-rate"
+                type="range"
+                min="0.01"
+                max="0.12"
+                step="0.001"
+                value="0.045"
+                data-output="mortgage-interest-rate-output"
+              />
+              <p class="hint">Loan interest: <strong id="mortgage-interest-rate-output">4.5%</strong></p>
+            </div>
             </div>
 
             <div data-wizard-pane="income">
+            <div id="quick-intake-panel" class="quick-intake">
+              <h3>Quick Estimate Check-In</h3>
+              <p id="quick-intake-progress" class="hint">Question 1 of 4</p>
+              <p id="quick-intake-question" class="quick-question">How much did you earn last month?</p>
+              <label for="quick-intake-answer">Your estimate</label>
+              <input id="quick-intake-answer" type="number" min="0" step="10" placeholder="e.g. 4200" />
+              <div class="actions">
+                <button id="quick-intake-prev" type="button">Previous</button>
+                <button id="quick-intake-next" type="button">Next question</button>
+              </div>
+              <label for="quick-intake-text">Or use natural language</label>
+              <textarea
+                id="quick-intake-text"
+                aria-label="Natural language onboarding input"
+                placeholder="I have $2,000 in my checking account and spend about $1,500 a month. I earn 4200 monthly."
+              ></textarea>
+              <button id="apply-natural-language" type="button">Apply from text</button>
+              <p id="quick-intake-mapped" class="hint">Mapped estimates will update fields below in real-time.</p>
+            </div>
+
+            <h3>Monthly safety check</h3>
+            <p class="hint">As your biggest monthly bill rises relative to income, this bar shrinks.</p>
+            <div class="safety-bar" role="img" aria-label="Monthly safety buffer bar">
+              <div id="safety-bar-fill" class="safety-bar-fill"></div>
+            </div>
+            <p class="hint">Safety buffer: <strong id="safety-bar-label">60%</strong></p>
+
             <label for="annual-income">Current annual income</label>
             <input
               id="annual-income"
@@ -565,7 +759,7 @@
             </div>
 
             <div data-wizard-pane="benefits">
-            <fieldset>
+            <fieldset data-guided-tags="family,retirement">
               <legend>Benefits and pension</legend>
               <label for="workplace-pension-income">Expected annual workplace pension</label>
               <input
@@ -650,11 +844,16 @@
               required
             />
             <p class="hint">OAS start age: <strong id="oas-age-output">65</strong></p>
-            <label for="strategy">Withdrawal strategy</label>
+            <label for="strategy">Spending order
+              <button class="info-trigger" type="button" aria-describedby="tip-spending-order" aria-expanded="false">i</button>
+            </label>
+            <span id="tip-spending-order" role="tooltip" class="tooltip" hidden>
+              Spending order means which account gets used first when covering costs in retirement.
+            </span>
             <select id="strategy">
-              <option value="blended">blended</option>
-              <option value="tfsa_first">tfsa_first</option>
-              <option value="rrsp_first">rrsp_first</option>
+              <option value="blended">Use all accounts gradually</option>
+              <option value="tfsa_first">Use tax-free savings first</option>
+              <option value="rrsp_first">Use retirement account first</option>
             </select>
             <label for="annual-spending">Annual spending</label>
             <input
@@ -680,7 +879,12 @@
               required
             />
             <p class="hint">Projection years: <strong id="projection-years-output">30</strong></p>
-            <label for="expected-return">Expected market growth rate</label>
+            <label for="expected-return">Stocks growth estimate
+              <button class="info-trigger" type="button" aria-describedby="tip-stocks-growth" aria-expanded="false">i</button>
+            </label>
+            <span id="tip-stocks-growth" role="tooltip" class="tooltip" hidden>
+              This is your long-run estimate for stock growth. Start with a rough value and refine later.
+            </span>
             <input
               id="expected-return"
               type="range"
@@ -692,7 +896,12 @@
               required
             />
             <p class="hint">Expected growth: <strong id="expected-return-output">5.0%</strong></p>
-            <label for="inflation-rate">Inflation rate</label>
+            <label for="inflation-rate">Price increase estimate
+              <button class="info-trigger" type="button" aria-describedby="tip-inflation" aria-expanded="false">i</button>
+            </label>
+            <span id="tip-inflation" role="tooltip" class="tooltip" hidden>
+              Inflation is how quickly everyday costs rise over time.
+            </span>
             <input
               id="inflation-rate"
               type="range"
@@ -747,6 +956,35 @@
       <section data-wizard-section="results">
         <h2>Results</h2>
         <div id="results" aria-live="polite"></div>
+
+        <h3>Inflation Reality Check Inputs</h3>
+        <p class="hint">Adjust these rates to match current market conditions and see your buying-power impact.</p>
+        <label for="inflation-cash-principal">Cash sitting in checking/savings</label>
+        <input id="inflation-cash-principal" type="number" min="0" step="100" value="50000" />
+        <label for="inflation-checking-rate">Checking account rate</label>
+        <input id="inflation-checking-rate" type="range" min="0" max="0.03" step="0.0001" value="0.0001" data-output="inflation-checking-rate-output" />
+        <p class="hint">Checking rate: <strong id="inflation-checking-rate-output">0.01%</strong></p>
+        <label for="inflation-high-yield-rate">High-yield savings rate</label>
+        <input id="inflation-high-yield-rate" type="range" min="0.01" max="0.08" step="0.0005" value="0.045" data-output="inflation-high-yield-rate-output" />
+        <p class="hint">High-yield rate: <strong id="inflation-high-yield-rate-output">4.50%</strong></p>
+        <label for="inflation-bond-rate">Bond yield estimate</label>
+        <input id="inflation-bond-rate" type="range" min="0.01" max="0.08" step="0.0005" value="0.035" data-output="inflation-bond-rate-output" />
+        <p class="hint">Bond yield: <strong id="inflation-bond-rate-output">3.50%</strong></p>
+
+        <h3>What-If Slider</h3>
+        <p>Try reducing one monthly expense and see the long-term impact.</p>
+        <label for="look-ahead-spending-cut">Monthly spending change</label>
+        <input
+          id="look-ahead-spending-cut"
+          type="range"
+          min="0"
+          max="300"
+          step="10"
+          value="50"
+          data-output="look-ahead-spending-cut-output"
+        />
+        <p class="hint">Spending change: <strong id="look-ahead-spending-cut-output">$50</strong> per month</p>
+        <p id="look-ahead-what-if" class="hint">Run a scenario to see what-if insights.</p>
       </section>
 
       <section data-wizard-section="results">
@@ -768,6 +1006,16 @@
         <button id="generate-prompt" type="button">Generate prompt package</button>
         <label for="prompt-output">Prompt text</label>
         <textarea id="prompt-output" aria-label="Prompt package output"></textarea>
+      </section>
+
+      <section>
+        <h2>Household YAML</h2>
+        <p>Save your full household profile to a portable YAML file, or load a saved YAML profile back into this workspace.</p>
+        <div class="grid">
+          <button id="export-household-yaml" type="button">Export household YAML</button>
+          <button id="import-household-yaml" type="button">Import household YAML</button>
+        </div>
+        <input id="household-yaml-file" class="sr-only" type="file" accept=".yaml,.yml,text/yaml,application/x-yaml" />
       </section>
 
       <section aria-labelledby="community-heading">

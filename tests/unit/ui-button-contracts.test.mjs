@@ -15,8 +15,13 @@ const REQUIRED_BUTTON_IDS = [
   "run-scenario",
   "compare-scenarios",
   "export-bundle",
+  "export-household-yaml",
+  "import-household-yaml",
   "show-market-trends",
-  "generate-prompt"
+  "generate-prompt",
+  "quick-intake-prev",
+  "quick-intake-next",
+  "apply-natural-language"
 ];
 
 test("ui contract: required action buttons are present in index.html", () => {
@@ -62,17 +67,37 @@ test("ui contract: expected return and inflation preset buttons are present", ()
   assert.match(indexHtml, /class=["']inflation-preset["'][^>]*data-inflation=["']0\.03["']/);
 });
 
+test("ui contract: look-ahead what-if slider is present", () => {
+  assert.match(indexHtml, /id=["']look-ahead-spending-cut["']/);
+  assert.match(indexHtml, /id=["']look-ahead-what-if["']/);
+  assert.match(indexHtml, /id=["']inflation-cash-principal["']/);
+  assert.match(indexHtml, /id=["']inflation-checking-rate["']/);
+  assert.match(indexHtml, /id=["']inflation-high-yield-rate["']/);
+  assert.match(indexHtml, /id=["']inflation-bond-rate["']/);
+});
+
+test("ui contract: guided tour persona selector and ARIA tooltips are present", () => {
+  assert.match(indexHtml, /id=["']guided-tour-persona["']/);
+  assert.match(indexHtml, /class=["']info-trigger["']/);
+  assert.match(indexHtml, /role=["']tooltip["']/);
+});
+
 test("ui contract: main app wires click handlers for key buttons", () => {
   const expectedWiring = [
     ["theme-toggle", "applyUserThemeToggle"],
     ["run-scenario", "onRunScenario"],
     ["compare-scenarios", "onCompareScenarios"],
     ["export-bundle", "onExportBundle"],
+    ["export-household-yaml", "onExportHouseholdYaml"],
+    ["import-household-yaml", "onImportHouseholdYamlClick"],
     ["show-market-trends", "onShowMarketTrends"],
     ["generate-prompt", "onGeneratePrompt"],
     ["random-persona", "onRandomPersona"],
     ["apply-persona", "onApplyPersona"],
-    ["run-persona-carousel", "onPersonaCarousel"]
+    ["run-persona-carousel", "onPersonaCarousel"],
+    ["quick-intake-prev", "onQuickIntakePrevious"],
+    ["quick-intake-next", "onQuickIntakeNext"],
+    ["apply-natural-language", "onApplyNaturalLanguage"]
   ];
 
   for (const [buttonId, handler] of expectedWiring) {
@@ -87,4 +112,20 @@ test("ui contract: main app wires click handlers for key buttons", () => {
   assert.match(appMain, /el\(["']wizard-next["']\)\.addEventListener\(["']click["'],\s*onWizardNext/);
   assert.match(appMain, /button\.wizard-step/);
   assert.match(appMain, /goToWizardStep/);
+  assert.match(
+    appMain,
+    /el\(["']data-entry-mode["']\)\.addEventListener\(["']change["'],\s*syncDataEntryModeUi/
+  );
+  assert.match(
+    appMain,
+    /el\(["']guided-tour-persona["']\)\.addEventListener\(["']change["'],\s*syncGuidedTourPersonaUi/
+  );
+  assert.match(
+    appMain,
+    /el\(["']household-yaml-file["']\)\.addEventListener\(["']change["'],\s*onImportHouseholdYamlFile/
+  );
+  assert.match(appMain, /look-ahead-spending-cut/);
+  assert.match(appMain, /updateLookAheadWhatIf/);
+  assert.match(appMain, /updateInflationRealityCheck/);
+  assert.match(appMain, /initializeInfoTooltips/);
 });

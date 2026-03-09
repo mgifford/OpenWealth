@@ -14,8 +14,23 @@ import {
   listRetirementPersonas,
   buildProjectionSeries,
   renderProjectionChartSvg,
+  buildStressTestRangeSeries,
+  renderStressTestRangeChartSvg,
   buildCoupleTimingOutcomes,
-  renderCoupleTimingOutcomes
+  renderCoupleTimingOutcomes,
+  parseNaturalLanguageFinancialEstimate,
+  computeSafetyBarValue,
+  buildLookAheadMilestones,
+  buildWhatIfImpact,
+  buildSpendingNudges,
+  renderLookAheadTldr,
+  renderMilestonesPanel,
+  renderNudgesPanel,
+  renderWhatIfMessage,
+  buildInflationRealityCheck,
+  renderInflationRealityPanel,
+  buildLiquidityBalance,
+  renderLiquidityBalancePanel
 } from "../ui/index.js";
 import {
   renderAssumptionsPanel,
@@ -29,6 +44,9 @@ import {
   renderStaleState
 } from "../components/index.js";
 import { buildReportBundle, createBundleDownloadPayload } from "../ui/export/index.js";
+import { stringifyYaml } from "../reports/yaml-stringify.js";
+import { parseImportContent } from "../imports/index.js";
+import { runDeterministicEngine } from "../engine/index.js";
 
 const store = createIndexedDbStore("openwealth-ui");
 const settings = createLocalSettingsAdapter("openwealth-ui");
@@ -52,6 +70,7 @@ const WIZARD_STEPS = [
   { id: "results", label: "Results" }
 ];
 let wizardStepIndex = 0;
+let quickIntakeIndex = 0;
 const prefersDarkScheme =
   typeof window !== "undefined" && typeof window.matchMedia === "function"
     ? window.matchMedia("(prefers-color-scheme: dark)")
@@ -116,6 +135,10 @@ function downloadTextFile(payload) {
   link.download = payload.fileName;
   link.click();
   URL.revokeObjectURL(url);
+}
+
+function cloneValue(value) {
+  return JSON.parse(JSON.stringify(value));
 }
 
 function updatePersonaPanel(persona) {
@@ -195,6 +218,297 @@ function syncHouseholdModeUi() {
   el("partner-name").required = isCouple;
   el("partner-birth-year").required = isCouple;
   el("partner-retirement-target").required = isCouple;
+}
+
+const QUICK_INTAKE_QUESTIONS = [
+  {
+    prompt: "How much did you earn last month?",
+    target: "annual-income",
+    transform: (value) => Math.round(value * 12)
+  },
+  {
+    prompt: "What is your biggest monthly bill?",
+    target: "debt-payment",
+    transform: (value) => value
+  },
+  {
+    prompt: "Roughly how much cash do you have in checking/savings?",
+    target: "starter-balance",
+    transform: (value) => value
+  },
+  {
+    prompt: "About how much do you have in RRSP savings?",
+    target: "rrsp-balance",
+    transform: (value) => value
+  }
+];
+
+const GUIDED_TOUR_PROFILES = {
+  student: {
+    note: "Student focus: keeps essentials and monthly cash pressure visible while hiding advanced retirement details.",
+    defaults: {
+      "starter-balance": 2000,
+      "annual-income": 36000,
+      "debt-payment": 650,
+      "mortgage-balance": 0,
+      "workplace-pension-income": 0
+    }
+  },
+  family: {
+    note: "Family focus: keeps debt, income, and emergency planning front-and-center.",
+    defaults: {
+      "starter-balance": 120000,
+      "annual-income": 95000,
+      "debt-payment": 2100,
+      "mortgage-balance": 350000,
+      "workplace-pension-income": 0
+    }
+  },
+  retirement: {
+    note: "Retirement focus: highlights long-term savings and benefit timing decisions.",
+    defaults: {
+      "starter-balance": 200000,
+      "annual-income": 110000,
+      "debt-payment": 900,
+      "mortgage-balance": 80000,
+      "workplace-pension-income": 12000
+    }
+  }
+};
+
+function setGuidedFieldVisibility(node, visible) {
+  node.hidden = !visible;
+  node.querySelectorAll("input, select, textarea, button").forEach((control) => {
+    if (!visible) {
+      if (control.required) {
+        control.dataset.requiredWhenVisible = "true";
+        control.required = false;
+      }
+      control.disabled = true;
+      return;
+    }
+
+    control.disabled = false;
+    if (control.dataset.requiredWhenVisible === "true") {
+      control.required = true;
+      delete control.dataset.requiredWhenVisible;
+    }
+  });
+}
+
+function applyGuidedTourDefaults(profile) {
+  Object.entries(profile.defaults).forEach(([fieldId, value]) => {
+    applyEstimateToField(fieldId, value);
+  });
+}
+
+function syncGuidedTourPersonaUi() {
+  const persona = el("guided-tour-persona").value;
+  const profile = GUIDED_TOUR_PROFILES[persona] ?? GUIDED_TOUR_PROFILES.family;
+  el("guided-tour-note").textContent = profile.note;
+
+  document.querySelectorAll("[data-guided-tags]").forEach((node) => {
+    const tags = (node.dataset.guidedTags ?? "")
+      .split(",")
+      .map((entry) => entry.trim())
+      .filter(Boolean);
+    setGuidedFieldVisibility(node, tags.includes(persona));
+  });
+
+  applyGuidedTourDefaults(profile);
+  syncAllRangeOutputs();
+  updateSafetyBar();
+}
+
+function initializeInfoTooltips() {
+  document.querySelectorAll(".info-trigger, .glossary-trigger").forEach((button) => {
+    const tooltipId = button.getAttribute("aria-describedby");
+    const tooltip = tooltipId ? document.getElementById(tooltipId) : null;
+    if (!tooltip) {
+      return;
+    }
+
+    const show = () => {
+      tooltip.hidden = false;
+      button.setAttribute("aria-expanded", "true");
+    };
+    const hide = () => {
+      tooltip.hidden = true;
+      button.setAttribute("aria-expanded", "false");
+    };
+
+    button.addEventListener("focus", show);
+    button.addEventListener("blur", hide);
+    button.addEventListener("mouseenter", show);
+    button.addEventListener("mouseleave", hide);
+    button.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        hide();
+      }
+    });
+    button.addEventListener("click", () => {
+      if (tooltip.hidden) {
+        show();
+      } else {
+        hide();
+      }
+    });
+  });
+}
+
+function renderPrimaryMetrics(totalSavings, monthlySurplus) {
+  return `
+    <section class="metric-primary-grid" aria-label="Primary plan metrics">
+      <article class="metric-primary">
+        <p class="label">Total savings now</p>
+        <p class="value">${formatCurrency(totalSavings)}</p>
+      </article>
+      <article class="metric-primary">
+        <p class="label">Monthly surplus</p>
+        <p class="value">${formatCurrency(monthlySurplus)}</p>
+      </article>
+    </section>
+  `;
+}
+
+function updateInflationRateOutputs() {
+  el("inflation-checking-rate-output").textContent = formatPercent(el("inflation-checking-rate").value);
+  el("inflation-high-yield-rate-output").textContent = formatPercent(el("inflation-high-yield-rate").value);
+  el("inflation-bond-rate-output").textContent = formatPercent(el("inflation-bond-rate").value);
+}
+
+function buildInflationRealityHtml(scenario, household) {
+  const inflationRate = Number(
+    scenario?.inflation_rate ?? household?.assumptions?.inflation_rate ?? el("inflation-rate").value
+  );
+  const panel = buildInflationRealityCheck({
+    principal: Number(el("inflation-cash-principal").value),
+    checkingRate: Number(el("inflation-checking-rate").value),
+    highYieldRate: Number(el("inflation-high-yield-rate").value),
+    bondRate: Number(el("inflation-bond-rate").value),
+    inflationRate
+  });
+  return renderInflationRealityPanel(panel);
+}
+
+async function updateInflationRealityCheck() {
+  updateInflationRateOutputs();
+
+  if (!lastRun?.scenario) {
+    return;
+  }
+
+  const household = await householdRepository.load();
+  const panelHtml = buildInflationRealityHtml(lastRun.scenario, household);
+  const container = el("inflation-reality-container");
+  if (container) {
+    container.innerHTML = panelHtml;
+    initializeInfoTooltips();
+  }
+}
+
+function updateSafetyBar() {
+  const monthlyIncome = Number(el("annual-income").value) / 12;
+  const monthlyBill = Number(el("debt-payment").value);
+  const safety = computeSafetyBarValue(monthlyIncome, monthlyBill);
+  el("safety-bar-fill").style.width = `${safety}%`;
+  el("safety-bar-label").textContent = `${safety}%`;
+}
+
+function applyEstimateToField(fieldId, value) {
+  const node = el(fieldId);
+  if (!node || !Number.isFinite(value) || value < 0) {
+    return;
+  }
+
+  node.value = String(Math.round(value));
+  formatRangeOutput(node);
+}
+
+function syncDataEntryModeUi() {
+  const mode = el("data-entry-mode").value;
+  const isEstimate = mode === "estimate";
+  el("quick-intake-panel").hidden = !isEstimate;
+  el("data-entry-mode-note").textContent = isEstimate
+    ? "Start with rough numbers now. You can refine exact values later."
+    : "Exact mode: enter precise values in the fields below.";
+}
+
+function syncQuickIntakeQuestion() {
+  const question = QUICK_INTAKE_QUESTIONS[quickIntakeIndex];
+  el("quick-intake-progress").textContent = `Question ${quickIntakeIndex + 1} of ${QUICK_INTAKE_QUESTIONS.length}`;
+  el("quick-intake-question").textContent = question.prompt;
+
+  const target = el(question.target);
+  const currentValue = Number(target?.value ?? 0);
+  const editableValue =
+    question.target === "annual-income" ? Math.round(currentValue / 12) : Math.round(currentValue);
+  el("quick-intake-answer").value = Number.isFinite(editableValue) ? String(editableValue) : "";
+  el("quick-intake-prev").disabled = quickIntakeIndex === 0;
+  el("quick-intake-next").textContent =
+    quickIntakeIndex >= QUICK_INTAKE_QUESTIONS.length - 1 ? "Finish check-in" : "Next question";
+}
+
+function applyQuickIntakeAnswer() {
+  const question = QUICK_INTAKE_QUESTIONS[quickIntakeIndex];
+  const answer = Number(el("quick-intake-answer").value);
+
+  if (!Number.isFinite(answer) || answer < 0) {
+    throw new Error("Enter a non-negative estimate before continuing.");
+  }
+
+  applyEstimateToField(question.target, question.transform(answer));
+  updateSafetyBar();
+}
+
+function onQuickIntakeNext() {
+  try {
+    applyQuickIntakeAnswer();
+
+    if (quickIntakeIndex < QUICK_INTAKE_QUESTIONS.length - 1) {
+      quickIntakeIndex += 1;
+      syncQuickIntakeQuestion();
+      return;
+    }
+
+    setStatus("Quick estimate check-in complete. You can run a first projection now.");
+  } catch (error) {
+    setStatus(error.message, true);
+  }
+}
+
+function onQuickIntakePrevious() {
+  if (quickIntakeIndex > 0) {
+    quickIntakeIndex -= 1;
+    syncQuickIntakeQuestion();
+  }
+}
+
+function onApplyNaturalLanguage() {
+  try {
+    const text = el("quick-intake-text").value;
+    const parsed = parseNaturalLanguageFinancialEstimate(text);
+
+    if (!parsed.monthlyIncome && !parsed.monthlySpending && !parsed.checkingBalance) {
+      throw new Error("Could not find amounts in that text. Try including monthly income and spending.");
+    }
+
+    if (parsed.monthlyIncome) {
+      applyEstimateToField("annual-income", parsed.monthlyIncome * 12);
+    }
+    if (parsed.monthlySpending) {
+      applyEstimateToField("debt-payment", parsed.monthlySpending);
+    }
+    if (parsed.checkingBalance) {
+      applyEstimateToField("starter-balance", parsed.checkingBalance);
+    }
+
+    updateSafetyBar();
+    el("quick-intake-mapped").textContent = `Applied: income ${parsed.monthlyIncome ? formatCurrency(parsed.monthlyIncome) + "/mo" : "n/a"}, bill ${parsed.monthlySpending ? formatCurrency(parsed.monthlySpending) + "/mo" : "n/a"}, cash ${parsed.checkingBalance ? formatCurrency(parsed.checkingBalance) : "n/a"}.`;
+    setStatus("Natural language estimates applied.");
+  } catch (error) {
+    setStatus(error.message, true);
+  }
 }
 
 function currentWizardStep() {
@@ -358,6 +672,34 @@ function renderProjectionChart(result) {
     description:
       "Shows benefits income, planned withdrawals, and spending need over the scenario projection horizon."
   });
+}
+
+function renderStressTestChart(result, milestones) {
+  const annualProjection = result.engineResult.projection.annualProjection ?? [];
+  const stressSeries = buildStressTestRangeSeries({
+    annualProjection,
+    sensitivityRows: result.engineResult.sensitivity ?? [],
+    simulationOutputs: result.engineResult.simulation?.outputs ?? []
+  });
+
+  if (!stressSeries.labels.length) {
+    return "";
+  }
+
+  const chart = renderStressTestRangeChartSvg(stressSeries, {
+    title: "Stress test: market volatility range",
+    description:
+      "Shaded area shows best, likely, and worst market paths using deterministic sensitivity scenarios and bounded simulation."
+  });
+
+  const lowReturn = (result.engineResult.sensitivity ?? []).find((row) => row.id === "low_return");
+  const goalYear = milestones.retirementYear ?? stressSeries.labels.at(-1);
+  const reassurance =
+    lowReturn && Number(lowReturn.totalUnfunded ?? 0) <= 0
+      ? `Even if the market has a bad year like 2008, this plan still stays on track for your ${goalYear} goal.`
+      : `A bad market year can delay your goal. Use the What-If slider to add a small buffer and improve your ${goalYear} outlook.`;
+
+  return `${chart}<p><strong>Stress test takeaway:</strong> ${reassurance}</p>`;
 }
 
 async function refreshOverview() {
@@ -550,23 +892,91 @@ async function onRunScenario() {
         result.engineResult.sustainability.preferences
       )
     );
+    const milestones = buildLookAheadMilestones({
+      household,
+      scenario: result.scenario,
+      engineResult: result.engineResult,
+      currentYear: new Date().getUTCFullYear()
+    });
+    const totalSavings = (household.accounts ?? []).reduce(
+      (sum, account) => sum + Number(account.current_balance ?? 0),
+      0
+    );
+    const primaryMetricsHtml = renderPrimaryMetrics(totalSavings, milestones.monthlySurplus);
+    const milestonesHtml = renderMilestonesPanel(milestones);
+    const tldrHtml = renderLookAheadTldr(milestones);
+    const stressTestHtml = renderStressTestChart(result, milestones);
+    const nudges = buildSpendingNudges({
+      milestones,
+      projectionSummary: result.engineResult.projection.summary
+    });
+    const nudgesHtml = renderNudgesPanel(nudges);
+    const liquidityBalance = buildLiquidityBalance({ household });
+    const liquidityBalanceHtml = renderLiquidityBalancePanel(liquidityBalance);
+    const inflationRealityHtml = buildInflationRealityHtml(result.scenario, household);
 
     el("results").innerHTML = `
       <p><strong>${result.scenario.name}</strong></p>
-      <p>Final net worth: ${Math.round(result.engineResult.projection.summary.finalNetWorth)}</p>
-      <p>Total unfunded: ${Math.round(result.engineResult.projection.summary.totalUnfunded)}</p>
+      ${primaryMetricsHtml}
+      <p>Projected long-term savings: ${formatCurrency(Math.round(result.engineResult.projection.summary.finalNetWorth))}</p>
+      <p>Potential funding gap: ${formatCurrency(Math.round(result.engineResult.projection.summary.totalUnfunded))}</p>
+      ${milestonesHtml}
+      ${stressTestHtml}
+      ${nudgesHtml}
+      ${liquidityBalanceHtml}
+      <div id="inflation-reality-container">${inflationRealityHtml}</div>
       ${coupleOutcomesHtml}
       ${renderProjectionChart(result)}
+      ${tldrHtml}
       ${renderAssumptionsPanel(result.assumptionsPanel)}
       <h3>Sustainability disclosure</h3>
       ${sustainabilityDisclosure}
       ${alternativesPanel}
     `;
+    initializeInfoTooltips();
+    await updateLookAheadWhatIf();
     setStatus("Scenario run complete.");
   } catch (error) {
     el("results").innerHTML = renderErrorState(createErrorState(error));
     setStatus(error.message, true);
   }
+}
+
+async function updateLookAheadWhatIf() {
+  const monthlyReduction = Number(el("look-ahead-spending-cut").value);
+  el("look-ahead-spending-cut-output").textContent = formatCurrency(monthlyReduction);
+
+  if (!lastRun?.scenario || !lastRun?.engineResult) {
+    el("look-ahead-what-if").textContent = "Run a scenario to see what-if insights.";
+    return;
+  }
+
+  const household = await householdRepository.load();
+  if (!household) {
+    el("look-ahead-what-if").textContent = "Missing household data for what-if analysis.";
+    return;
+  }
+
+  const adjustedSpending = Math.max(0, Number(lastRun.scenario.annual_spending ?? 60000) - monthlyReduction * 12);
+  const whatIfScenario = {
+    ...cloneValue(lastRun.scenario),
+    annual_spending: adjustedSpending
+  };
+
+  const variantEngineResult = runDeterministicEngine({
+    household: cloneValue(household),
+    scenario: whatIfScenario,
+    currentAge: 38
+  });
+
+  const impact = buildWhatIfImpact({
+    monthlyReduction,
+    scenario: lastRun.scenario,
+    baselineEngineResult: lastRun.engineResult,
+    variantEngineResult
+  });
+
+  el("look-ahead-what-if").textContent = renderWhatIfMessage(impact);
 }
 
 async function onCompareScenarios() {
@@ -612,6 +1022,65 @@ async function onExportBundle() {
   } catch (error) {
     setStatus(error.message, true);
   }
+}
+
+async function onExportHouseholdYaml() {
+  try {
+    const household = await householdRepository.load();
+    if (!household) {
+      throw new Error("Save onboarding data before exporting household YAML.");
+    }
+
+    const payload = {
+      schema_version: "1.0.0",
+      household
+    };
+
+    downloadTextFile({
+      fileName: `openwealth-household-${household.household_id}.yaml`,
+      mimeType: "application/x-yaml",
+      data: stringifyYaml(payload)
+    });
+
+    setStatus("Household YAML exported.");
+  } catch (error) {
+    setStatus(error.message, true);
+  }
+}
+
+async function onImportHouseholdYamlFile(event) {
+  try {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    const text = await file.text();
+    const parsed = parseImportContent("yaml", text);
+    const household = parsed?.household ?? parsed;
+
+    if (!household || typeof household !== "object") {
+      throw new Error("YAML file must include a household object.");
+    }
+    if (typeof household.household_id !== "string" || household.household_id.length === 0) {
+      throw new Error("Imported household is missing household_id.");
+    }
+    if (!Array.isArray(household.people) || !Array.isArray(household.accounts)) {
+      throw new Error("Imported household must include people and accounts arrays.");
+    }
+
+    await householdRepository.save(household);
+    await refreshOverview();
+    setStatus(`Household YAML imported from ${file.name}.`);
+  } catch (error) {
+    setStatus(error.message, true);
+  } finally {
+    event.target.value = "";
+  }
+}
+
+function onImportHouseholdYamlClick() {
+  el("household-yaml-file").click();
 }
 
 function onGeneratePrompt() {
@@ -775,12 +1244,34 @@ async function init() {
   el("run-scenario").addEventListener("click", onRunScenario);
   el("compare-scenarios").addEventListener("click", onCompareScenarios);
   el("export-bundle").addEventListener("click", onExportBundle);
+  el("export-household-yaml").addEventListener("click", onExportHouseholdYaml);
+  el("import-household-yaml").addEventListener("click", onImportHouseholdYamlClick);
+  el("household-yaml-file").addEventListener("change", onImportHouseholdYamlFile);
   el("show-market-trends").addEventListener("click", onShowMarketTrends);
   el("generate-prompt").addEventListener("click", onGeneratePrompt);
   el("random-persona").addEventListener("click", onRandomPersona);
   el("apply-persona").addEventListener("click", onApplyPersona);
   el("run-persona-carousel").addEventListener("click", onPersonaCarousel);
   el("household-mode").addEventListener("change", syncHouseholdModeUi);
+  el("guided-tour-persona").addEventListener("change", syncGuidedTourPersonaUi);
+  el("data-entry-mode").addEventListener("change", syncDataEntryModeUi);
+  el("quick-intake-next").addEventListener("click", onQuickIntakeNext);
+  el("quick-intake-prev").addEventListener("click", onQuickIntakePrevious);
+  el("apply-natural-language").addEventListener("click", onApplyNaturalLanguage);
+  el("look-ahead-spending-cut").addEventListener("input", () => {
+    updateLookAheadWhatIf().catch((error) => setStatus(error.message, true));
+  });
+  [
+    "inflation-cash-principal",
+    "inflation-checking-rate",
+    "inflation-high-yield-rate",
+    "inflation-bond-rate"
+  ].forEach((id) => {
+    const eventName = id === "inflation-cash-principal" ? "input" : "input";
+    el(id).addEventListener(eventName, () => {
+      updateInflationRealityCheck().catch((error) => setStatus(error.message, true));
+    });
+  });
   el("wizard-prev").addEventListener("click", onWizardPrevious);
   el("wizard-next").addEventListener("click", onWizardNext);
 
@@ -804,6 +1295,9 @@ async function init() {
         assumptionProvenance.source = "user";
       }
       formatRangeOutput(input);
+      if (["annual-income", "debt-payment"].includes(input.id)) {
+        updateSafetyBar();
+      }
     });
   });
   document.querySelectorAll("button.market-preset").forEach((button) => {
@@ -817,6 +1311,13 @@ async function init() {
   });
   syncAllRangeOutputs();
   syncHouseholdModeUi();
+  syncGuidedTourPersonaUi();
+  syncDataEntryModeUi();
+  syncQuickIntakeQuestion();
+  updateSafetyBar();
+  updateInflationRateOutputs();
+  initializeInfoTooltips();
+  await updateLookAheadWhatIf();
   goToWizardStep(0);
 
   onRandomPersona();

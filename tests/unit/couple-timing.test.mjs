@@ -40,7 +40,8 @@ test("couple outcomes include combined and per-person retirement timing", () => 
 
   const html = renderCoupleTimingOutcomes(outcomes);
   assert.match(html, /Couple retirement timing outcomes/);
-  assert.match(html, /Per-person retirement timing/);
+  assert.match(html, /Life timeline/);
+  assert.match(html, /metric-primary-grid/);
   assert.match(html, /Sam/);
   assert.match(html, /Riley/);
 });

@@ -26,7 +26,7 @@ export function buildReportSections(engineResult, input = {}) {
     profile: buildProfileSection(input.household ?? { household_id: "n/a", name: "Unknown", province_or_territory: "NA", people: [] }),
     accounts: buildAccountsSection(input.household ?? { accounts: [] }),
     scenarios: scenarioSection,
-    assumptions: buildAssumptionsSection(engineResult),
+    assumptions: buildAssumptionsSection(engineResult, input.scenario ?? {}),
     caveats: caveatsSection,
     sustainability: buildSustainabilitySection(engineResult.sustainability ?? {})
     ,

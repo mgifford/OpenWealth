@@ -106,7 +106,7 @@ export function createPlanningExperience(dependencies) {
       return {
         scenario,
         engineResult,
-        assumptionsPanel: buildAssumptionsPanel(engineResult),
+        assumptionsPanel: buildAssumptionsPanel(engineResult, scenario),
         state: loading
       };
     },

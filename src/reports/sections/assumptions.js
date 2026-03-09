@@ -1,7 +1,8 @@
-export function buildAssumptionsSection(engineResult) {
+export function buildAssumptionsSection(engineResult, scenario = {}) {
   return {
     section_id: "assumptions",
     title: "Assumptions",
-    values: engineResult.assumptions ?? {}
+    values: engineResult.assumptions ?? {},
+    provenance: scenario.assumptions_provenance ?? {}
   };
 }

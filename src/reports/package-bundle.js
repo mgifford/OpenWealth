@@ -1,6 +1,5 @@
 import { buildManifest } from "./manifest.js";
-import { createHash } from "node:crypto";
-import { Buffer } from "node:buffer";
+import { sha256Hex, utf8Size, encodeBase64Utf8 } from "./crypto-utils.js";
 
 function formatDateForBundle(timestamp) {
   return timestamp.slice(0, 10).replaceAll("-", "");
@@ -41,10 +40,6 @@ export function packageReportBundle(input, artifacts, options = {}) {
   };
 }
 
-function sha256(content) {
-  return createHash("sha256").update(content, "utf8").digest("hex");
-}
-
 function inferMimeType(fileName) {
   if (fileName.endsWith(".html")) {
     return "text/html";
@@ -59,14 +54,6 @@ function inferMimeType(fileName) {
     return "text/markdown";
   }
   return "text/plain";
-}
-
-function utf8Size(content) {
-  return Buffer.byteLength(content, "utf8");
-}
-
-function encodeBase64(content) {
-  return Buffer.from(content, "utf8").toString("base64");
 }
 
 function canonicalArtifactString(artifact) {
@@ -88,9 +75,9 @@ export function serializeBundle(bundle) {
       name,
       mime_type: inferMimeType(name),
       encoding: "utf-8",
-      sha256: sha256(content),
+      sha256: sha256Hex(content),
       size_bytes: utf8Size(content),
-      content_base64: encodeBase64(content)
+      content_base64: encodeBase64Utf8(content)
     };
   });
 
@@ -103,7 +90,7 @@ export function serializeBundle(bundle) {
     bundle_name: bundle.bundle_name,
     generated_at: bundle.generated_at,
     manifest_sha256: manifestArtifact?.sha256 ?? null,
-    bundle_sha256: sha256(bundleIntegritySeed),
+    bundle_sha256: sha256Hex(bundleIntegritySeed),
     artifacts
   };
 

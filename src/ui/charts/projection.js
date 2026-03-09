@@ -29,6 +29,26 @@ function pointsForSeries(values, width, height, padding, maxValue) {
     .join(" ");
 }
 
+function renderPointMarkers(values, color, width, height, padding, maxValue) {
+  return values
+    .map((value, index) => {
+      const x = scaleX(index, values.length, width, padding);
+      const y = scaleY(value, maxValue, height, padding);
+      return `<circle cx="${x}" cy="${y}" r="2" fill="${color}" />`;
+    })
+    .join("");
+}
+
+function renderEndLabel(values, color, width, height, padding, maxValue, text) {
+  if (!values.length) {
+    return "";
+  }
+
+  const x = scaleX(values.length - 1, values.length, width, padding) + 6;
+  const y = scaleY(values[values.length - 1], maxValue, height, padding) - 2;
+  return `<text x="${x}" y="${y}" fill="${color}" font-size="10">${text}</text>`;
+}
+
 export function buildProjectionSeries(annualProjection = []) {
   return {
     labels: annualProjection.map((row) => row.year),
@@ -60,6 +80,38 @@ export function renderProjectionChartSvg(series, options = {}) {
   const withdrawalsPoints = pointsForSeries(series.withdrawalsPlanned, width, height, padding, clippedMax);
   const spendingPoints = pointsForSeries(series.spendingNeed, width, height, padding, clippedMax);
 
+  const benefitsMarkers = renderPointMarkers(series.benefitsIncome, "#11a579", width, height, padding, clippedMax);
+  const withdrawalsMarkers = renderPointMarkers(series.withdrawalsPlanned, "#3969ac", width, height, padding, clippedMax);
+  const spendingMarkers = renderPointMarkers(series.spendingNeed, "#f2b701", width, height, padding, clippedMax);
+
+  const benefitsEnd = renderEndLabel(
+    series.benefitsIncome,
+    "#11a579",
+    width,
+    height,
+    padding,
+    clippedMax,
+    `${Math.round(series.benefitsIncome.at(-1) ?? 0).toLocaleString()}`
+  );
+  const withdrawalsEnd = renderEndLabel(
+    series.withdrawalsPlanned,
+    "#3969ac",
+    width,
+    height,
+    padding,
+    clippedMax,
+    `${Math.round(series.withdrawalsPlanned.at(-1) ?? 0).toLocaleString()}`
+  );
+  const spendingEnd = renderEndLabel(
+    series.spendingNeed,
+    "#f2b701",
+    width,
+    height,
+    padding,
+    clippedMax,
+    `${Math.round(series.spendingNeed.at(-1) ?? 0).toLocaleString()}`
+  );
+
   return `
 <figure>
   <figcaption>${title}</figcaption>
@@ -71,6 +123,12 @@ export function renderProjectionChartSvg(series, options = {}) {
     <polyline fill="none" stroke="#11a579" stroke-width="2" points="${benefitsPoints}" />
     <polyline fill="none" stroke="#3969ac" stroke-width="2" points="${withdrawalsPoints}" />
     <polyline fill="none" stroke="#f2b701" stroke-width="2" points="${spendingPoints}" />
+    ${benefitsMarkers}
+    ${withdrawalsMarkers}
+    ${spendingMarkers}
+    ${benefitsEnd}
+    ${withdrawalsEnd}
+    ${spendingEnd}
   </svg>
   <p>Green: benefits income, Blue: planned withdrawals, Gold: spending need.</p>
 </figure>

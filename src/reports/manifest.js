@@ -1,5 +1,4 @@
-import { createHash } from "node:crypto";
-import { Buffer } from "node:buffer";
+import { sha256Hex, utf8Size } from "./crypto-utils.js";
 
 const REQUIRED_ARTIFACTS = [
   "report.html",
@@ -7,14 +6,6 @@ const REQUIRED_ARTIFACTS = [
   "scenario-results.yaml",
   "assumptions.yaml"
 ];
-
-function sha256(content) {
-  return createHash("sha256").update(content, "utf8").digest("hex");
-}
-
-function utf8Size(content) {
-  return Buffer.byteLength(content, "utf8");
-}
 
 export function validateRequiredArtifacts(artifacts) {
   for (const fileName of REQUIRED_ARTIFACTS) {
@@ -40,7 +31,7 @@ export function buildManifest(input, artifacts, options = {}) {
     warnings_summary: input.engineResult.warnings ?? [],
     artifacts: Object.entries(artifacts).map(([name, content]) => ({
       name,
-      sha256: sha256(content),
+      sha256: sha256Hex(content),
       size_bytes: utf8Size(content)
     }))
   };

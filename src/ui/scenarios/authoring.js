@@ -24,9 +24,15 @@ export function buildScenarioDraft(input, options = {}) {
     cpp_start_age: Number(input.cpp_start_age ?? 65),
     oas_start_age: Number(input.oas_start_age ?? 65),
     withdrawal_strategy: input.withdrawal_strategy ?? "blended",
+    expected_return: Number(input.expected_return ?? 0.05),
     inflation_rate: Number(input.inflation_rate ?? 0.02),
     annual_spending: Number(input.annual_spending ?? 60000),
     projection_years: Number(input.projection_years ?? 30),
+    assumptions_provenance: {
+      expected_return: input.assumptions_provenance?.expected_return ?? "default",
+      inflation_rate: input.assumptions_provenance?.inflation_rate ?? "default",
+      source: input.assumptions_provenance?.source ?? "user"
+    },
     created_at: input.created_at ?? isoTimestamp(options.clock)
   };
 }

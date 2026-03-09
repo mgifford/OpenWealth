@@ -36,6 +36,11 @@ const experience = createPlanningExperience({ householdRepository, scenarioRepos
 
 let lastRun = null;
 let activePersona = null;
+const assumptionProvenance = {
+  expected_return: "manual_slider",
+  inflation_rate: "manual_slider",
+  source: "user"
+};
 const prefersDarkScheme =
   typeof window !== "undefined" && typeof window.matchMedia === "function"
     ? window.matchMedia("(prefers-color-scheme: dark)")
@@ -211,6 +216,16 @@ function renderSensitivityChart(sensitivityRows) {
 
   const yFor = (value) => height - padding - (value / maxNetWorth) * (height - padding * 2);
   const linePoints = rows.map((row) => `${xFor(row.expectedReturn)},${yFor(row.finalNetWorth)}`).join(" ");
+  const pointMarkers = rows
+    .map(
+      (row) =>
+        `<circle cx="${xFor(row.expectedReturn)}" cy="${yFor(row.finalNetWorth)}" r="2.5" fill="#0d7a63" />`
+    )
+    .join("");
+  const finalLabel = rows.at(-1);
+  const labelMarkup = finalLabel
+    ? `<text x="${xFor(finalLabel.expectedReturn) + 8}" y="${yFor(finalLabel.finalNetWorth) - 4}" fill="#0d7a63" font-size="10">${formatCurrency(finalLabel.finalNetWorth)}</text>`
+    : "";
 
   const tableRows = rows
     .map(
@@ -228,6 +243,8 @@ function renderSensitivityChart(sensitivityRows) {
         <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="currentColor" stroke-opacity="0.4" />
         <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="currentColor" stroke-opacity="0.4" />
         <polyline fill="none" stroke="#0d7a63" stroke-width="2" points="${linePoints}" />
+        ${pointMarkers}
+        ${labelMarkup}
       </svg>
     </figure>
     <table>
@@ -376,6 +393,9 @@ function applyMarketPreset(button) {
   el("expected-return").value = String(presetReturn);
   el("inflation-rate").value = String(presetInflation);
   el("scenario-name").value = `${presetName} Scenario`;
+  assumptionProvenance.expected_return = `preset:${presetName.toLowerCase()}`;
+  assumptionProvenance.inflation_rate = `preset:${presetName.toLowerCase()}`;
+  assumptionProvenance.source = "preset";
   syncAllRangeOutputs();
   setStatus(`${presetName} market preset applied.`);
 }
@@ -383,6 +403,8 @@ function applyMarketPreset(button) {
 function applyReturnPreset(button) {
   const presetReturn = Number(button.dataset.return ?? el("expected-return").value);
   el("expected-return").value = String(presetReturn);
+  assumptionProvenance.expected_return = `return_preset:${formatPercent(presetReturn)}`;
+  assumptionProvenance.source = "mixed";
   syncAllRangeOutputs();
   setStatus(`Expected return preset applied: ${formatPercent(presetReturn)}`);
 }
@@ -390,6 +412,8 @@ function applyReturnPreset(button) {
 function applyInflationPreset(button) {
   const presetInflation = Number(button.dataset.inflation ?? el("inflation-rate").value);
   el("inflation-rate").value = String(presetInflation);
+  assumptionProvenance.inflation_rate = `inflation_preset:${formatPercent(presetInflation)}`;
+  assumptionProvenance.source = "mixed";
   syncAllRangeOutputs();
   setStatus(`Inflation preset applied: ${formatPercent(presetInflation)}`);
 }
@@ -406,7 +430,10 @@ async function onCreateScenario(event) {
       annual_spending: Number(el("annual-spending").value),
       projection_years: Number(el("projection-years").value),
       expected_return: Number(el("expected-return").value),
-      inflation_rate: Number(el("inflation-rate").value)
+      inflation_rate: Number(el("inflation-rate").value),
+      assumptions_provenance: {
+        ...assumptionProvenance
+      }
     });
 
     await refreshOverview();
@@ -655,7 +682,17 @@ async function init() {
   el("household-mode").addEventListener("change", syncHouseholdModeUi);
 
   document.querySelectorAll("input[type='range'][data-output]").forEach((input) => {
-    input.addEventListener("input", () => formatRangeOutput(input));
+    input.addEventListener("input", () => {
+      if (input.id === "expected-return") {
+        assumptionProvenance.expected_return = "manual_slider";
+        assumptionProvenance.source = "user";
+      }
+      if (input.id === "inflation-rate") {
+        assumptionProvenance.inflation_rate = "manual_slider";
+        assumptionProvenance.source = "user";
+      }
+      formatRangeOutput(input);
+    });
   });
   document.querySelectorAll("button.market-preset").forEach((button) => {
     button.addEventListener("click", () => applyMarketPreset(button));

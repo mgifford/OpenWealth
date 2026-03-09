@@ -1,4 +1,4 @@
-import YAML from "yaml";
+import { stringifyYaml } from "./yaml-stringify.js";
 
 export function exportYamlArtifacts(input, options = {}) {
   const schemaVersion = options.schemaVersion ?? "1.0.0";
@@ -19,8 +19,8 @@ export function exportYamlArtifacts(input, options = {}) {
   };
 
   return {
-    "household.yaml": YAML.stringify(householdDocument),
-    "scenario-results.yaml": YAML.stringify(scenarioResultsDocument),
-    "assumptions.yaml": YAML.stringify(assumptionsDocument)
+    "household.yaml": stringifyYaml(householdDocument),
+    "scenario-results.yaml": stringifyYaml(scenarioResultsDocument),
+    "assumptions.yaml": stringifyYaml(assumptionsDocument)
   };
 }

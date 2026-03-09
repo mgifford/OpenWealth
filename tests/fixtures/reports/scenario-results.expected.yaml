@@ -14,14 +14,14 @@ results:
       strategy: tfsa_first
       finalNetWorth: 3926438.2539158943
       totalUnfunded: 0
-    assumptions: &a1
+    assumptions:
       inflationRate: 0.02
       expectedReturn: 0.05
       retirementAge: 65
       cppStartAge: 65
       oasStartAge: 65
       strategy: tfsa_first
-    warnings: &a2
+    warnings:
       - Informational model only; not financial advice.
       - Deterministic engine output depends on provided assumptions.
     annualProjection:
@@ -392,37 +392,32 @@ results:
       - metric_key: fossil_exposure
         availability_state: modeled
         modeled_value: 15.74
-        unit: "% portfolio"
-        source_reference: Modeled from account-type exposure assumptions (OpenWealth
-          baseline 2026)
+        unit: % portfolio
+        source_reference: Modeled from account-type exposure assumptions (OpenWealth baseline 2026)
         confidence: medium
       - metric_key: carbon_intensity
         availability_state: modeled
         modeled_value: 120.1
         unit: tCO2e / $M revenue
-        source_reference: Modeled from account-type exposure assumptions (OpenWealth
-          baseline 2026)
+        source_reference: Modeled from account-type exposure assumptions (OpenWealth baseline 2026)
         confidence: medium
       - metric_key: renewable_transition_exposure
         availability_state: modeled
         modeled_value: 17.72
-        unit: "% portfolio"
-        source_reference: Modeled from account-type exposure assumptions (OpenWealth
-          baseline 2026)
+        unit: % portfolio
+        source_reference: Modeled from account-type exposure assumptions (OpenWealth baseline 2026)
         confidence: medium
       - metric_key: social_community_exposure
         availability_state: modeled
         modeled_value: 8.59
-        unit: "% portfolio"
-        source_reference: Modeled from account-type exposure assumptions (OpenWealth
-          baseline 2026)
+        unit: % portfolio
+        source_reference: Modeled from account-type exposure assumptions (OpenWealth baseline 2026)
         confidence: medium
       - metric_key: controversial_sector_exposure
         availability_state: modeled
         modeled_value: 5.87
-        unit: "% portfolio"
-        source_reference: Modeled from account-type exposure assumptions (OpenWealth
-          baseline 2026)
+        unit: % portfolio
+        source_reference: Modeled from account-type exposure assumptions (OpenWealth baseline 2026)
         confidence: medium
     has_opaque_score: false
     climate_overlays:
@@ -433,7 +428,7 @@ results:
         risk_note: Near-term repricing risk for carbon-intensive holdings
         availability_state: modeled
         confidence: medium
-        source_reference: OpenWealth climate overlay assumptions (scenario-based, non-predictive)
+        source_reference: "OpenWealth climate overlay assumptions (scenario-based, non-predictive)"
       - overlay_key: delayed_transition
         label: Delayed transition
         projected_return_delta: -0.003
@@ -441,7 +436,7 @@ results:
         risk_note: Longer period of policy uncertainty and staggered repricing
         availability_state: modeled
         confidence: medium
-        source_reference: OpenWealth climate overlay assumptions (scenario-based, non-predictive)
+        source_reference: "OpenWealth climate overlay assumptions (scenario-based, non-predictive)"
       - overlay_key: worsened_physical_risk
         label: Worsened physical risk
         projected_return_delta: -0.01
@@ -449,6 +444,14 @@ results:
         risk_note: Higher expected loss rates from physical climate events
         availability_state: modeled
         confidence: medium
-        source_reference: OpenWealth climate overlay assumptions (scenario-based, non-predictive)
-  assumptions: *a1
-  warnings: *a2
+        source_reference: "OpenWealth climate overlay assumptions (scenario-based, non-predictive)"
+  assumptions:
+    inflationRate: 0.02
+    expectedReturn: 0.05
+    retirementAge: 65
+    cppStartAge: 65
+    oasStartAge: 65
+    strategy: tfsa_first
+  warnings:
+    - Informational model only; not financial advice.
+    - Deterministic engine output depends on provided assumptions.

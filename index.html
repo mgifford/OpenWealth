@@ -545,6 +545,19 @@
         <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
       </section>
 
+      <section aria-labelledby="profile-save-load-heading">
+        <h2 id="profile-save-load-heading">Save / Load Profile</h2>
+        <p>
+          Your data is stored locally in this browser. Export a YAML file to keep your profile
+          portable — reload it here anytime, on any device, or after clearing browser data.
+        </p>
+        <div class="grid">
+          <button id="export-household-yaml" type="button">Save profile to YAML file</button>
+          <button id="import-household-yaml" type="button">Load saved YAML profile</button>
+        </div>
+        <input id="household-yaml-file" class="sr-only" type="file" accept=".yaml,.yml,text/yaml,application/x-yaml" />
+      </section>
+
       <section aria-labelledby="wizard-heading">
         <h2 id="wizard-heading">Guided Retirement Wizard</h2>
         <p>Follow a structured planning flow: About You -> Savings -> Income -> Benefits -> Market Assumptions -> Results.</p>
@@ -961,6 +974,7 @@
           <button id="compare-scenarios" type="button">Compare all scenarios</button>
           <button id="export-bundle" type="button">Export report bundle</button>
         </div>
+        <p class="hint">Save your progress: use the <a href="#profile-save-load-heading"><strong>Save / Load Profile</strong></a> section to export a YAML file you can reload later.</p>
       </section>
 
       <section data-wizard-section="results">
@@ -1022,16 +1036,6 @@
         <button id="generate-prompt" type="button">Generate prompt package</button>
         <label for="prompt-output">Prompt text</label>
         <textarea id="prompt-output" aria-label="Prompt package output"></textarea>
-      </section>
-
-      <section>
-        <h2>Household YAML</h2>
-        <p>Save your full household profile to a portable YAML file, or load a saved YAML profile back into this workspace.</p>
-        <div class="grid">
-          <button id="export-household-yaml" type="button">Export household YAML</button>
-          <button id="import-household-yaml" type="button">Import household YAML</button>
-        </div>
-        <input id="household-yaml-file" class="sr-only" type="file" accept=".yaml,.yml,text/yaml,application/x-yaml" />
       </section>
 
       <section aria-labelledby="community-heading">

@@ -126,6 +126,115 @@ function applyPersonaToUi(persona) {
   el("strategy").value = values.strategy;
   el("retirement-goal-range").textContent = values.retirementGoalRange;
   el("life-expectancy-range").textContent = values.lifeExpectancyRange;
+  syncAllRangeOutputs();
+}
+
+function formatPercent(value) {
+  return `${(Number(value) * 100).toFixed(1)}%`;
+}
+
+function formatCurrency(value) {
+  return `$${Math.round(Number(value)).toLocaleString()}`;
+}
+
+function formatRangeOutput(input) {
+  const outputId = input.dataset.output;
+  if (!outputId) {
+    return;
+  }
+
+  let displayValue = input.value;
+  if (input.id === "annual-spending") {
+    displayValue = formatCurrency(input.value);
+  } else if (input.id === "expected-return" || input.id === "inflation-rate") {
+    displayValue = formatPercent(input.value);
+  }
+
+  el(outputId).textContent = displayValue;
+}
+
+function syncAllRangeOutputs() {
+  document.querySelectorAll("input[type='range'][data-output]").forEach((input) => {
+    formatRangeOutput(input);
+  });
+}
+
+function renderSensitivityChart(sensitivityRows) {
+  const rows = sensitivityRows
+    .map((row) => ({
+      id: row.id,
+      expectedReturn: Number(row.assumptions.expectedReturn ?? 0),
+      finalNetWorth: Number(row.finalNetWorth ?? 0),
+      totalUnfunded: Number(row.totalUnfunded ?? 0)
+    }))
+    .sort((left, right) => left.expectedReturn - right.expectedReturn);
+
+  if (!rows.length) {
+    return "<p>No market trend scenarios available.</p>";
+  }
+
+  const width = 760;
+  const height = 260;
+  const padding = 26;
+  const minReturn = rows[0].expectedReturn;
+  const maxReturn = rows[rows.length - 1].expectedReturn;
+  const maxNetWorth = Math.max(1, ...rows.map((row) => row.finalNetWorth));
+
+  const xFor = (value) => {
+    if (maxReturn === minReturn) {
+      return padding;
+    }
+    return padding + ((value - minReturn) / (maxReturn - minReturn)) * (width - padding * 2);
+  };
+
+  const yFor = (value) => height - padding - (value / maxNetWorth) * (height - padding * 2);
+  const linePoints = rows.map((row) => `${xFor(row.expectedReturn)},${yFor(row.finalNetWorth)}`).join(" ");
+
+  const tableRows = rows
+    .map(
+      (row) =>
+        `<tr><th scope="row">${row.id}</th><td>${formatPercent(row.expectedReturn)}</td><td>${formatCurrency(row.finalNetWorth)}</td><td>${formatCurrency(row.totalUnfunded)}</td></tr>`
+    )
+    .join("");
+
+  return `
+    <figure>
+      <figcaption>Growth-rate trend: expected return vs final net worth</figcaption>
+      <svg viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="market-trend-title market-trend-desc">
+        <title id="market-trend-title">Market trend sensitivity chart</title>
+        <desc id="market-trend-desc">Line chart showing how final net worth changes as expected return assumptions increase.</desc>
+        <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="currentColor" stroke-opacity="0.4" />
+        <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="currentColor" stroke-opacity="0.4" />
+        <polyline fill="none" stroke="#0d7a63" stroke-width="2" points="${linePoints}" />
+      </svg>
+    </figure>
+    <table>
+      <caption>Market trend scenarios</caption>
+      <thead><tr><th scope="col">Variant</th><th scope="col">Expected return</th><th scope="col">Final net worth</th><th scope="col">Total unfunded</th></tr></thead>
+      <tbody>${tableRows}</tbody>
+    </table>
+  `;
+}
+
+async function onShowMarketTrends() {
+  try {
+    const scenarioId = el("scenario-select").value;
+    if (!scenarioId) {
+      throw new Error("Create and select a scenario first.");
+    }
+
+    const result = await experience.runScenario(scenarioId, { currentAge: 38 });
+    if (!result.engineResult) {
+      throw new Error("Unable to generate market trends for this scenario.");
+    }
+
+    const sensitivityRows = result.engineResult.sensitivity ?? [];
+    el("market-trends").innerHTML = renderSensitivityChart(sensitivityRows);
+    setStatus("Market trend scenarios updated.");
+  } catch (error) {
+    el("market-trends").innerHTML = renderErrorState(createErrorState(error));
+    setStatus(error.message, true);
+  }
 }
 
 function renderProjectionChart(result) {
@@ -208,7 +317,9 @@ async function onCreateScenario(event) {
       oas_start_age: Number(el("oas-age").value),
       withdrawal_strategy: el("strategy").value,
       annual_spending: Number(el("annual-spending").value),
-      projection_years: Number(el("projection-years").value)
+      projection_years: Number(el("projection-years").value),
+      expected_return: Number(el("expected-return").value),
+      inflation_rate: Number(el("inflation-rate").value)
     });
 
     await refreshOverview();
@@ -449,10 +560,16 @@ async function init() {
   el("run-scenario").addEventListener("click", onRunScenario);
   el("compare-scenarios").addEventListener("click", onCompareScenarios);
   el("export-bundle").addEventListener("click", onExportBundle);
+  el("show-market-trends").addEventListener("click", onShowMarketTrends);
   el("generate-prompt").addEventListener("click", onGeneratePrompt);
   el("random-persona").addEventListener("click", onRandomPersona);
   el("apply-persona").addEventListener("click", onApplyPersona);
   el("run-persona-carousel").addEventListener("click", onPersonaCarousel);
+
+  document.querySelectorAll("input[type='range'][data-output]").forEach((input) => {
+    input.addEventListener("input", () => formatRangeOutput(input));
+  });
+  syncAllRangeOutputs();
 
   onRandomPersona();
   setStatus("Ready.");

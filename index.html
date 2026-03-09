@@ -412,7 +412,17 @@
             <label for="birth-year">Birth year</label>
             <input id="birth-year" type="number" required value="1988" />
             <label for="retirement-target">Retirement target age</label>
-            <input id="retirement-target" type="number" required value="65" />
+            <input
+              id="retirement-target"
+              type="range"
+              min="50"
+              max="75"
+              step="1"
+              value="65"
+              data-output="retirement-target-output"
+              required
+            />
+            <p class="hint">Selected retirement target age: <strong id="retirement-target-output">65</strong></p>
             <p>Retirement goal range: <strong id="retirement-goal-range">n/a</strong></p>
             <p>Life expectancy range: <strong id="life-expectancy-range">n/a</strong></p>
             <label for="starter-balance">Starter TFSA balance</label>
@@ -428,11 +438,41 @@
             <label for="scenario-name">Scenario name</label>
             <input id="scenario-name" required value="Baseline Scenario" />
             <label for="scenario-retirement">Retirement age</label>
-            <input id="scenario-retirement" type="number" required value="65" />
+            <input
+              id="scenario-retirement"
+              type="range"
+              min="50"
+              max="75"
+              step="1"
+              value="65"
+              data-output="scenario-retirement-output"
+              required
+            />
+            <p class="hint">Selected retirement age: <strong id="scenario-retirement-output">65</strong></p>
             <label for="cpp-age">CPP start age</label>
-            <input id="cpp-age" type="number" required value="65" />
+            <input
+              id="cpp-age"
+              type="range"
+              min="60"
+              max="70"
+              step="1"
+              value="65"
+              data-output="cpp-age-output"
+              required
+            />
+            <p class="hint">CPP start age: <strong id="cpp-age-output">65</strong></p>
             <label for="oas-age">OAS start age</label>
-            <input id="oas-age" type="number" required value="65" />
+            <input
+              id="oas-age"
+              type="range"
+              min="65"
+              max="70"
+              step="1"
+              value="65"
+              data-output="oas-age-output"
+              required
+            />
+            <p class="hint">OAS start age: <strong id="oas-age-output">65</strong></p>
             <label for="strategy">Withdrawal strategy</label>
             <select id="strategy">
               <option value="blended">blended</option>
@@ -440,9 +480,53 @@
               <option value="rrsp_first">rrsp_first</option>
             </select>
             <label for="annual-spending">Annual spending</label>
-            <input id="annual-spending" type="number" required value="60000" />
+            <input
+              id="annual-spending"
+              type="range"
+              min="25000"
+              max="150000"
+              step="1000"
+              value="60000"
+              data-output="annual-spending-output"
+              required
+            />
+            <p class="hint">Annual spending: <strong id="annual-spending-output">$60,000</strong></p>
             <label for="projection-years">Projection years</label>
-            <input id="projection-years" type="number" required value="30" />
+            <input
+              id="projection-years"
+              type="range"
+              min="10"
+              max="50"
+              step="1"
+              value="30"
+              data-output="projection-years-output"
+              required
+            />
+            <p class="hint">Projection years: <strong id="projection-years-output">30</strong></p>
+            <label for="expected-return">Expected market growth rate</label>
+            <input
+              id="expected-return"
+              type="range"
+              min="0.02"
+              max="0.10"
+              step="0.001"
+              value="0.05"
+              data-output="expected-return-output"
+              required
+            />
+            <p class="hint">Expected growth: <strong id="expected-return-output">5.0%</strong></p>
+            <label for="inflation-rate">Inflation rate</label>
+            <input
+              id="inflation-rate"
+              type="range"
+              min="0.01"
+              max="0.06"
+              step="0.001"
+              value="0.025"
+              data-output="inflation-rate-output"
+              required
+            />
+            <p class="hint">Inflation: <strong id="inflation-rate-output">2.5%</strong></p>
             <button type="submit">Create scenario</button>
           </form>
         </section>
@@ -467,6 +551,13 @@
       <section>
         <h2>Comparison</h2>
         <div id="comparison" aria-live="polite"></div>
+      </section>
+
+      <section>
+        <h2>Market Trends</h2>
+        <p>Review expected growth-rate scenarios and how outcomes change across low/base/high return assumptions.</p>
+        <button id="show-market-trends" type="button">Show market trend scenarios</button>
+        <div id="market-trends" aria-live="polite"></div>
       </section>
 
       <section>

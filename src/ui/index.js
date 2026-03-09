@@ -19,3 +19,4 @@ export {
 	pickRandomRetirementPersona,
 	applyPersonaToFormValues
 } from "./personas/index.js";
+export { buildProjectionSeries, renderProjectionChartSvg } from "./charts/projection.js";

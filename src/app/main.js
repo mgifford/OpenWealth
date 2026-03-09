@@ -10,7 +10,10 @@ import {
   renderAlternativesPanel,
   createPromptPackage,
   pickRandomRetirementPersona,
-  applyPersonaToFormValues
+  applyPersonaToFormValues,
+  listRetirementPersonas,
+  buildProjectionSeries,
+  renderProjectionChartSvg
 } from "../ui/index.js";
 import {
   renderAssumptionsPanel,
@@ -101,6 +104,16 @@ function applyPersonaToUi(persona) {
   el("strategy").value = values.strategy;
   el("retirement-goal-range").textContent = values.retirementGoalRange;
   el("life-expectancy-range").textContent = values.lifeExpectancyRange;
+}
+
+function renderProjectionChart(result) {
+  const projection = result.engineResult.projection.annualProjection ?? [];
+  const series = buildProjectionSeries(projection);
+  return renderProjectionChartSvg(series, {
+    title: `Income projection - ${result.scenario.name}`,
+    description:
+      "Shows benefits income, planned withdrawals, and spending need over the scenario projection horizon."
+  });
 }
 
 async function refreshOverview() {
@@ -209,6 +222,7 @@ async function onRunScenario() {
       <p><strong>${result.scenario.name}</strong></p>
       <p>Final net worth: ${Math.round(result.engineResult.projection.summary.finalNetWorth)}</p>
       <p>Total unfunded: ${Math.round(result.engineResult.projection.summary.totalUnfunded)}</p>
+      ${renderProjectionChart(result)}
       ${renderAssumptionsPanel(result.assumptionsPanel)}
       <h3>Sustainability disclosure</h3>
       ${sustainabilityDisclosure}
@@ -304,6 +318,95 @@ function onApplyPersona() {
   }
 }
 
+async function ensurePersonaBaseline(persona) {
+  const existing = await householdRepository.load();
+  if (existing) {
+    return existing;
+  }
+
+  let draft = experience.createOnboardingDraft();
+  draft = experience.applyOnboardingStep(draft, "household", {
+    name: `${persona.title} Household`,
+    province_or_territory: "ON"
+  });
+  draft = experience.applyOnboardingStep(draft, "people", {
+    people: [
+      {
+        display_name: persona.title,
+        birth_year: 1988,
+        retirement_target_age: persona.assumptions.retirement_target_age
+      }
+    ]
+  });
+  draft = experience.applyOnboardingStep(draft, "accounts", {
+    accounts: [
+      {
+        account_type: "tfsa",
+        current_balance: persona.assumptions.starter_balance,
+        annual_contribution: 7000,
+        confidence: "high",
+        user_verified: true
+      }
+    ]
+  });
+
+  const onboarded = await experience.completeOnboarding(draft);
+  return onboarded.household;
+}
+
+async function onPersonaCarousel() {
+  try {
+    const personas = listRetirementPersonas();
+    await ensurePersonaBaseline(personas[0]);
+
+    const scenarioIds = [];
+    const cards = [];
+
+    for (const persona of personas) {
+      const scenario = await experience.createScenario({
+        name: `${persona.title} Persona`,
+        retirement_age: persona.assumptions.retirement_age,
+        cpp_start_age: persona.assumptions.cpp_start_age,
+        oas_start_age: persona.assumptions.oas_start_age,
+        withdrawal_strategy: persona.assumptions.withdrawal_strategy,
+        annual_spending: persona.assumptions.annual_spending,
+        projection_years: persona.assumptions.projection_years
+      });
+
+      const runResult = await experience.runScenario(scenario.scenario_id, { currentAge: 38 });
+      if (runResult.engineResult) {
+        scenarioIds.push(scenario.scenario_id);
+        cards.push(`
+          <article>
+            <h4>${persona.title}</h4>
+            <p>Lifestyle: ${persona.lifestyle}</p>
+            <p>Retirement goal: ${persona.retirement_goal_range}</p>
+            <p>Life expectancy: ${persona.life_expectancy_range.min}-${persona.life_expectancy_range.max}</p>
+            <p>Final net worth: ${Math.round(runResult.engineResult.projection.summary.finalNetWorth)}</p>
+            <p>Total unfunded: ${Math.round(runResult.engineResult.projection.summary.totalUnfunded)}</p>
+          </article>
+        `);
+      }
+    }
+
+    await refreshOverview();
+    const comparisonResult = await experience.compareScenarios(scenarioIds, { currentAge: 38 });
+    const comparisonTable = comparisonResult.comparison
+      ? renderComparisonTable(comparisonResult.comparison)
+      : "<p>No comparison available.</p>";
+
+    el("persona-carousel-results").innerHTML = `
+      <div class="grid">${cards.join("")}</div>
+      <h3>Persona scenario comparison</h3>
+      ${comparisonTable}
+    `;
+
+    setStatus("Persona carousel completed.");
+  } catch (error) {
+    setStatus(error.message, true);
+  }
+}
+
 async function init() {
   applyTheme(settings.get("theme", "auto"));
   await refreshOverview();
@@ -321,6 +424,7 @@ async function init() {
   el("generate-prompt").addEventListener("click", onGeneratePrompt);
   el("random-persona").addEventListener("click", onRandomPersona);
   el("apply-persona").addEventListener("click", onApplyPersona);
+  el("run-persona-carousel").addEventListener("click", onPersonaCarousel);
 
   onRandomPersona();
   setStatus("Ready.");

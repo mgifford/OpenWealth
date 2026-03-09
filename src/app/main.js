@@ -615,22 +615,36 @@ async function onExportBundle() {
 }
 
 function onGeneratePrompt() {
-  try {
-    if (!lastRun) {
-      throw new Error("Run a scenario before generating a prompt package.");
+  (async () => {
+    try {
+      if (!lastRun) {
+        const scenarioId = el("scenario-select").value;
+        if (!scenarioId) {
+          throw new Error("Create and select a scenario before generating a prompt package.");
+        }
+
+        const result = await experience.runScenario(scenarioId, { currentAge: 38 });
+        if (!result.engineResult) {
+          throw new Error("Could not run selected scenario for prompt generation.");
+        }
+
+        lastRun = result;
+      }
+
+      const household = await householdRepository.load();
+      const promptPackage = createPromptPackage({
+        household,
+        scenario: lastRun.scenario,
+        engineResult: lastRun.engineResult,
+        generatedAt: new Date().toISOString()
+      });
+
+      el("prompt-output").value = promptPackage.prompt_text;
+      setStatus("Prompt package generated. Review privacy warning before sharing with external LLMs.");
+    } catch (error) {
+      setStatus(error.message, true);
     }
-
-    const promptPackage = createPromptPackage({
-      scenario: lastRun.scenario,
-      engineResult: lastRun.engineResult,
-      generatedAt: new Date().toISOString()
-    });
-
-    el("prompt-output").value = promptPackage.prompt_text;
-    setStatus("Prompt package generated.");
-  } catch (error) {
-    setStatus(error.message, true);
-  }
+  })();
 }
 
 function onRandomPersona() {

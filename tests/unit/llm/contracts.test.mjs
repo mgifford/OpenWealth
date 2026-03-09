@@ -80,9 +80,12 @@ test("prompt package includes assumptions, caveats, and disclaimer", () => {
 
   const prompt = createPromptPackage({ household, scenario, engineResult, generatedAt: "2026-03-08T23:10:00Z" });
 
+  assert.match(prompt.prompt_text, /Privacy warning/i);
+  assert.match(prompt.prompt_text, /Household name:/i);
   assert.match(prompt.prompt_text, /Deterministic assumptions/i);
   assert.match(prompt.prompt_text, /Warnings/i);
   assert.match(prompt.prompt_text, /source of truth/i);
+  assert.match(prompt.privacy_warning, /Remove or anonymize personal identifiers/i);
 });
 
 test("contract validation helper maps contract types to schemas", () => {

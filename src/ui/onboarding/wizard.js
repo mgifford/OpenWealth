@@ -15,7 +15,9 @@ export function createOnboardingDraft() {
       province_or_territory: "ON"
     },
     people: [],
-    starterAccounts: []
+    starterAccounts: [],
+    incomeSources: [],
+    liabilities: []
   };
 }
 
@@ -24,7 +26,9 @@ export function applyOnboardingStep(draft, step, payload) {
     ...draft,
     household: { ...draft.household },
     people: draft.people.map((person) => ({ ...person })),
-    starterAccounts: draft.starterAccounts.map((account) => ({ ...account }))
+    starterAccounts: draft.starterAccounts.map((account) => ({ ...account })),
+    incomeSources: draft.incomeSources.map((income) => ({ ...income })),
+    liabilities: draft.liabilities.map((liability) => ({ ...liability }))
   };
 
   if (step === "household") {
@@ -61,6 +65,41 @@ export function applyOnboardingStep(draft, step, payload) {
     return next;
   }
 
+  if (step === "financials") {
+    const currentIncome = Number(payload.current_income ?? 0);
+    const mortgageBalance = Number(payload.mortgage_balance ?? 0);
+    const debtPayment = Number(payload.debt_payment ?? 0);
+    const mortgageRate = Number(payload.mortgage_interest_rate ?? 0.045);
+
+    next.incomeSources =
+      currentIncome > 0
+        ? [
+            {
+              income_id: payload.income_id ?? createId("income_1"),
+              source_type: "employment",
+              annual_amount: currentIncome,
+              taxable: true,
+              confidence: payload.income_confidence ?? "medium"
+            }
+          ]
+        : [];
+
+    next.liabilities =
+      mortgageBalance > 0
+        ? [
+            {
+              liability_id: payload.liability_id ?? createId("liability_1"),
+              kind: "mortgage",
+              balance: mortgageBalance,
+              interest_rate: mortgageRate,
+              payment_amount: Math.max(0, debtPayment)
+            }
+          ]
+        : [];
+
+    return next;
+  }
+
   throw new Error(`Unknown onboarding step: ${step}`);
 }
 
@@ -91,6 +130,8 @@ export function finalizeOnboardingDraft(draft, options = {}) {
     province_or_territory: draft.household.province_or_territory,
     people: draft.people,
     accounts: draft.starterAccounts,
+    liabilities: draft.liabilities,
+    income_sources: draft.incomeSources,
     goals: [],
     assumptions: {
       inflation_rate: 0.02,

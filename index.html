@@ -427,6 +427,72 @@
             <p>Life expectancy range: <strong id="life-expectancy-range">n/a</strong></p>
             <label for="starter-balance">Starter TFSA balance</label>
             <input id="starter-balance" type="number" required value="120000" />
+            <label for="rrsp-balance">Starter RRSP balance</label>
+            <input
+              id="rrsp-balance"
+              type="range"
+              min="0"
+              max="1500000"
+              step="5000"
+              value="80000"
+              data-output="rrsp-balance-output"
+            />
+            <p class="hint">RRSP balance: <strong id="rrsp-balance-output">$80,000</strong></p>
+            <label for="nonreg-balance">Starter non-registered balance</label>
+            <input
+              id="nonreg-balance"
+              type="range"
+              min="0"
+              max="1500000"
+              step="5000"
+              value="25000"
+              data-output="nonreg-balance-output"
+            />
+            <p class="hint">Non-registered balance: <strong id="nonreg-balance-output">$25,000</strong></p>
+            <label for="annual-income">Current annual income</label>
+            <input
+              id="annual-income"
+              type="range"
+              min="0"
+              max="400000"
+              step="1000"
+              value="95000"
+              data-output="annual-income-output"
+            />
+            <p class="hint">Annual income: <strong id="annual-income-output">$95,000</strong></p>
+            <label for="mortgage-balance">Mortgage or debt balance</label>
+            <input
+              id="mortgage-balance"
+              type="range"
+              min="0"
+              max="2000000"
+              step="5000"
+              value="350000"
+              data-output="mortgage-balance-output"
+            />
+            <p class="hint">Debt balance: <strong id="mortgage-balance-output">$350,000</strong></p>
+            <label for="debt-payment">Monthly debt payment</label>
+            <input
+              id="debt-payment"
+              type="range"
+              min="0"
+              max="10000"
+              step="50"
+              value="2100"
+              data-output="debt-payment-output"
+            />
+            <p class="hint">Debt payment: <strong id="debt-payment-output">$2,100</strong></p>
+            <label for="mortgage-interest-rate">Mortgage interest rate</label>
+            <input
+              id="mortgage-interest-rate"
+              type="range"
+              min="0.01"
+              max="0.12"
+              step="0.001"
+              value="0.045"
+              data-output="mortgage-interest-rate-output"
+            />
+            <p class="hint">Mortgage interest: <strong id="mortgage-interest-rate-output">4.5%</strong></p>
             <button type="submit">Save onboarding</button>
           </form>
         </section>
@@ -527,6 +593,18 @@
               required
             />
             <p class="hint">Inflation: <strong id="inflation-rate-output">2.5%</strong></p>
+            <p class="hint">Market presets:</p>
+            <div class="grid">
+              <button class="market-preset" type="button" data-name="Conservative" data-return="0.04" data-inflation="0.028">
+                Conservative
+              </button>
+              <button class="market-preset" type="button" data-name="Balanced" data-return="0.055" data-inflation="0.024">
+                Balanced
+              </button>
+              <button class="market-preset" type="button" data-name="Growth" data-return="0.07" data-inflation="0.022">
+                Growth
+              </button>
+            </div>
             <button type="submit">Create scenario</button>
           </form>
         </section>

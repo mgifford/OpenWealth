@@ -144,9 +144,20 @@ function formatRangeOutput(input) {
   }
 
   let displayValue = input.value;
-  if (input.id === "annual-spending") {
+  if (
+    [
+      "annual-spending",
+      "rrsp-balance",
+      "nonreg-balance",
+      "annual-income",
+      "mortgage-balance",
+      "debt-payment"
+    ].includes(input.id)
+  ) {
     displayValue = formatCurrency(input.value);
-  } else if (input.id === "expected-return" || input.id === "inflation-rate") {
+  } else if (
+    ["expected-return", "inflation-rate", "mortgage-interest-rate"].includes(input.id)
+  ) {
     displayValue = formatPercent(input.value);
   }
 
@@ -295,8 +306,28 @@ async function onOnboard(event) {
           annual_contribution: 7000,
           confidence: "high",
           user_verified: true
+        },
+        {
+          account_type: "rrsp",
+          current_balance: Number(el("rrsp-balance").value),
+          annual_contribution: 12000,
+          confidence: "medium",
+          user_verified: true
+        },
+        {
+          account_type: "non_registered",
+          current_balance: Number(el("nonreg-balance").value),
+          annual_contribution: 6000,
+          confidence: "medium",
+          user_verified: true
         }
       ]
+    });
+    draft = experience.applyOnboardingStep(draft, "financials", {
+      current_income: Number(el("annual-income").value),
+      mortgage_balance: Number(el("mortgage-balance").value),
+      debt_payment: Number(el("debt-payment").value),
+      mortgage_interest_rate: Number(el("mortgage-interest-rate").value)
     });
 
     await experience.completeOnboarding(draft);
@@ -305,6 +336,18 @@ async function onOnboard(event) {
   } catch (error) {
     setStatus(error.message, true);
   }
+}
+
+function applyMarketPreset(button) {
+  const presetName = button.dataset.name ?? "Preset";
+  const presetReturn = Number(button.dataset.return ?? 0.05);
+  const presetInflation = Number(button.dataset.inflation ?? 0.025);
+
+  el("expected-return").value = String(presetReturn);
+  el("inflation-rate").value = String(presetInflation);
+  el("scenario-name").value = `${presetName} Scenario`;
+  syncAllRangeOutputs();
+  setStatus(`${presetName} market preset applied.`);
 }
 
 async function onCreateScenario(event) {
@@ -568,6 +611,9 @@ async function init() {
 
   document.querySelectorAll("input[type='range'][data-output]").forEach((input) => {
     input.addEventListener("input", () => formatRangeOutput(input));
+  });
+  document.querySelectorAll("button.market-preset").forEach((button) => {
+    button.addEventListener("click", () => applyMarketPreset(button));
   });
   syncAllRangeOutputs();
 

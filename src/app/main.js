@@ -41,6 +41,15 @@ const assumptionProvenance = {
   inflation_rate: "manual_slider",
   source: "user"
 };
+const WIZARD_STEPS = [
+  { id: "about-you", label: "About You" },
+  { id: "savings", label: "Savings" },
+  { id: "income", label: "Income" },
+  { id: "benefits", label: "Benefits" },
+  { id: "market-assumptions", label: "Market Assumptions" },
+  { id: "results", label: "Results" }
+];
+let wizardStepIndex = 0;
 const prefersDarkScheme =
   typeof window !== "undefined" && typeof window.matchMedia === "function"
     ? window.matchMedia("(prefers-color-scheme: dark)")
@@ -184,6 +193,69 @@ function syncHouseholdModeUi() {
   el("partner-name").required = isCouple;
   el("partner-birth-year").required = isCouple;
   el("partner-retirement-target").required = isCouple;
+}
+
+function currentWizardStep() {
+  return WIZARD_STEPS[wizardStepIndex] ?? WIZARD_STEPS[0];
+}
+
+function syncWizardUi() {
+  const step = currentWizardStep();
+  el("wizard-current-step").textContent = step.label;
+
+  document.querySelectorAll("button.wizard-step").forEach((button) => {
+    const isActive = button.dataset.step === step.id;
+    button.setAttribute("aria-selected", String(isActive));
+    button.dataset.active = isActive ? "true" : "false";
+  });
+
+  document.querySelectorAll("[data-wizard-pane]").forEach((pane) => {
+    pane.hidden = pane.dataset.wizardPane !== step.id;
+  });
+
+  document.querySelectorAll("[data-wizard-section]").forEach((section) => {
+    const visibleSteps = (section.dataset.wizardSection ?? "").split(",");
+    section.hidden = !visibleSteps.includes(step.id);
+  });
+
+  el("wizard-prev").disabled = wizardStepIndex === 0;
+  el("wizard-next").textContent = step.id === "results" ? "Finish" : "Next";
+}
+
+function goToWizardStep(index) {
+  wizardStepIndex = Math.max(0, Math.min(index, WIZARD_STEPS.length - 1));
+  syncWizardUi();
+}
+
+async function onWizardNext() {
+  const step = currentWizardStep();
+
+  if (step.id === "benefits") {
+    const saved = await onOnboard({ preventDefault() {} });
+    if (!saved) {
+      return;
+    }
+  }
+
+  if (step.id === "market-assumptions") {
+    const created = await onCreateScenario({ preventDefault() {} });
+    if (!created) {
+      return;
+    }
+    await refreshOverview();
+    await onRunScenario();
+    await onShowMarketTrends();
+  }
+
+  if (wizardStepIndex < WIZARD_STEPS.length - 1) {
+    goToWizardStep(wizardStepIndex + 1);
+  }
+}
+
+function onWizardPrevious() {
+  if (wizardStepIndex > 0) {
+    goToWizardStep(wizardStepIndex - 1);
+  }
 }
 
 function renderSensitivityChart(sensitivityRows) {
@@ -380,8 +452,10 @@ async function onOnboard(event) {
     await experience.completeOnboarding(draft);
     await refreshOverview();
     setStatus("Onboarding saved.");
+    return true;
   } catch (error) {
     setStatus(error.message, true);
+    return false;
   }
 }
 
@@ -438,8 +512,10 @@ async function onCreateScenario(event) {
 
     await refreshOverview();
     setStatus("Scenario created.");
+    return true;
   } catch (error) {
     setStatus(error.message, true);
+    return false;
   }
 }
 
@@ -680,6 +756,17 @@ async function init() {
   el("apply-persona").addEventListener("click", onApplyPersona);
   el("run-persona-carousel").addEventListener("click", onPersonaCarousel);
   el("household-mode").addEventListener("change", syncHouseholdModeUi);
+  el("wizard-prev").addEventListener("click", onWizardPrevious);
+  el("wizard-next").addEventListener("click", onWizardNext);
+
+  document.querySelectorAll("button.wizard-step").forEach((button) => {
+    button.addEventListener("click", () => {
+      const index = WIZARD_STEPS.findIndex((step) => step.id === button.dataset.step);
+      if (index >= 0) {
+        goToWizardStep(index);
+      }
+    });
+  });
 
   document.querySelectorAll("input[type='range'][data-output]").forEach((input) => {
     input.addEventListener("input", () => {
@@ -705,6 +792,7 @@ async function init() {
   });
   syncAllRangeOutputs();
   syncHouseholdModeUi();
+  goToWizardStep(0);
 
   onRandomPersona();
   setStatus("Ready.");

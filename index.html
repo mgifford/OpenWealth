@@ -178,6 +178,22 @@
         color: var(--muted);
       }
 
+      .actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 0.6rem;
+      }
+
+      .actions button {
+        width: auto;
+        margin-bottom: 0;
+      }
+
+      .wizard-step[data-active="true"] {
+        background: var(--accent-strong);
+      }
+
       .grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -394,11 +410,31 @@
         <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
       </section>
 
+      <section aria-labelledby="wizard-heading">
+        <h2 id="wizard-heading">Guided Retirement Wizard</h2>
+        <p>Follow a structured planning flow: About You -> Savings -> Income -> Benefits -> Market Assumptions -> Results.</p>
+        <div class="grid" id="wizard-steps" role="tablist" aria-label="Guided wizard steps">
+          <button class="wizard-step" type="button" data-step="about-you">1. About You</button>
+          <button class="wizard-step" type="button" data-step="savings">2. Savings</button>
+          <button class="wizard-step" type="button" data-step="income">3. Income</button>
+          <button class="wizard-step" type="button" data-step="benefits">4. Benefits</button>
+          <button class="wizard-step" type="button" data-step="market-assumptions">5. Market Assumptions</button>
+          <button class="wizard-step" type="button" data-step="results">6. Results</button>
+        </div>
+        <div class="actions">
+          <button id="wizard-prev" type="button">Back</button>
+          <button id="wizard-next" type="button">Next</button>
+        </div>
+        <p class="hint">Current step: <strong id="wizard-current-step">About You</strong></p>
+      </section>
+
       <div class="grid">
-        <section>
+        <section data-wizard-section="about-you,savings,income,benefits">
           <h2>Onboarding</h2>
           <form id="onboarding-form" aria-describedby="onboarding-help">
             <p id="onboarding-help">Required fields only for a first deterministic scenario run.</p>
+
+            <div data-wizard-pane="about-you">
             <label for="household-name">Household name</label>
             <input id="household-name" required value="OpenWealth Household" />
             <label for="province">Province</label>
@@ -452,6 +488,9 @@
 
             <p>Retirement goal range: <strong id="retirement-goal-range">n/a</strong></p>
             <p>Life expectancy range: <strong id="life-expectancy-range">n/a</strong></p>
+            </div>
+
+            <div data-wizard-pane="savings">
             <label for="starter-balance">Starter TFSA balance</label>
             <input id="starter-balance" type="number" required value="120000" />
             <label for="rrsp-balance">Starter RRSP balance</label>
@@ -476,17 +515,6 @@
               data-output="nonreg-balance-output"
             />
             <p class="hint">Non-registered balance: <strong id="nonreg-balance-output">$25,000</strong></p>
-            <label for="annual-income">Current annual income</label>
-            <input
-              id="annual-income"
-              type="range"
-              min="0"
-              max="400000"
-              step="1000"
-              value="95000"
-              data-output="annual-income-output"
-            />
-            <p class="hint">Annual income: <strong id="annual-income-output">$95,000</strong></p>
             <label for="mortgage-balance">Mortgage or debt balance</label>
             <input
               id="mortgage-balance"
@@ -520,7 +548,23 @@
               data-output="mortgage-interest-rate-output"
             />
             <p class="hint">Mortgage interest: <strong id="mortgage-interest-rate-output">4.5%</strong></p>
+            </div>
 
+            <div data-wizard-pane="income">
+            <label for="annual-income">Current annual income</label>
+            <input
+              id="annual-income"
+              type="range"
+              min="0"
+              max="400000"
+              step="1000"
+              value="95000"
+              data-output="annual-income-output"
+            />
+            <p class="hint">Annual income: <strong id="annual-income-output">$95,000</strong></p>
+            </div>
+
+            <div data-wizard-pane="benefits">
             <fieldset>
               <legend>Benefits and pension</legend>
               <label for="workplace-pension-income">Expected annual workplace pension</label>
@@ -560,10 +604,11 @@
               <p class="hint">Preferred OAS age: <strong id="preferred-oas-age-output">65</strong></p>
             </fieldset>
             <button type="submit">Save onboarding</button>
+            </div>
           </form>
         </section>
 
-        <section>
+        <section data-wizard-section="market-assumptions">
           <h2>Scenario Authoring</h2>
           <form id="scenario-form" aria-describedby="scenario-help">
             <p id="scenario-help">Create variants for timing and spending assumptions.</p>
@@ -688,7 +733,7 @@
         </section>
       </div>
 
-      <section>
+      <section data-wizard-section="results">
         <h2>Run and Compare</h2>
         <label for="scenario-select">Select scenario</label>
         <select id="scenario-select"></select>
@@ -699,17 +744,17 @@
         </div>
       </section>
 
-      <section>
+      <section data-wizard-section="results">
         <h2>Results</h2>
         <div id="results" aria-live="polite"></div>
       </section>
 
-      <section>
+      <section data-wizard-section="results">
         <h2>Comparison</h2>
         <div id="comparison" aria-live="polite"></div>
       </section>
 
-      <section>
+      <section data-wizard-section="results">
         <h2>Market Trends</h2>
         <p>Review expected growth-rate scenarios and how outcomes change across low/base/high return assumptions.</p>
         <button id="show-market-trends" type="button">Show market trend scenarios</button>

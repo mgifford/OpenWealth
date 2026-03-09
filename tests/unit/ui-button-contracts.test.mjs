@@ -10,6 +10,8 @@ const REQUIRED_BUTTON_IDS = [
   "random-persona",
   "apply-persona",
   "run-persona-carousel",
+  "wizard-prev",
+  "wizard-next",
   "run-scenario",
   "compare-scenarios",
   "export-bundle",
@@ -21,6 +23,14 @@ test("ui contract: required action buttons are present in index.html", () => {
   for (const buttonId of REQUIRED_BUTTON_IDS) {
     assert.match(indexHtml, new RegExp(`id=["']${buttonId}["']`));
   }
+});
+
+test("ui contract: guided wizard step buttons are present", () => {
+  const wizardStepMatches = indexHtml.match(/class=["']wizard-step["']/g) ?? [];
+  assert.equal(wizardStepMatches.length, 6);
+  assert.match(indexHtml, /data-step=["']about-you["']/);
+  assert.match(indexHtml, /data-step=["']market-assumptions["']/);
+  assert.match(indexHtml, /data-step=["']results["']/);
 });
 
 test("ui contract: market preset buttons are visible with expected assumptions", () => {
@@ -73,4 +83,8 @@ test("ui contract: main app wires click handlers for key buttons", () => {
   assert.match(appMain, /applyReturnPreset/);
   assert.match(appMain, /button\.inflation-preset/);
   assert.match(appMain, /applyInflationPreset/);
+  assert.match(appMain, /el\(["']wizard-prev["']\)\.addEventListener\(["']click["'],\s*onWizardPrevious/);
+  assert.match(appMain, /el\(["']wizard-next["']\)\.addEventListener\(["']click["'],\s*onWizardNext/);
+  assert.match(appMain, /button\.wizard-step/);
+  assert.match(appMain, /goToWizardStep/);
 });

@@ -30,7 +30,8 @@ export {
 	buildProjectionSeries,
 	renderProjectionChartSvg,
 	buildStressTestRangeSeries,
-	renderStressTestRangeChartSvg
+	renderStressTestRangeChartSvg,
+	renderLikelyNetWorthLineChartSvg
 } from "./charts/projection.js";
 export {
 	buildCoupleTimingOutcomes,

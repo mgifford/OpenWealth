@@ -63,14 +63,17 @@ export function renderCoupleTimingOutcomes(outcomes) {
     return "";
   }
 
+  const currentYear = outcomes.combined.latestRetirementYear - outcomes.combined.yearsUntilBothRetired;
   const years = outcomes.perPerson.map((person) => person.retirementYear);
-  const minYear = Math.min(...years);
+  const minYear = Math.min(currentYear, ...years);
   const maxYear = Math.max(...years);
   const span = Math.max(1, maxYear - minYear);
   const width = 640;
   const leftPad = 48;
   const rightPad = 24;
   const y = 50;
+
+  const nowX = leftPad + ((currentYear - minYear) / span) * (width - leftPad - rightPad);
 
   const points = outcomes.perPerson
     .map((person, index) => {
@@ -109,6 +112,8 @@ export function renderCoupleTimingOutcomes(outcomes) {
         <figcaption>Life timeline</figcaption>
         <svg viewBox="0 0 ${width} 100" role="img" aria-label="Couple retirement life timeline">
           <line x1="${leftPad}" y1="${y}" x2="${width - rightPad}" y2="${y}" stroke="currentColor" stroke-opacity="0.4"></line>
+          <circle cx="${nowX}" cy="${y}" r="5" fill="#444"></circle>
+          <text x="${nowX}" y="86" text-anchor="middle" font-size="10">Now (${currentYear})</text>
           ${points}
         </svg>
       </figure>

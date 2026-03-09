@@ -5,7 +5,8 @@ import {
   buildProjectionSeries,
   buildStressTestRangeSeries,
   renderProjectionChartSvg,
-  renderStressTestRangeChartSvg
+  renderStressTestRangeChartSvg,
+  renderLikelyNetWorthLineChartSvg
 } from "../../src/ui/charts/projection.js";
 
 test("projection series builder maps annual rows", () => {
@@ -64,4 +65,15 @@ test("stress test chart renderer outputs shaded path and accessible svg", () => 
   assert.match(svg, /stress-chart-title/);
   assert.match(svg, /<path d=/);
   assert.match(svg, /Shaded area/);
+});
+
+test("likely-only chart renderer outputs single-line accessible svg", () => {
+  const svg = renderLikelyNetWorthLineChartSvg({
+    labels: [2030, 2031, 2032],
+    likely: [100000, 110000, 120000]
+  });
+
+  assert.match(svg, /likely-chart-title/);
+  assert.match(svg, /Likely case only/);
+  assert.match(svg, /polyline/);
 });

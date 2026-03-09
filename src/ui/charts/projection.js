@@ -183,6 +183,8 @@ export function renderProjectionChartSvg(series, options = {}) {
     <desc id="projection-chart-desc">${description}</desc>
     <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="currentColor" stroke-opacity="0.4" />
     <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="currentColor" stroke-opacity="0.4" />
+    <text x="${width / 2}" y="${height - 6}" text-anchor="middle" font-size="10">Years in projection (from now)</text>
+    <text x="12" y="${height / 2}" text-anchor="middle" font-size="10" transform="rotate(-90 12 ${height / 2})">Annual amount (CAD)</text>
     <polyline fill="none" stroke="#11a579" stroke-width="2" points="${benefitsPoints}" />
     <polyline fill="none" stroke="#3969ac" stroke-width="2" points="${withdrawalsPoints}" />
     <polyline fill="none" stroke="#f2b701" stroke-width="2" points="${spendingPoints}" />
@@ -193,7 +195,9 @@ export function renderProjectionChartSvg(series, options = {}) {
     ${withdrawalsEnd}
     ${spendingEnd}
   </svg>
-  <p>Green: benefits income, Blue: planned withdrawals, Gold: spending need.</p>
+  <p>Green: benefits income (CPP/OAS and pension flows that arrive without selling assets).</p>
+  <p>Blue: planned withdrawals (money you need to take from savings/investment accounts each year).</p>
+  <p>Gold: spending need (annual lifestyle cost target in that year, including inflation assumptions).</p>
 </figure>
 `.trim();
 }
@@ -244,6 +248,49 @@ export function renderStressTestRangeChartSvg(series, options = {}) {
     ${likelyEnd}
   </svg>
   <p>Blue line: likely case. Shaded area: possible range. Red edge: worst case. Green edge: best case.</p>
+</figure>
+`.trim();
+}
+
+export function renderLikelyNetWorthLineChartSvg(series, options = {}) {
+  const width = options.width ?? 860;
+  const height = options.height ?? 250;
+  const padding = options.padding ?? 28;
+  const title = options.title ?? "Likely case net-worth path";
+  const description =
+    options.description ?? "Single likely line showing projected net-worth path over time.";
+
+  if (!series?.labels?.length || !series?.likely?.length) {
+    return "";
+  }
+
+  const maxValue = Math.max(1, ...series.likely);
+  const clippedMax = clamp(maxValue, 1, Number.MAX_SAFE_INTEGER);
+  const likelyPoints = pointsForSeries(series.likely, width, height, padding, clippedMax);
+  const likelyMarkers = renderPointMarkers(series.likely, "#12436d", width, height, padding, clippedMax);
+  const likelyEnd = renderEndLabel(
+    series.likely,
+    "#12436d",
+    width,
+    height,
+    padding,
+    clippedMax,
+    `${Math.round(series.likely.at(-1) ?? 0).toLocaleString()}`
+  );
+
+  return `
+<figure>
+  <figcaption>${title}</figcaption>
+  <svg viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="likely-chart-title likely-chart-desc">
+    <title id="likely-chart-title">${title}</title>
+    <desc id="likely-chart-desc">${description}</desc>
+    <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="currentColor" stroke-opacity="0.4" />
+    <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="currentColor" stroke-opacity="0.4" />
+    <polyline fill="none" stroke="#12436d" stroke-width="2.5" points="${likelyPoints}" />
+    ${likelyMarkers}
+    ${likelyEnd}
+  </svg>
+  <p>Likely case only. Turn on stress range to reveal uncertainty bounds.</p>
 </figure>
 `.trim();
 }

@@ -16,6 +16,7 @@ import {
   renderProjectionChartSvg,
   buildStressTestRangeSeries,
   renderStressTestRangeChartSvg,
+  renderLikelyNetWorthLineChartSvg,
   buildCoupleTimingOutcomes,
   renderCoupleTimingOutcomes,
   parseNaturalLanguageFinancialEstimate,
@@ -187,6 +188,7 @@ function formatRangeOutput(input) {
   let displayValue = input.value;
   if (
     [
+      "starter-balance",
       "annual-spending",
       "rrsp-balance",
       "nonreg-balance",
@@ -684,6 +686,17 @@ function renderStressTestChart(result, milestones) {
 
   if (!stressSeries.labels.length) {
     return "";
+  }
+
+  const mode = el("stress-visual-mode")?.value ?? "likely";
+
+  if (mode === "likely") {
+    const likelyChart = renderLikelyNetWorthLineChartSvg(stressSeries, {
+      title: "Likely case net-worth path",
+      description: "Simplified view showing only the likely path for projected net worth."
+    });
+
+    return `${likelyChart}<p><strong>Simple view:</strong> This is one likely path. Switch to stress range to see best/worst volatility bounds.</p>`;
   }
 
   const chart = renderStressTestRangeChartSvg(stressSeries, {
@@ -1260,6 +1273,12 @@ async function init() {
   el("apply-natural-language").addEventListener("click", onApplyNaturalLanguage);
   el("look-ahead-spending-cut").addEventListener("input", () => {
     updateLookAheadWhatIf().catch((error) => setStatus(error.message, true));
+  });
+  el("stress-visual-mode").addEventListener("change", () => {
+    if (!lastRun) {
+      return;
+    }
+    onRunScenario().catch((error) => setStatus(error.message, true));
   });
   [
     "inflation-cash-principal",

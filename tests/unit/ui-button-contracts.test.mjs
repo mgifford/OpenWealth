@@ -74,6 +74,7 @@ test("ui contract: look-ahead what-if slider is present", () => {
   assert.match(indexHtml, /id=["']inflation-checking-rate["']/);
   assert.match(indexHtml, /id=["']inflation-high-yield-rate["']/);
   assert.match(indexHtml, /id=["']inflation-bond-rate["']/);
+  assert.match(indexHtml, /id=["']stress-visual-mode["']/);
 });
 
 test("ui contract: guided tour persona selector and ARIA tooltips are present", () => {
@@ -127,5 +128,6 @@ test("ui contract: main app wires click handlers for key buttons", () => {
   assert.match(appMain, /look-ahead-spending-cut/);
   assert.match(appMain, /updateLookAheadWhatIf/);
   assert.match(appMain, /updateInflationRealityCheck/);
+  assert.match(appMain, /el\(["']stress-visual-mode["']\)\.addEventListener\(["']change["']/);
   assert.match(appMain, /initializeInfoTooltips/);
 });

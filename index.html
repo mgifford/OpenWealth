@@ -644,7 +644,17 @@
 
             <div data-wizard-pane="savings">
             <label for="starter-balance">Starter TFSA balance</label>
-            <input id="starter-balance" type="number" required value="120000" />
+            <input
+              id="starter-balance"
+              type="range"
+              min="0"
+              max="1500000"
+              step="5000"
+              value="120000"
+              data-output="starter-balance-output"
+              required
+            />
+            <p class="hint">TFSA balance: <strong id="starter-balance-output">$120,000</strong></p>
             <div data-guided-tags="family,retirement">
               <label for="rrsp-balance">Starter retirement savings (RRSP)</label>
               <input
@@ -956,6 +966,12 @@
       <section data-wizard-section="results">
         <h2>Results</h2>
         <div id="results" aria-live="polite"></div>
+
+        <label for="stress-visual-mode">Complexity view</label>
+        <select id="stress-visual-mode">
+          <option value="likely" selected>Likely only line</option>
+          <option value="range">Stress test range shaded band</option>
+        </select>
 
         <h3>Inflation Reality Check Inputs</h3>
         <p class="hint">Adjust these rates to match current market conditions and see your buying-power impact.</p>

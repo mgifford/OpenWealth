@@ -40,6 +40,7 @@ jobs:
           name: batch-scenarios-${{ github.run_number }}
           path: dist/batch
           retention-days: 14
+          if-no-files-found: error
 
       - name: Batch summary
         if: success()

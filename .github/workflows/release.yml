@@ -46,6 +46,7 @@ jobs:
           name: release-package-${{ github.ref_name }}
           path: dist/release
           retention-days: 30
+          if-no-files-found: error
 
       - name: Release summary
         if: success()

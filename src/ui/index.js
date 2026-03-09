@@ -14,3 +14,8 @@ export {
 } from "./sustainability/index.js";
 export { buildReportBundle, createBundleDownloadPayload } from "./export/index.js";
 export { createPromptPackage } from "./prompt-generator/index.js";
+export {
+	listRetirementPersonas,
+	pickRandomRetirementPersona,
+	applyPersonaToFormValues
+} from "./personas/index.js";

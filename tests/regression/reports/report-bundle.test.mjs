@@ -9,7 +9,8 @@ import {
   assembleReport,
   exportYamlArtifacts,
   buildManifest,
-  packageReportBundle
+  packageReportBundle,
+  serializeBundle
 } from "../../../src/reports/index.js";
 
 function readJson(relativePath) {
@@ -100,4 +101,14 @@ test("bundle includes required artifacts and valid manifest checksums", () => {
 
   const expectedManifest = readText("tests/fixtures/reports/manifest.expected.json");
   assert.equal(bundle.files["manifest.json"], expectedManifest);
+
+  const serialized = serializeBundle(bundle);
+  const externalBundle = JSON.parse(serialized);
+  assert.equal(externalBundle.format, "application/vnd.openwealth.bundle+json");
+  assert.equal(externalBundle.format_version, "1.1.0");
+  assert.ok(externalBundle.bundle_sha256);
+  assert.ok(externalBundle.manifest_sha256);
+  assert.ok(Array.isArray(externalBundle.artifacts));
+  assert.equal(externalBundle.artifacts.length, 5);
+  assert.ok(externalBundle.artifacts.every((artifact) => artifact.content_base64.length > 0));
 });

@@ -13,10 +13,10 @@
     "privacy:guard": "node scripts/privacy/artifact-guard.js dist",
     "lint": "node scripts/lint.mjs",
     "test": "npm run test:unit",
-    "test:schema": "node --test tests/schema/**/*.test.mjs",
-    "test:integration": "node --test tests/integration/**/*.test.mjs",
-    "test:unit": "node --test tests/unit/**/*.test.mjs",
-    "test:regression": "node --test tests/regression/**/*.test.mjs"
+    "test:schema": "node --test \"tests/schema/**/*.test.mjs\"",
+    "test:integration": "node --test \"tests/integration/**/*.test.mjs\"",
+    "test:unit": "node --test \"tests/unit/**/*.test.mjs\"",
+    "test:regression": "node --test \"tests/regression/**/*.test.mjs\""
   },
   "devDependencies": {
     "eslint": "^9.22.0",

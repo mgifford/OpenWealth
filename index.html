@@ -4,6 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>OpenWealth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --bg: #f6f2e8;
@@ -17,8 +23,32 @@
         --border: #d7d0c1;
       }
 
+      :root[data-theme="light"] {
+        --bg: #f6f2e8;
+        --bg-alt: #fffaf1;
+        --text: #1b1f23;
+        --muted: #5f6b77;
+        --accent: #0d7a63;
+        --accent-strong: #0a5b4a;
+        --danger: #9f2424;
+        --card: #ffffff;
+        --border: #d7d0c1;
+      }
+
+      :root[data-theme="dark"] {
+        --bg: #0f1a1c;
+        --bg-alt: #132326;
+        --text: #e9f0f1;
+        --muted: #adc0c3;
+        --accent: #50d0b5;
+        --accent-strong: #6ce6cc;
+        --danger: #ff8787;
+        --card: #173035;
+        --border: #31535a;
+      }
+
       @media (prefers-color-scheme: dark) {
-        :root {
+        :root:not([data-theme="light"]) {
           --bg: #0f1a1c;
           --bg-alt: #132326;
           --text: #e9f0f1;
@@ -37,9 +67,12 @@
 
       body {
         margin: 0;
-        font-family: "Segoe UI", "Noto Sans", sans-serif;
+        font-family: "Space Grotesk", "Noto Sans", sans-serif;
         color: var(--text);
-        background: radial-gradient(circle at top, var(--bg-alt), var(--bg) 60%);
+        background:
+          radial-gradient(circle at 5% 8%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 32%),
+          radial-gradient(circle at 90% 15%, color-mix(in srgb, var(--accent-strong) 10%, transparent), transparent 35%),
+          radial-gradient(circle at top, var(--bg-alt), var(--bg) 60%);
       }
 
       main {
@@ -52,11 +85,39 @@
 
       h1 {
         margin: 0;
+        font-family: "Fraunces", Georgia, serif;
         letter-spacing: 0.02em;
+      }
+
+      h2,
+      h3 {
+        font-family: "Fraunces", Georgia, serif;
+        margin-top: 0;
       }
 
       .lede {
         margin: 0.25rem 0 0;
+        color: var(--muted);
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .toolbar button {
+        width: auto;
+        margin: 0;
+        padding-inline: 0.95rem;
+      }
+
+      .toolbar .chip {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 0.2rem 0.65rem;
+        font-size: 0.84rem;
         color: var(--muted);
       }
 
@@ -66,11 +127,35 @@
         gap: 1rem;
       }
 
+      .skip-link {
+        position: absolute;
+        left: 0.75rem;
+        top: -44px;
+        background: var(--accent-strong);
+        color: #fff;
+        padding: 0.45rem 0.7rem;
+        border-radius: 8px;
+        z-index: 10;
+      }
+
+      .skip-link:focus {
+        top: 0.75rem;
+      }
+
       section {
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: 12px;
         padding: 1rem;
+        animation: rise 360ms ease both;
+      }
+
+      section:nth-of-type(2) {
+        animation-delay: 40ms;
+      }
+
+      section:nth-of-type(3) {
+        animation-delay: 80ms;
       }
 
       label {
@@ -104,6 +189,15 @@
         background: var(--accent-strong);
       }
 
+      a:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible,
+      button:focus-visible {
+        outline: 3px solid color-mix(in srgb, var(--accent) 65%, white);
+        outline-offset: 2px;
+      }
+
       #status[data-error="true"] {
         color: var(--danger);
       }
@@ -119,23 +213,70 @@
         padding: 0.45rem;
         text-align: left;
       }
+
+      textarea {
+        width: 100%;
+        min-height: 180px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: inherit;
+        font-family: "Space Grotesk", sans-serif;
+        padding: 0.6rem;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
     </style>
   </head>
   <body>
-    <main>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <main id="main-content">
       <h1>OpenWealth</h1>
       <p class="lede">Privacy-first Canadian planning dashboard with deterministic scenarios and portable reports.</p>
+      <div class="toolbar">
+        <button id="theme-toggle" type="button">Toggle theme</button>
+        <span class="chip">theme: <strong id="theme-mode">auto</strong></span>
+      </div>
+
+      <section>
+        <h2>Retirement Persona Guide</h2>
+        <p>Try a random planning persona to explore frugal or comfortable retirement assumptions.</p>
+        <div class="grid">
+          <button id="random-persona" type="button">Pick random persona</button>
+          <button id="apply-persona" type="button">Apply persona to forms</button>
+        </div>
+        <div id="persona-card" aria-live="polite"></div>
+      </section>
 
       <section>
         <h2>Workspace Overview</h2>
         <div id="overview"></div>
-        <p id="status" role="status" aria-live="polite"></p>
+        <div id="stale-state"></div>
+        <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
       </section>
 
       <div class="grid">
         <section>
           <h2>Onboarding</h2>
-          <form id="onboarding-form">
+          <form id="onboarding-form" aria-describedby="onboarding-help">
+            <p id="onboarding-help">Required fields only for a first deterministic scenario run.</p>
             <label for="household-name">Household name</label>
             <input id="household-name" required value="OpenWealth Household" />
             <label for="province">Province</label>
@@ -150,6 +291,8 @@
             <input id="birth-year" type="number" required value="1988" />
             <label for="retirement-target">Retirement target age</label>
             <input id="retirement-target" type="number" required value="65" />
+            <p>Retirement goal range: <strong id="retirement-goal-range">n/a</strong></p>
+            <p>Life expectancy range: <strong id="life-expectancy-range">n/a</strong></p>
             <label for="starter-balance">Starter TFSA balance</label>
             <input id="starter-balance" type="number" required value="120000" />
             <button type="submit">Save onboarding</button>
@@ -158,7 +301,8 @@
 
         <section>
           <h2>Scenario Authoring</h2>
-          <form id="scenario-form">
+          <form id="scenario-form" aria-describedby="scenario-help">
+            <p id="scenario-help">Create variants for timing and spending assumptions.</p>
             <label for="scenario-name">Scenario name</label>
             <input id="scenario-name" required value="Baseline Scenario" />
             <label for="scenario-retirement">Retirement age</label>
@@ -195,12 +339,20 @@
 
       <section>
         <h2>Results</h2>
-        <div id="results"></div>
+        <div id="results" aria-live="polite"></div>
       </section>
 
       <section>
         <h2>Comparison</h2>
-        <div id="comparison"></div>
+        <div id="comparison" aria-live="polite"></div>
+      </section>
+
+      <section>
+        <h2>Prompt Package</h2>
+        <p>Generate a constrained assistant prompt from deterministic scenario outputs.</p>
+        <button id="generate-prompt" type="button">Generate prompt package</button>
+        <label for="prompt-output">Prompt text</label>
+        <textarea id="prompt-output" aria-label="Prompt package output"></textarea>
       </section>
     </main>
     <script type="module" src="./src/app/main.js"></script>

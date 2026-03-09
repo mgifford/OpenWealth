@@ -22,8 +22,8 @@ export function buildReportBundle(input, options = {}) {
 
 export function createBundleDownloadPayload(serializedBundle, bundleName) {
   return {
-    fileName: `${bundleName}.json`,
-    mimeType: "application/json",
+    fileName: `${bundleName}.owb.json`,
+    mimeType: "application/vnd.openwealth.bundle+json",
     data: serializedBundle
   };
 }

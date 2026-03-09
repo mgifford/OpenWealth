@@ -37,6 +37,7 @@ jobs:
           name: public-data-refresh-${{ github.run_number }}
           path: dist/data-refresh
           retention-days: 14
+          if-no-files-found: error
 
       - name: Refresh summary
         if: success()

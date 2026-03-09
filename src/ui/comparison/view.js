@@ -29,9 +29,9 @@ export function renderComparisonTable(comparison) {
   const body = comparison.rows
     .map(
       (row) =>
-        `<tr><td>${row.scenario_name}</td><td>${Math.round(row.final_net_worth)}</td><td>${Math.round(row.total_unfunded)}</td></tr>`
+        `<tr><th scope="row">${row.scenario_name}</th><td>${Math.round(row.final_net_worth)}</td><td>${Math.round(row.total_unfunded)}</td></tr>`
     )
     .join("");
 
-  return `<table><thead><tr><th>Scenario</th><th>Final net worth</th><th>Total unfunded</th></tr></thead><tbody>${body}</tbody></table>`;
+  return `<table><caption>Scenario comparison summary</caption><thead><tr><th scope="col">Scenario</th><th scope="col">Final net worth</th><th scope="col">Total unfunded</th></tr></thead><tbody>${body}</tbody></table>`;
 }

@@ -6,14 +6,18 @@ It is designed to help people understand trade-offs in retirement planning, acco
 
 ## Status
 
-This repository currently contains planning artifacts for Feature `001-privacy-first-investment-context-dashboard`:
+Feature `001-privacy-first-investment-context-dashboard` has been implemented through WP10:
 
-- Product specification
-- Clarifications
-- Implementation plan
-- Data model
-- Research decisions
-- Work packages
+- deterministic planning engine (CPP/OAS timing, withdrawal strategies, sensitivity, simulation)
+- local-first state, snapshots, and migration handling
+- import preview, approval, merge, and provenance tracking
+- onboarding/scenario/comparison UI flows
+- sustainability and climate overlays with component-level disclosure
+- portable report bundle generation (HTML + YAML + manifest)
+- constrained LLM assistant contracts and guardrails
+- GitHub Actions automation for CI, Pages preview/deploy, data refresh, batch scenarios, release packaging, and privacy checks
+
+Live site (GitHub Pages): `https://mgifford.github.io/OpenWealth/`
 
 ## Product Direction
 
@@ -44,6 +48,7 @@ OpenWealth is built around these principles:
 
 ```text
 src/
+  app/
   ui/
   components/
   engine/
@@ -54,6 +59,7 @@ src/
 
 tests/
   unit/
+  integration/
   schema/
   regression/
   fixtures/
@@ -79,12 +85,50 @@ kitty-specs/
   npm run lint
   npm run test:schema
   npm run test:unit
+  npm run test:integration
   npm run test:regression
   npm run build
   ```
 
+  ## Automation Commands
+
+  ```bash
+  npm run data:refresh
+  npm run batch:scenarios
+  npm run release:package
+  npm run privacy:guard
+  ```
+
+  ## Workflow Matrix
+
+  - `ci.yml`: lint + schema + unit + integration + regression + build
+  - `pages-deploy.yml`: PR preview artifact and main branch Pages deployment
+  - `data-refresh.yml`: scheduled/dispatch public dataset checksum + changelog artifacts
+  - `batch-scenarios.yml`: scheduled/dispatch synthetic batch report artifacts
+  - `release.yml`: tag/dispatch release package generation + release attachment
+  - `privacy-guard.yml`: denylist/path/content checks over generated artifacts
+
+  ## Pre-release Verification
+
+  Before tagging a release:
+
+  1. Run local quality gates:
+    - `npm run lint`
+    - `npm run test:schema`
+    - `npm run test:unit`
+    - `npm run test:integration`
+    - `npm run test:regression`
+    - `npm run build`
+  2. Dry-run automation scripts locally:
+    - `npm run data:refresh`
+    - `npm run batch:scenarios`
+    - `npm run release:package`
+    - `npm run privacy:guard`
+  3. Trigger GitHub workflows via `workflow_dispatch` and verify artifacts/retention in Actions UI.
+  4. Confirm Pages deploys from GitHub Actions and renders expected app shell on `main`.
+
 ## Next Steps
 
-- Implement work packages in order (or in approved dependency-parallel lanes)
-- Keep rules deterministic and testable
-- Keep reports explicit about assumptions and uncertainty
+- Continue UI polish and richer accessibility coverage for end-to-end flows
+- Expand report artifact interoperability and import/export tooling
+- Add more scenario regression fixtures for release confidence

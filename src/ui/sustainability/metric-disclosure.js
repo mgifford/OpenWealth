@@ -33,9 +33,9 @@ export function renderMetricDisclosure(disclosureRows) {
   const rows = disclosureRows
     .map(
       (row) =>
-        `<tr><td>${row.metric_key}</td><td>${row.availability}</td><td>${row.value ?? "n/a"}</td><td>${row.unit}</td><td>${row.confidence}</td><td>${row.source_reference}</td></tr>`
+        `<tr><th scope="row">${row.metric_key}</th><td>${row.availability}</td><td>${row.value ?? "n/a"}</td><td>${row.unit}</td><td>${row.confidence}</td><td>${row.source_reference}</td></tr>`
     )
     .join("");
 
-  return `<table><thead><tr><th>Metric</th><th>Availability</th><th>Value</th><th>Unit</th><th>Confidence</th><th>Source</th></tr></thead><tbody>${rows}</tbody></table>`;
+  return `<table><caption>Sustainability metric disclosure</caption><thead><tr><th scope="col">Metric</th><th scope="col">Availability</th><th scope="col">Value</th><th scope="col">Unit</th><th scope="col">Confidence</th><th scope="col">Source</th></tr></thead><tbody>${rows}</tbody></table>`;
 }

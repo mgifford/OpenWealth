@@ -10,7 +10,8 @@ export default [
         document: "readonly",
         window: "readonly",
         Blob: "readonly",
-        URL: "readonly"
+        URL: "readonly",
+        TextEncoder: "readonly"
       }
     },
     rules: {

@@ -370,6 +370,36 @@
         animation: rise 360ms ease both;
       }
 
+      .heading-anchor {
+        display: inline-block;
+        margin-left: 0.4em;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.85em;
+        opacity: 0;
+        transition: opacity 160ms ease;
+        vertical-align: middle;
+      }
+
+      h2:hover .heading-anchor,
+      h2:focus-within .heading-anchor,
+      .heading-anchor:focus {
+        opacity: 1;
+      }
+
+      .heading-anchor:hover,
+      .heading-anchor:focus {
+        color: var(--accent);
+        text-decoration: underline;
+        opacity: 1;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .heading-anchor {
+          transition: none !important;
+        }
+      }
+
       section:nth-of-type(2) {
         animation-delay: 40ms;
       }
@@ -526,8 +556,8 @@
         <span class="chip">theme: <strong id="theme-mode">light</strong></span>
       </div>
 
-      <section>
-        <h2>Retirement Persona Guide</h2>
+      <section aria-labelledby="retirement-persona-guide-heading">
+        <h2 id="retirement-persona-guide-heading">Retirement Persona Guide<a class="heading-anchor" href="#retirement-persona-guide-heading" aria-label="Link to Retirement Persona Guide section">§</a></h2>
         <p>Try a random planning persona to explore frugal or comfortable retirement assumptions.</p>
         <div class="grid">
           <button id="random-persona" type="button">Pick random persona</button>
@@ -538,15 +568,15 @@
         <div id="persona-carousel-results" aria-live="polite"></div>
       </section>
 
-      <section>
-        <h2>Workspace Overview</h2>
+      <section aria-labelledby="workspace-overview-heading">
+        <h2 id="workspace-overview-heading">Workspace Overview<a class="heading-anchor" href="#workspace-overview-heading" aria-label="Link to Workspace Overview section">§</a></h2>
         <div id="overview"></div>
         <div id="stale-state"></div>
         <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
       </section>
 
       <section aria-labelledby="profile-save-load-heading">
-        <h2 id="profile-save-load-heading">Save / Load Profile</h2>
+        <h2 id="profile-save-load-heading">Save / Load Profile<a class="heading-anchor" href="#profile-save-load-heading" aria-label="Link to Save / Load Profile section">§</a></h2>
         <p>
           Your data is stored locally in this browser. Export a YAML file to keep your profile
           portable — reload it here anytime, on any device, or after clearing browser data.
@@ -559,7 +589,7 @@
       </section>
 
       <section aria-labelledby="wizard-heading">
-        <h2 id="wizard-heading">Guided Retirement Wizard</h2>
+        <h2 id="wizard-heading">Guided Retirement Wizard<a class="heading-anchor" href="#wizard-heading" aria-label="Link to Guided Retirement Wizard section">§</a></h2>
         <p>Follow a structured planning flow: About You -> Savings -> Income -> Benefits -> Market Assumptions -> Results.</p>
         <div class="grid" id="wizard-steps" role="tablist" aria-label="Guided wizard steps">
           <button class="wizard-step" type="button" data-step="about-you">1. About You</button>
@@ -577,8 +607,8 @@
       </section>
 
       <div class="grid">
-        <section data-wizard-section="about-you,savings,income,benefits">
-          <h2>Onboarding</h2>
+        <section data-wizard-section="about-you,savings,income,benefits" aria-labelledby="onboarding-heading">
+          <h2 id="onboarding-heading">Onboarding<a class="heading-anchor" href="#onboarding-heading" aria-label="Link to Onboarding section">§</a></h2>
           <form id="onboarding-form" aria-describedby="onboarding-help">
             <p id="onboarding-help">Required fields only for a first deterministic scenario run.</p>
             <div class="guided-tour">
@@ -825,8 +855,8 @@
           </form>
         </section>
 
-        <section data-wizard-section="market-assumptions">
-          <h2>Scenario Authoring</h2>
+        <section data-wizard-section="market-assumptions" aria-labelledby="scenario-authoring-heading">
+          <h2 id="scenario-authoring-heading">Scenario Authoring<a class="heading-anchor" href="#scenario-authoring-heading" aria-label="Link to Scenario Authoring section">§</a></h2>
           <form id="scenario-form" aria-describedby="scenario-help">
             <p id="scenario-help">Create variants for timing and spending assumptions.</p>
             <label for="scenario-name">Scenario name</label>
@@ -965,8 +995,8 @@
         </section>
       </div>
 
-      <section data-wizard-section="results">
-        <h2>Run and Compare</h2>
+      <section data-wizard-section="results" aria-labelledby="run-compare-heading">
+        <h2 id="run-compare-heading">Run and Compare<a class="heading-anchor" href="#run-compare-heading" aria-label="Link to Run and Compare section">§</a></h2>
         <label for="scenario-select">Select scenario</label>
         <select id="scenario-select"></select>
         <div class="grid">
@@ -977,8 +1007,8 @@
         <p class="hint">Save your progress: use the <a href="#profile-save-load-heading"><strong>Save / Load Profile</strong></a> section to export a YAML file you can reload later.</p>
       </section>
 
-      <section data-wizard-section="results">
-        <h2>Results</h2>
+      <section data-wizard-section="results" aria-labelledby="results-heading">
+        <h2 id="results-heading">Results<a class="heading-anchor" href="#results-heading" aria-label="Link to Results section">§</a></h2>
         <div id="results" aria-live="polite"></div>
         <p class="hint">
           Need a focused view? Open the standalone
@@ -1025,20 +1055,20 @@
         <p id="look-ahead-what-if" class="hint">Run a scenario to see what-if insights.</p>
       </section>
 
-      <section data-wizard-section="results">
-        <h2>Comparison</h2>
+      <section data-wizard-section="results" aria-labelledby="comparison-heading">
+        <h2 id="comparison-heading">Comparison<a class="heading-anchor" href="#comparison-heading" aria-label="Link to Comparison section">§</a></h2>
         <div id="comparison" aria-live="polite"></div>
       </section>
 
-      <section data-wizard-section="results">
-        <h2>Market Trends</h2>
+      <section data-wizard-section="results" aria-labelledby="market-trends-heading">
+        <h2 id="market-trends-heading">Market Trends<a class="heading-anchor" href="#market-trends-heading" aria-label="Link to Market Trends section">§</a></h2>
         <p>Review expected growth-rate scenarios and how outcomes change across low/base/high return assumptions.</p>
         <button id="show-market-trends" type="button">Show market trend scenarios</button>
         <div id="market-trends" aria-live="polite"></div>
       </section>
 
-      <section>
-        <h2>Prompt Package</h2>
+      <section aria-labelledby="prompt-package-heading">
+        <h2 id="prompt-package-heading">Prompt Package<a class="heading-anchor" href="#prompt-package-heading" aria-label="Link to Prompt Package section">§</a></h2>
         <p>Generate a constrained assistant prompt from deterministic scenario outputs.</p>
         <p class="hint"><strong>Privacy warning:</strong> Do not share names, account numbers, or other personal data with external LLM tools unless you intend to disclose it.</p>
         <button id="generate-prompt" type="button">Generate prompt package</button>
@@ -1047,7 +1077,7 @@
       </section>
 
       <section aria-labelledby="community-heading">
-        <h2 id="community-heading">Community and Contributing</h2>
+        <h2 id="community-heading">Community and Contributing<a class="heading-anchor" href="#community-heading" aria-label="Link to Community and Contributing section">§</a></h2>
         <p>
           OpenWealth is a community initiative. Help improve these open tools by contributing ideas, bug reports,
           tests, documentation, and code.

@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anchor Links Accessibility Best Practices — OpenWealth Examples</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f6f2e8;
+        --bg-alt: #fffaf1;
+        --text: #1b1f23;
+        --muted: #5f6b77;
+        --accent: #0d7a63;
+        --accent-strong: #0a5b4a;
+        --card: #ffffff;
+        --border: #d7d0c1;
+        --code-bg: #f0ece0;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f1a1c;
+          --bg-alt: #132326;
+          --text: #e9f0f1;
+          --muted: #adc0c3;
+          --accent: #50d0b5;
+          --accent-strong: #6ce6cc;
+          --card: #173035;
+          --border: #31535a;
+          --code-bg: #1e2f32;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, "Segoe UI", sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        line-height: 1.6;
+      }
+
+      .skip-link {
+        position: absolute;
+        left: 0.75rem;
+        top: -44px;
+        background: var(--accent-strong);
+        color: #fff;
+        padding: 0.45rem 0.7rem;
+        border-radius: 8px;
+        z-index: 10;
+        text-decoration: none;
+      }
+
+      .skip-link:focus {
+        top: 0.75rem;
+      }
+
+      main {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 2rem 1.25rem;
+      }
+
+      h1, h2, h3 {
+        margin-top: 0;
+        line-height: 1.2;
+      }
+
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .lede {
+        color: var(--muted);
+        margin: 0 0 2rem;
+        font-size: 1.05rem;
+      }
+
+      section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      /* -------------------------------------------------------
+         Heading anchor pattern
+         - The anchor link is visually hidden by default
+         - It becomes visible on hover of the heading or direct focus
+         - Uses aria-label to provide a meaningful accessible name
+         - The § (section sign) is a common, semantic convention
+      ------------------------------------------------------- */
+      .heading-anchor {
+        display: inline-block;
+        margin-left: 0.4em;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.85em;
+        opacity: 0;
+        transition: opacity 160ms ease;
+        vertical-align: middle;
+      }
+
+      h2:hover .heading-anchor,
+      h2:focus-within .heading-anchor,
+      h3:hover .heading-anchor,
+      h3:focus-within .heading-anchor,
+      .heading-anchor:focus {
+        opacity: 1;
+      }
+
+      .heading-anchor:hover,
+      .heading-anchor:focus {
+        color: var(--accent);
+        text-decoration: underline;
+        opacity: 1;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .heading-anchor {
+          transition: none !important;
+        }
+      }
+
+      /* Visible focus ring for all interactive elements */
+      a:focus-visible {
+        outline: 3px solid color-mix(in srgb, var(--accent) 65%, white);
+        outline-offset: 2px;
+        border-radius: 3px;
+      }
+
+      pre {
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem;
+        overflow-x: auto;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      code {
+        background: var(--code-bg);
+        border-radius: 4px;
+        padding: 0.1em 0.3em;
+        font-size: 0.92em;
+      }
+
+      pre code {
+        background: none;
+        padding: 0;
+      }
+
+      ul, ol {
+        padding-left: 1.5rem;
+      }
+
+      li {
+        margin-bottom: 0.35rem;
+      }
+
+      .do-dont {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+
+      @media (max-width: 600px) {
+        .do-dont {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .do-box,
+      .dont-box {
+        border-radius: 8px;
+        padding: 1rem;
+        border: 1px solid var(--border);
+      }
+
+      .do-box {
+        border-left: 4px solid #1d9f6e;
+      }
+
+      .dont-box {
+        border-left: 4px solid #9f2424;
+      }
+
+      .do-box p,
+      .dont-box p {
+        margin: 0 0 0.5rem;
+        font-weight: 700;
+      }
+
+      .breadcrumb {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-bottom: 1.5rem;
+      }
+
+      .breadcrumb a {
+        color: var(--accent);
+      }
+
+      .toc {
+        background: var(--bg-alt);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+        min-width: 260px;
+      }
+
+      .toc h2 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .toc ol {
+        margin: 0;
+        padding-left: 1.25rem;
+      }
+
+      .toc a {
+        color: var(--accent);
+      }
+
+      @media (forced-colors: active) {
+        .heading-anchor {
+          forced-color-adjust: auto;
+        }
+
+        .do-box {
+          border-left-color: ButtonText;
+        }
+
+        .dont-box {
+          border-left-color: Mark;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <main id="main-content">
+      <nav aria-label="Breadcrumb" class="breadcrumb">
+        <a href="../index.html">OpenWealth</a> › Examples › Anchor Links Accessibility Best Practices
+      </nav>
+
+      <h1>Anchor Links Accessibility Best Practices</h1>
+      <p class="lede">
+        A reference guide demonstrating how to add heading anchor links that are keyboard accessible,
+        screen-reader friendly, and meet WCAG 2.2 AA requirements.
+      </p>
+
+      <nav aria-label="Table of contents" class="toc">
+        <h2>Contents</h2>
+        <ol>
+          <li><a href="#what-are-anchor-links">What are anchor links?</a></li>
+          <li><a href="#why-accessibility-matters">Why accessibility matters</a></li>
+          <li><a href="#implementation-pattern">Implementation pattern</a></li>
+          <li><a href="#css-pattern">CSS pattern</a></li>
+          <li><a href="#dos-and-donts">Do's and don'ts</a></li>
+          <li><a href="#wcag-criteria">WCAG criteria reference</a></li>
+          <li><a href="#live-examples">Live examples</a></li>
+        </ol>
+      </nav>
+
+      <section aria-labelledby="what-are-anchor-links">
+        <h2 id="what-are-anchor-links">
+          What are anchor links?
+          <a class="heading-anchor" href="#what-are-anchor-links" aria-label="Link to What are anchor links? section">§</a>
+        </h2>
+        <p>
+          Anchor links (also called heading permalinks or deep links) are links that point directly to
+          a specific section on a page using a fragment identifier — the part of a URL after the
+          <code>#</code> symbol.
+        </p>
+        <p>
+          For example, the URL <code>https://example.com/page.html#what-are-anchor-links</code> would
+          scroll the browser to the element with <code>id="what-are-anchor-links"</code>.
+        </p>
+        <p>
+          Anchor links are useful for:
+        </p>
+        <ul>
+          <li>Sharing a direct link to a specific section of a long page</li>
+          <li>Building accessible table-of-contents navigation</li>
+          <li>Letting users bookmark or return to a specific part of documentation</li>
+          <li>Providing "skip to section" targets in long-form content</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="why-accessibility-matters">
+        <h2 id="why-accessibility-matters">
+          Why accessibility matters
+          <a class="heading-anchor" href="#why-accessibility-matters" aria-label="Link to Why accessibility matters section">§</a>
+        </h2>
+        <p>
+          Anchor links can create accessibility barriers if not implemented carefully:
+        </p>
+        <ul>
+          <li>
+            <strong>Screen reader users</strong> need a clear, descriptive link name — not just
+            an ambiguous <code>#</code> symbol that is read aloud in isolation.
+          </li>
+          <li>
+            <strong>Keyboard-only users</strong> must be able to reach and activate the anchor link
+            without a mouse.
+          </li>
+          <li>
+            <strong>Low-vision users</strong> need sufficient colour contrast on the link text and
+            a visible focus indicator.
+          </li>
+          <li>
+            <strong>Cognitive accessibility</strong> — the visual indicator (§ or #) should appear
+            consistently and predictably so users learn to expect it.
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="implementation-pattern">
+        <h2 id="implementation-pattern">
+          Implementation pattern
+          <a class="heading-anchor" href="#implementation-pattern" aria-label="Link to Implementation pattern section">§</a>
+        </h2>
+        <p>
+          The recommended HTML pattern places the anchor link <em>inside</em> the heading element,
+          immediately after the heading text. Using <code>aria-label</code> on the link provides a
+          meaningful accessible name to screen readers, independent of the visible <code>§</code>
+          character.
+        </p>
+
+        <h3 id="html-pattern">
+          HTML
+          <a class="heading-anchor" href="#html-pattern" aria-label="Link to HTML pattern">§</a>
+        </h3>
+        <pre><code>&lt;!-- ✅ Recommended pattern --&gt;
+&lt;section aria-labelledby="section-id"&gt;
+  &lt;h2 id="section-id"&gt;
+    Section Title
+    &lt;a class="heading-anchor"
+       href="#section-id"
+       aria-label="Link to Section Title"&gt;§&lt;/a&gt;
+  &lt;/h2&gt;
+  &lt;p&gt;Section content...&lt;/p&gt;
+&lt;/section&gt;</code></pre>
+
+        <p>Key points:</p>
+        <ul>
+          <li>The <code>id</code> is placed on the <strong>heading element</strong>, not the section.</li>
+          <li>The containing <code>&lt;section&gt;</code> uses <code>aria-labelledby</code> pointing to the heading <code>id</code>.</li>
+          <li>The <code>&lt;a&gt;</code> element has an <code>aria-label</code> that clearly describes its purpose.</li>
+          <li>The visible symbol <code>§</code> (section sign) conveys meaning without relying on colour.</li>
+          <li>The link <code>href</code> points to the same <code>#id</code> on the heading.</li>
+        </ul>
+
+        <h3 id="aria-label-values">
+          Choosing <code>aria-label</code> values
+          <a class="heading-anchor" href="#aria-label-values" aria-label="Link to Choosing aria-label values">§</a>
+        </h3>
+        <p>
+          There are two common conventions for <code>aria-label</code> on heading anchor links.
+          Choose the one that fits your maintenance model:
+        </p>
+        <ul>
+          <li>
+            <strong>Descriptive (recommended for most cases):</strong>
+            <code>"Link to [Section Name]"</code> — unambiguous when screen readers list all links
+            on a page (e.g., using NVDA's link list or VoiceOver's rotor). The trade-off is that
+            the label must be updated whenever the heading text changes.
+          </li>
+          <li>
+            <strong>Generic (lower maintenance):</strong>
+            <code>"Permalink"</code> or <code>"Link to this section"</code> — never needs updating,
+            and still works because the screen reader announces the surrounding heading as context.
+            The trade-off is that links listed out of context (outside the heading) are less descriptive.
+          </li>
+        </ul>
+        <pre><code>&lt;!-- ✅ Descriptive: clear when listed out of context --&gt;
+&lt;a href="#results" aria-label="Link to Results section"&gt;§&lt;/a&gt;
+
+&lt;!-- ✅ Generic: lower maintenance, relies on heading context --&gt;
+&lt;a href="#results" aria-label="Permalink"&gt;§&lt;/a&gt;
+
+&lt;!-- ❌ Avoid: no accessible name at all --&gt;
+&lt;a href="#results"&gt;§&lt;/a&gt;
+
+&lt;!-- ❌ Avoid: aria-hidden removes the link from the accessibility tree --&gt;
+&lt;a href="#results" aria-hidden="true"&gt;§&lt;/a&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="css-pattern">
+        <h2 id="css-pattern">
+          CSS pattern
+          <a class="heading-anchor" href="#css-pattern" aria-label="Link to CSS pattern section">§</a>
+        </h2>
+        <p>
+          The anchor link is hidden by default (opacity 0) and revealed when the user hovers over
+          the heading, when focus moves into the heading, or when the link itself receives focus.
+          This is the most common and accessible pattern.
+        </p>
+        <pre><code>.heading-anchor {
+  display: inline-block;
+  margin-left: 0.4em;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85em;
+
+  /* Hidden by default, revealed on hover/focus */
+  opacity: 0;
+  transition: opacity 160ms ease;
+  vertical-align: middle;
+}
+
+/* Show when heading is hovered or focus is inside heading */
+h2:hover .heading-anchor,
+h2:focus-within .heading-anchor,
+.heading-anchor:focus {
+  opacity: 1;
+}
+
+/* Accent colour and underline when active */
+.heading-anchor:hover,
+.heading-anchor:focus {
+  color: var(--accent);
+  text-decoration: underline;
+  opacity: 1;
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .heading-anchor {
+    transition: none !important;
+  }
+}</code></pre>
+
+        <p>
+          <strong>Important:</strong> Using <code>opacity: 0</code> (rather than
+          <code>display: none</code> or <code>visibility: hidden</code>) keeps the element in the
+          accessibility tree and tab order at all times, so keyboard-only users can still focus and
+          activate the link. The <code>:focus</code> selector in the CSS then makes the link
+          <em>visually</em> visible whenever it receives keyboard focus — ensuring keyboard users
+          always see the link while navigating by <kbd>Tab</kbd>, even without hovering.
+        </p>
+      </section>
+
+      <section aria-labelledby="dos-and-donts">
+        <h2 id="dos-and-donts">
+          Do's and don'ts
+          <a class="heading-anchor" href="#dos-and-donts" aria-label="Link to Do's and don'ts section">§</a>
+        </h2>
+
+        <div class="do-dont">
+          <div class="do-box">
+            <p>✅ Do</p>
+            <ul>
+              <li>Use <code>aria-label</code> on anchor links to describe their purpose</li>
+              <li>Place the anchor link inside the heading element</li>
+              <li>Use <code>opacity: 0</code> to hide visually while keeping in the tab order</li>
+              <li>Reveal the anchor link on heading hover and on focus</li>
+              <li>Use unique, descriptive <code>id</code> values on headings</li>
+              <li>Add <code>aria-labelledby</code> to the containing <code>&lt;section&gt;</code></li>
+              <li>Respect <code>prefers-reduced-motion</code> by removing the transition</li>
+              <li>Ensure sufficient colour contrast on the link text (WCAG 1.4.3)</li>
+            </ul>
+          </div>
+          <div class="dont-box">
+            <p>❌ Don't</p>
+            <ul>
+              <li>Use <code>aria-hidden="true"</code> on anchor links (hides from screen readers)</li>
+              <li>Use <code>display: none</code> or <code>visibility: hidden</code> (removes from tab order)</li>
+              <li>Rely solely on colour to convey the link is clickable</li>
+              <li>Use duplicate <code>id</code> values on the same page</li>
+              <li>Place the anchor link outside the heading (breaks the relationship)</li>
+              <li>Use generic labels like "link" or "#" as the accessible name</li>
+              <li>Forget to test with keyboard-only navigation</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="wcag-criteria">
+        <h2 id="wcag-criteria">
+          WCAG criteria reference
+          <a class="heading-anchor" href="#wcag-criteria" aria-label="Link to WCAG criteria reference section">§</a>
+        </h2>
+        <p>The following WCAG 2.2 success criteria apply to heading anchor links:</p>
+        <ul>
+          <li>
+            <strong>1.4.3 Contrast (Minimum) — Level AA:</strong>
+            The visible anchor link symbol must have a colour contrast ratio of at least 4.5:1
+            against its background.
+          </li>
+          <li>
+            <strong>2.1.1 Keyboard — Level A:</strong>
+            All functionality (including activating the anchor link) must be operable via keyboard.
+          </li>
+          <li>
+            <strong>2.4.3 Focus Order — Level A:</strong>
+            The link must receive focus in a logical order consistent with the reading order.
+          </li>
+          <li>
+            <strong>2.4.4 Link Purpose (In Context) — Level AA:</strong>
+            The purpose of each anchor link must be determinable from the link text alone or from
+            its context (use <code>aria-label</code> for this).
+          </li>
+          <li>
+            <strong>2.4.7 Focus Visible — Level AA:</strong>
+            The anchor link must have a visible focus indicator when keyboard-focused.
+          </li>
+          <li>
+            <strong>4.1.2 Name, Role, Value — Level A:</strong>
+            The link element must have an accessible name (provided via <code>aria-label</code>).
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="live-examples">
+        <h2 id="live-examples">
+          Live examples
+          <a class="heading-anchor" href="#live-examples" aria-label="Link to Live examples section">§</a>
+        </h2>
+        <p>
+          The headings on this page itself use the patterns described above.
+          Try the following to verify accessibility:
+        </p>
+        <ol>
+          <li>
+            <strong>Hover test:</strong> Hover over any section heading above —
+            a <code>§</code> symbol should appear to the right of the heading text.
+          </li>
+          <li>
+            <strong>Keyboard test:</strong> Press <kbd>Tab</kbd> to move focus through the page.
+            When focus lands on a heading anchor link, the <code>§</code> symbol should become
+            visible and the link should have a visible focus ring.
+          </li>
+          <li>
+            <strong>URL test:</strong> Click any <code>§</code> anchor link — the page URL should
+            update to include the section's fragment (e.g., <code>#live-examples</code>).
+            Sharing this URL should scroll a new visitor directly to that section.
+          </li>
+          <li>
+            <strong>Screen reader test:</strong> Navigate by links (e.g., using NVDA's
+            <kbd>Insert+F7</kbd> or VoiceOver's <kbd>VO+U</kbd>). Each anchor link should be
+            announced as "Link to [Section Name]" — not just "§" or "section sign".
+          </li>
+        </ol>
+
+        <h3 id="table-of-contents-example">
+          Table of contents example
+          <a class="heading-anchor" href="#table-of-contents-example" aria-label="Link to Table of contents example">§</a>
+        </h3>
+        <p>
+          The table of contents at the top of this page demonstrates an alternative pattern:
+          a <code>&lt;nav aria-label="Table of contents"&gt;</code> element containing an ordered
+          list of links to section headings. This pattern is recommended for long pages with many
+          sections and provides orientation for screen reader users who can navigate by landmarks.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

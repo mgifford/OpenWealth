@@ -106,6 +106,19 @@ test("ui contract: results wizard step includes save-profile reminder", () => {
   assert.match(indexHtml, /Save \/ Load Profile/);
 });
 
+test("ui contract: wizard bottom navigation buttons are present in each step section", () => {
+  const prevMatches = indexHtml.match(/data-wizard-nav=["']prev["']/g) ?? [];
+  const nextMatches = indexHtml.match(/data-wizard-nav=["']next["']/g) ?? [];
+
+  assert.ok(prevMatches.length >= 7, `expected at least 7 data-wizard-nav="prev" buttons (top + one per step), found ${prevMatches.length}`);
+  assert.ok(nextMatches.length >= 7, `expected at least 7 data-wizard-nav="next" buttons (top + one per step), found ${nextMatches.length}`);
+
+  assert.match(indexHtml, /data-wizard-pane=["']about-you["'][^]*?data-wizard-nav=["']next["']/s);
+  assert.match(indexHtml, /data-wizard-pane=["']savings["'][^]*?data-wizard-nav=["']next["']/s);
+  assert.match(indexHtml, /data-wizard-pane=["']income["'][^]*?data-wizard-nav=["']next["']/s);
+  assert.match(indexHtml, /data-wizard-pane=["']benefits["'][^]*?data-wizard-nav=["']next["']/s);
+});
+
 test("ui contract: main app wires click handlers for key buttons", () => {
   const expectedWiring = [
     ["theme-toggle", "applyUserThemeToggle"],
@@ -132,8 +145,8 @@ test("ui contract: main app wires click handlers for key buttons", () => {
   assert.match(appMain, /applyReturnPreset/);
   assert.match(appMain, /button\.inflation-preset/);
   assert.match(appMain, /applyInflationPreset/);
-  assert.match(appMain, /el\(["']wizard-prev["']\)\.addEventListener\(["']click["'],\s*onWizardPrevious/);
-  assert.match(appMain, /el\(["']wizard-next["']\)\.addEventListener\(["']click["'],\s*onWizardNext/);
+  assert.match(appMain, /\[data-wizard-nav=['"]prev['"]\].*onWizardPrevious|onWizardPrevious.*\[data-wizard-nav=['"]prev['"]\]/s);
+  assert.match(appMain, /\[data-wizard-nav=['"]next['"]\].*onWizardNext|onWizardNext.*\[data-wizard-nav=['"]next['"]\]/s);
   assert.match(appMain, /button\.wizard-step/);
   assert.match(appMain, /goToWizardStep/);
   assert.match(

@@ -587,8 +587,8 @@
           <button class="wizard-step" type="button" data-step="results">6. Results</button>
         </div>
         <div class="actions">
-          <button id="wizard-prev" type="button">Back</button>
-          <button id="wizard-next" type="button">Next</button>
+          <button id="wizard-prev" data-wizard-nav="prev" type="button">Back</button>
+          <button id="wizard-next" data-wizard-nav="next" type="button">Next</button>
         </div>
         <p class="hint">Current step: <strong id="wizard-current-step">About You</strong></p>
       </section>
@@ -617,6 +617,7 @@
             </p>
 
             <div data-wizard-pane="about-you">
+            <h3>About You</h3>
             <label for="household-name">Household name</label>
             <input id="household-name" required value="OpenWealth Household" />
             <label for="province">Province</label>
@@ -670,9 +671,14 @@
 
             <p>Retirement goal range: <strong id="retirement-goal-range">n/a</strong></p>
             <p>Life expectancy range: <strong id="life-expectancy-range">n/a</strong></p>
+            <div class="actions">
+              <button data-wizard-nav="prev" type="button">Back</button>
+              <button data-wizard-nav="next" type="button">Next</button>
+            </div>
             </div>
 
             <div data-wizard-pane="savings">
+            <h3>Savings</h3>
             <label for="starter-balance">Starter TFSA balance</label>
             <input
               id="starter-balance"
@@ -755,11 +761,16 @@
               />
               <p class="hint">Loan interest: <strong id="mortgage-interest-rate-output">4.5%</strong></p>
             </div>
+            <div class="actions">
+              <button data-wizard-nav="prev" type="button">Back</button>
+              <button data-wizard-nav="next" type="button">Next</button>
+            </div>
             </div>
 
             <div data-wizard-pane="income">
+            <h3>Income</h3>
             <div id="quick-intake-panel" class="quick-intake">
-              <h3>Quick Estimate Check-In</h3>
+              <h4>Quick Estimate Check-In</h4>
               <p id="quick-intake-progress" class="hint">Question 1 of 4</p>
               <p id="quick-intake-question" class="quick-question">How much did you earn last month?</p>
               <label for="quick-intake-answer">Your estimate</label>
@@ -778,7 +789,7 @@
               <p id="quick-intake-mapped" class="hint">Mapped estimates will update fields below in real-time.</p>
             </div>
 
-            <h3>Monthly safety check</h3>
+            <h4>Monthly safety check</h4>
             <p class="hint">As your biggest monthly bill rises relative to income, this bar shrinks.</p>
             <div class="safety-bar" role="img" aria-label="Monthly safety buffer bar">
               <div id="safety-bar-fill" class="safety-bar-fill"></div>
@@ -796,9 +807,14 @@
               data-output="annual-income-output"
             />
             <p class="hint">Annual income: <strong id="annual-income-output">$95,000</strong></p>
+            <div class="actions">
+              <button data-wizard-nav="prev" type="button">Back</button>
+              <button data-wizard-nav="next" type="button">Next</button>
+            </div>
             </div>
 
             <div data-wizard-pane="benefits">
+            <h3>Benefits</h3>
             <fieldset data-guided-tags="family,retirement">
               <legend>Benefits and pension</legend>
               <label for="workplace-pension-income">Expected annual workplace pension</label>
@@ -838,6 +854,10 @@
               <p class="hint">Preferred OAS age: <strong id="preferred-oas-age-output">65</strong></p>
             </fieldset>
             <button type="submit">Save onboarding</button>
+            <div class="actions">
+              <button data-wizard-nav="prev" type="button">Back</button>
+              <button data-wizard-nav="next" type="button">Next</button>
+            </div>
             </div>
           </form>
         </section>
@@ -978,6 +998,10 @@
               <button class="inflation-preset" type="button" data-inflation="0.03">3.0%</button>
             </div>
             <button type="submit">Create scenario</button>
+            <div class="actions">
+              <button data-wizard-nav="prev" type="button">Back</button>
+              <button data-wizard-nav="next" type="button">Next</button>
+            </div>
           </form>
         </section>
       </div>
@@ -1052,6 +1076,10 @@
         <p>Review expected growth-rate scenarios and how outcomes change across low/base/high return assumptions.</p>
         <button id="show-market-trends" type="button">Show market trend scenarios</button>
         <div id="market-trends" aria-live="polite"></div>
+        <div class="actions">
+          <button data-wizard-nav="prev" type="button">Back</button>
+          <button data-wizard-nav="next" type="button">Next</button>
+        </div>
       </section>
 
       <section aria-labelledby="profile-save-load-heading">

@@ -575,19 +575,6 @@
         <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
       </section>
 
-      <section aria-labelledby="profile-save-load-heading">
-        <h2 id="profile-save-load-heading">Save / Load Profile<a class="heading-anchor" href="#profile-save-load-heading" aria-label="Link to Save / Load Profile section">§</a></h2>
-        <p>
-          Your data is stored locally in this browser. Export a YAML file to keep your profile
-          portable — reload it here anytime, on any device, or after clearing browser data.
-        </p>
-        <div class="grid">
-          <button id="export-household-yaml" type="button">Save profile to YAML file</button>
-          <button id="import-household-yaml" type="button">Load saved YAML profile</button>
-        </div>
-        <input id="household-yaml-file" class="sr-only" type="file" accept=".yaml,.yml,text/yaml,application/x-yaml" />
-      </section>
-
       <section aria-labelledby="wizard-heading">
         <h2 id="wizard-heading">Guided Retirement Wizard<a class="heading-anchor" href="#wizard-heading" aria-label="Link to Guided Retirement Wizard section">§</a></h2>
         <p>Follow a structured planning flow: About You -> Savings -> Income -> Benefits -> Market Assumptions -> Results.</p>
@@ -1065,6 +1052,19 @@
         <p>Review expected growth-rate scenarios and how outcomes change across low/base/high return assumptions.</p>
         <button id="show-market-trends" type="button">Show market trend scenarios</button>
         <div id="market-trends" aria-live="polite"></div>
+      </section>
+
+      <section aria-labelledby="profile-save-load-heading">
+        <h2 id="profile-save-load-heading">Save / Load Profile<a class="heading-anchor" href="#profile-save-load-heading" aria-label="Link to Save / Load Profile section">§</a></h2>
+        <p>
+          Your data is stored locally in this browser. Export a YAML file to keep your profile
+          portable — reload it here anytime, on any device, or after clearing browser data.
+        </p>
+        <div class="grid">
+          <button id="export-household-yaml" type="button">Save profile to YAML file</button>
+          <button id="import-household-yaml" type="button">Load saved YAML profile</button>
+        </div>
+        <input id="household-yaml-file" class="sr-only" type="file" accept=".yaml,.yml,text/yaml,application/x-yaml" />
       </section>
 
       <section aria-labelledby="prompt-package-heading">

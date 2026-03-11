@@ -537,8 +537,12 @@ function syncWizardUi() {
     section.hidden = !visibleSteps.includes(step.id);
   });
 
-  el("wizard-prev").disabled = wizardStepIndex === 0;
-  el("wizard-next").textContent = step.id === "results" ? "Finish" : "Next";
+  document.querySelectorAll("[data-wizard-nav='prev']").forEach((btn) => {
+    btn.disabled = wizardStepIndex === 0;
+  });
+  document.querySelectorAll("[data-wizard-nav='next']").forEach((btn) => {
+    btn.textContent = step.id === "results" ? "Finish" : "Next";
+  });
 }
 
 function goToWizardStep(index) {
@@ -1312,8 +1316,12 @@ async function init() {
       updateInflationRealityCheck().catch((error) => setStatus(error.message, true));
     });
   });
-  el("wizard-prev").addEventListener("click", onWizardPrevious);
-  el("wizard-next").addEventListener("click", onWizardNext);
+  document.querySelectorAll("[data-wizard-nav='prev']").forEach((btn) => {
+    btn.addEventListener("click", onWizardPrevious);
+  });
+  document.querySelectorAll("[data-wizard-nav='next']").forEach((btn) => {
+    btn.addEventListener("click", onWizardNext);
+  });
 
   document.querySelectorAll("button.wizard-step").forEach((button) => {
     button.addEventListener("click", () => {

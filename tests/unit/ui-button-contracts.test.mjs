@@ -83,14 +83,14 @@ test("ui contract: guided tour persona selector and ARIA tooltips are present", 
   assert.match(indexHtml, /role=["']tooltip["']/);
 });
 
-test("ui contract: save/load profile section appears before the wizard navigation", () => {
+test("ui contract: save/load profile section appears before the prompt package section", () => {
   const saveLoadPos = indexHtml.indexOf('id="profile-save-load-heading"');
-  const wizardHeadingPos = indexHtml.indexOf('id="wizard-heading"');
+  const promptPackagePos = indexHtml.indexOf('id="prompt-package-heading"');
   assert.ok(saveLoadPos >= 0, "profile-save-load-heading element must exist");
-  assert.ok(wizardHeadingPos >= 0, "wizard-heading element must exist");
+  assert.ok(promptPackagePos >= 0, "prompt-package-heading element must exist");
   assert.ok(
-    saveLoadPos < wizardHeadingPos,
-    "Save / Load Profile section must appear before the wizard navigation section"
+    saveLoadPos < promptPackagePos,
+    "Save / Load Profile section must appear before the Prompt Package section"
   );
   assert.match(indexHtml, /id=["']export-household-yaml["']/);
   assert.match(indexHtml, /id=["']import-household-yaml["']/);

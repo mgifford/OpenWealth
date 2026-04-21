@@ -13,6 +13,7 @@ on:
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/accessibility-scan.yml"
+      - ".pa11yci.json"
   pull_request:
     paths:
       - "src/**"
@@ -24,6 +25,7 @@ on:
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/accessibility-scan.yml"
+      - ".pa11yci.json"
   workflow_dispatch:
 
 permissions:
@@ -62,16 +64,16 @@ jobs:
           sleep 2
 
       - name: Scan app shell (index)
-        run: npx --yes pa11y-ci http://127.0.0.1:4173/index.html
+        run: npx --yes pa11y-ci --config .pa11yci.json http://127.0.0.1:4173/index.html
 
       - name: Scan standalone inflation meter page
-        run: npx --yes pa11y-ci http://127.0.0.1:4173/inflation-meter.html
+        run: npx --yes pa11y-ci --config .pa11yci.json http://127.0.0.1:4173/inflation-meter.html
 
       - name: Scan standalone liquidity levers page
-        run: npx --yes pa11y-ci http://127.0.0.1:4173/liquidity-levers.html
+        run: npx --yes pa11y-ci --config .pa11yci.json http://127.0.0.1:4173/liquidity-levers.html
 
       - name: Scan generated report HTML fixture
-        run: npx --yes pa11y-ci http://127.0.0.1:4173/a11y/report.html
+        run: npx --yes pa11y-ci --config .pa11yci.json http://127.0.0.1:4173/a11y/report.html
 
       - name: Stop static server
         if: always()

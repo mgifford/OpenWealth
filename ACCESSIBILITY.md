@@ -81,6 +81,12 @@ Recommended assistive technology checks:
 - browser zoom at 200%
 - reduced motion preference where motion is introduced
 
+### CI Accessibility Scanning
+
+Automated scanning runs via `pa11y-ci` in GitHub Actions on every push to `main` and on pull requests that touch UI or report files.
+
+The `.pa11yci.json` config at the repo root passes `--no-sandbox` and `--disable-setuid-sandbox` to Chromium. This is required on Ubuntu 24.04+ GitHub Actions runners where AppArmor restricts unprivileged user namespaces. These flags are only used in the CI environment; they have no effect on manual or production accessibility testing.
+
 ## 6. Severity and Prioritization
 
 Accessibility issues are prioritized as:

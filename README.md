@@ -143,6 +143,16 @@ kitty-specs/
   3. Trigger GitHub workflows via `workflow_dispatch` and verify artifacts/retention in Actions UI.
   4. Confirm Pages deploys from GitHub Actions and renders expected app shell on `main`.
 
+## Learning Resources
+
+See [docs/investment-reading-list.md](docs/investment-reading-list.md) for a curated list
+of investment books aligned with OpenWealth's evidence-based, long-term planning philosophy.
+The list also includes guidance on which principles from that literature should inform LLM
+assistant behaviour within the tool.
+
+For Canadian-specific planning rules (TFSA, RRSP, FHSA, RESP, CPP, OAS) refer to the
+CRA, FCAC, and community resources listed at the end of that document.
+
 ## Next Steps
 
 - Continue UI polish and richer accessibility coverage for end-to-end flows

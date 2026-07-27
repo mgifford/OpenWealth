@@ -23,7 +23,7 @@
     "test:regression": "node --test \"tests/regression/**/*.test.mjs\""
   },
   "devDependencies": {
-    "eslint": "^9.22.0",
+    "eslint": "^10.8.0",
     "prettier": "^3.5.3"
   },
   "engines": {
